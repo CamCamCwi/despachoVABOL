@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 
@@ -155,32 +156,57 @@ public class DComentario {
         }  
     }
     
-    public ArrayList Listar() {
-        ArrayList listaPersonas = new ArrayList();
-        String query = "SELECT com_id, com_fecha, com_hora, com_contenido, com_doc, com_usuario, com_com2"
-                        + "FROM comentario ";
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        
-        try {       
-            Connection con = conexion.getConexion();
-            ps = con.prepareStatement(query);
-            rs = ps.executeQuery();
-            ResultSetMetaData rsMd = rs.getMetaData();
+    public String Listar(){
+        String imprimir="";
+        Statement Consulta;
+        ResultSet resultado = null;        
+        try {
+            String query = "SELECT * FROM comentario";            
+            Connection con = conexion.getConexion();            
+            Consulta = (Statement) con.createStatement();
+            resultado = Consulta.executeQuery(query);            
+            ResultSetMetaData rsMd = resultado.getMetaData();
             int cantidadColumnas = rsMd.getColumnCount();
-            
-            while (rs.next()) {
-                Object[] filas = new Object[cantidadColumnas];
+            while (resultado.next()) {
                 for (int i = 0; i < cantidadColumnas; i++) {
-                    filas[i] = rs.getObject(i + 1);
+                    imprimir =imprimir  +resultado.getString(i+1)+ " ";
+                    //datos[i] = resultado.getString(i+1);
                 }
-                listaPersonas.add(filas);
+                imprimir += "\n";
             }
+            Consulta.close();
+            
             con.close();
-   
+            
         } catch (Exception e) {
             System.out.println("no se pudo listar los datos");
         }
-        return listaPersonas;
-    }  
+        return imprimir;
+    }
+    
+    public boolean Existe(int com_id){
+        PreparedStatement ps = null;
+        Connection con = conexion.getConexion();
+        String sql = "SELECT * FROM comentario where com_id = ?";
+        ResultSet resultado = null;
+        try{
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, com_id);
+            resultado = ps.executeQuery();
+            if(resultado.next()) {
+                return true;
+            }else{
+                return false;
+            }
+        }catch(SQLException e){
+            return false;
+        }finally{
+            try{
+                con.close();
+            }catch(SQLException e){
+                System.err.println(e);
+            }
+        }  
+    }
+    
 }
