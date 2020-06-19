@@ -51,11 +51,8 @@ public class DCategoriaDoc {
             ps.setString(1, this.getCatDoc_nombre());
             ps.setString(2, this.getCatDoc_descripcion());
             ps.execute();
-            //System.out.println("Categoria de docuemento registrada");
             return true;
         }catch(SQLException e){
-            //System.err.println(e);
-            //System.out.println("Categoria de docuemento no registrado");
             return false;
         }finally{
             try{
@@ -77,10 +74,8 @@ public class DCategoriaDoc {
             ps.setString(2, this.getCatDoc_descripcion());
             ps.setInt(3, this.getCatDoc_id());
             ps.execute();
-            //System.out.println("Categoria de docuemento modificado");
             return true;
         }catch(SQLException e){
-            //System.out.println("Categoria de docuemento no modificado");
             return false;
         }finally{
             try{
@@ -99,11 +94,8 @@ public class DCategoriaDoc {
             ps = con.prepareStatement(sql);
             ps.setInt(1, this.getCatDoc_id());
             ps.execute();
-            //System.out.println("Categoria de docuemento eliminado");
             return true;
         }catch(SQLException e){
-            //System.err.println(e);
-            //System.out.println("Categoria de docuemento no eliminado");
             return false;
         }finally{
             try{
