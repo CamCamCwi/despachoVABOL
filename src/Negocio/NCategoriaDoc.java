@@ -36,8 +36,9 @@ public class NCategoriaDoc {
     }
     
     public String ModificarCategoriaDoc(int catDoc_id, String catDoc_nombre, String catDoc_descripcion){
-        if(this.dcategoriadoc.Existe(catDoc_id)){
-            if(catDoc_nombre.length()!= 0 && catDoc_descripcion.length()!=0 && Integer.toString(catDoc_id).length()!= 0){
+        //if(this.dcategoriadoc.Existe(catDoc_id)){
+        if(catDoc_nombre.length()!= 0 && catDoc_descripcion.length()!=0 && Integer.toString(catDoc_id).length()!= 0){
+            if(this.dcategoriadoc.Existe(catDoc_id)){
                 if(catDoc_nombre.length() <= 125){
                     if (catDoc_descripcion.length() <= 255){
                         this.dcategoriadoc.setCatDoc_id(catDoc_id);
@@ -55,17 +56,18 @@ public class NCategoriaDoc {
                    respuesta = "El nombre es demasiado largo"; 
                 }
             }else{
-                respuesta = "No se permiten datos vacios o nulos";
-            }
+                respuesta = "La categoria documento que quiere modificar no existe";
+            }   
         }else{
-            respuesta = "La categoria documento que quiere modificar no existe";
+            respuesta = "No se permiten datos vacios o nulos";
         }
        return respuesta;
     }
     
     public String EliminarCategoriaDoc(int catDoc_id){
-        if(this.dcategoriadoc.Existe(catDoc_id)){
-            if(Integer.toString(catDoc_id).length()!=0){
+
+        if(Integer.toString(catDoc_id).length()!=0){
+            if(this.dcategoriadoc.Existe(catDoc_id)){
                 this.dcategoriadoc.setCatDoc_id(catDoc_id);
                 if(this.dcategoriadoc.Eliminar()){
                     respuesta = "Se eliminó correctamente la categoría documento";
@@ -73,10 +75,11 @@ public class NCategoriaDoc {
                     respuesta = "No se pudo eliminar la categoría documento";
                 }
             }else{
-                respuesta = "No se permiten datos vacios o nulos";
+                respuesta = "La categoria documento que quiere eliminar no existe"; 
             }
+                
         }else{
-            respuesta = "La categoria documento que quiere eliminar no existe";
+            respuesta = "No se permiten datos vacios o nulos";
         }
       return respuesta;
     }
