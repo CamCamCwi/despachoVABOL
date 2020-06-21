@@ -82,7 +82,7 @@ public class DComentario {
         this.com_com2 = com_com2;
     }
     
-    public void Registrar(){
+    public boolean Registrar(){
         PreparedStatement ps = null; 
         Connection con = conexion.getConexion();
         String sql = "INSERT INTO comentario(com_fecha, com_hora, com_contenido, com_doc, com_usuario, com_com2) VALUES (?,?,?,?,?,?)";
@@ -95,10 +95,9 @@ public class DComentario {
             ps.setInt(5, this.getCom_usuario());
             ps.setInt(6, this.getCom_com2());
             ps.execute();
-            System.out.println("Comentario registrado");
+            return true;
         }catch(SQLException e){
-            System.err.println(e);
-            System.out.println("Comentario no registrado");
+            return false;
         }finally{
             try{
                 con.close();
@@ -108,7 +107,7 @@ public class DComentario {
         }  
     }
     
-    public void Modificar(){
+    public boolean Modificar(){
         PreparedStatement ps = null;
         Connection con = conexion.getConexion();
         String sql = "UPDATE comentario SET com_fecha = ?, com_hora = ?, com_contenido = ?, com_doc = ?, com_usuario = ?, "
@@ -123,9 +122,9 @@ public class DComentario {
             ps.setInt(6, this.getCom_com2());
             ps.setInt(7, this.getCom_id());
             ps.execute();
-            System.out.println("Comentario modificado");
+            return true;
         }catch(SQLException e){
-            System.out.println("Comentario no modificado");
+            return false;
         }finally{
             try{
                 con.close();
@@ -135,7 +134,7 @@ public class DComentario {
         }  
     }
     
-    public void Eliminar(){
+    public boolean Eliminar(){
         PreparedStatement ps = null;
         Connection con = conexion.getConexion();
         String sql = "DELETE from comentario where com_id = ?";
@@ -143,10 +142,9 @@ public class DComentario {
             ps = con.prepareStatement(sql);
             ps.setInt(1, this.getCom_id());
             ps.execute();
-            System.out.println("Comentario eliminado");
+            return true;
         }catch(SQLException e){
-            System.err.println(e);
-            System.out.println("Comentario no eliminado");
+            return false;
         }finally{
             try{
                 con.close();
@@ -170,7 +168,6 @@ public class DComentario {
             while (resultado.next()) {
                 for (int i = 0; i < cantidadColumnas; i++) {
                     imprimir =imprimir  +resultado.getString(i+1)+ " ";
-                    //datos[i] = resultado.getString(i+1);
                 }
                 imprimir += "\n";
             }
@@ -179,7 +176,7 @@ public class DComentario {
             con.close();
             
         } catch (Exception e) {
-            System.out.println("no se pudo listar los datos");
+           imprimir = "No se pudieron listar los datos";
         }
         return imprimir;
     }
