@@ -1,19 +1,29 @@
 package Mail;
 
+import Negocio.NCategoriaDoc;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.regex.Pattern;
+
+
 
 public class Mmail {
-
+    
+    private NCategoriaDoc ncategoriadoc;
+    
     private String servidor = "mail.tecnoweb.org.bo";
     private String emisor = "grupo02sa@tecnoweb.org.bo";
     private String usuario="grupo02sa";
     private String contrasena="grupo02grupo02";
 
+    public Mmail() {
+        this.ncategoriadoc = new NCategoriaDoc();
+    }
+    
     private String subject = "reg_categoriadoc[Contrato, Documento que compromete a ambas partes de cumplir con el "
             + "contenido del mismo]";
 
@@ -52,7 +62,7 @@ public class Mmail {
                 + "   Buscar Abogado : \n"
                 + "	find_abogado[int ci] \n"
                 + "   Modificar Contraseña de Abogado : \n"
-                + "	mod_contraseña_Abogado(String Usuario, String Anterior contraseña , String nueva contraseña] \n"
+                + "	mod_contraseña_abogado[String Usuario, String Anterior contraseña , String nueva contraseña] \n"
                 + "CU5: Gestionar comentario\n"
                 + "   RegistrarComentario\n"
                 + "     reg_comentario[String contenidoComentario, int idDocumento, int idUsuario, int idComentario](El comentario puede ser nulo)\n"
@@ -204,7 +214,7 @@ public class Mmail {
                 comando="RETR "+ number +"\n";
                 System.out.print("C : "+comando);
                 salida.writeBytes( comando ); 
-                subject = getSubject(entrada);
+                this.subject = getSubject(entrada);
                 
                 
                 comando="QUIT\r\n";
@@ -216,7 +226,7 @@ public class Mmail {
             salida.close();
             entrada.close();
             socket.close();
-          
+            VerificarSubject(this.subject, "danielrobles1190@gmail.com");
         }catch(UnknownHostException e){
             e.printStackTrace();
             System.out.println(" S : no se pudo conectar con el servidor indicado");
@@ -273,48 +283,260 @@ public class Mmail {
         System.out.println(number);
         return number;  
     }
+    
+    public void VerificarSubject(String sub, String receptor){
+        String errorFormato = "";
+        // Solo lo uso para verificar el help
+        String subjecthelp = sub.toLowerCase();
+        subjecthelp = subjecthelp.trim();
+        if(subjecthelp == "help"){
+            String help = this.help();
+            this.sendMail(receptor, help);
+        }else{
+            int index1 = sub.indexOf("[");
+            int index2 = sub.indexOf("]");
+            if(index1 != -1 && index2!=-1){
+                if(index1 < index2){
+                    if(index1 > 0){
+                        this.OpcionesCase(sub,receptor);
+                    }else{
+                        errorFormato = "No se reconoce el formato indicado. Verifique que está enviando los datos dentro de un encabezado.";
+                        //this.sendMail(receptor, errorFormato);
+                        System.out.println(errorFormato);
+                    }
+                }else{
+                    errorFormato = "No se reconoce el formato indicado. Verifique que está utilizando los corchetes([]) de forma ordenada.";
+                    //this.sendMail(receptor, errorFormato);
+                    System.out.println(errorFormato);
+                }
+            }else{
+                errorFormato = "No se reconoce el formato indicado. Verifique que está utilizando los corchetes([]) para realizar la petición.";
+                //this.sendMail(receptor, errorFormato);
+                System.out.println(errorFormato);
+            }
+        }
+    }
+    
+    public void OpcionesCase(String sub, String receptor){
+        sub = sub.trim();
+        String[] partesSubject = sub.split("\\[");
+        String encabezado = partesSubject[0];
+        String cuerpo[] = partesSubject[1].split("\\]");
+        String datos[] = cuerpo[0].split("\\,");
+        for (int i = 0; i < datos.length; i++) {
+            datos[i] = datos[i].trim();
+        }
+        switch (encabezado) 
+        {
+            //CU2: Gestionar Categoria Documento
+                case "reg_categoriadoc":
+                        this.RegistrarCategoriaDoc(datos);
+                        break;
+                case "mod_categoriadoc":
+                        this.ModificarCategoriaDoc(datos);
+                        break;
+                case "del_categoriadoc":
+                        this.EliminarCategoriaDoc(datos);
+                        break;
+                case "list_categotiadoc":
+                        this.ListarCategoriaDoc();
+                        break;
+            // CU3: Gestionar Cliente
+                case "reg_cliente":
+                        this.RegistrarCliente(datos);
+                        break;
+                case "mod_cliente":
+                        this.ModificarCliente(datos);
+                        break;
+                case "del_cliente":
+                        this.EliminarCliente(datos);
+                        break;
+                case "list_cliente":
+                        this.ListarClientes();
+                        break;
+                case "find_cliente":
+                        this.BuscarCliente(datos);
+                        break;
+                case "mod_contraseña_cliente":
+                        this.ModificarContraseñaCliente(datos);
+                        break;
+            // CU4: Gestionar Abogado
+                case "reg_abogado":
+                        this.RegistrarAbogado(datos);
+                        break;
+                case "mod_abogado":
+                        this.ModificarAbogado(datos);
+                        break;
+                case "del_abogado":
+                        this.EliminarAbogado(datos);
+                        break;
+                case "list_abogado":
+                        this.ListarAbogados();
+                        break;
+                case "find_abogado":
+                        this.BuscarCliente(datos);
+                        break;
+                case "mod_contraseña_abogado":
+                        this.ModificarContraseñaCliente(datos);
+                        break;
+            // CU5: Gestionar comentario
+                case "reg_comentario":
+                        this.RegistrarComentario(datos);
+                        break;
+                case "mod_comentario":
+                        this.ModificarComentario(datos);
+                        break;
+                case "del_comentario":
+                        this.EliminarComentario(datos);
+                        break;
+                case "list_comentario":
+                        this.ListarComentarios();
+                        break;
+        }
+    }
 
     // Métodos de cada clase. 
-    // CU1: Gestionar Comentario /n
-    // RegistrarComentario
-    // ModificarComentario
-    // EliminarComentario
-    // ListarComentarios
-    // Anuncio
-    // RegistrarAnuncio
-    // ModificarAnuncio
-    // EliminarAnuncio
-    // ListarAnuncios
-    // CategoriaAnuncio
-    // RegistrarCategoriaAnuncio
-    // ModificarCategoriaAnuncio
-    // EliminarCategoriaAnuncio
-    // ListarCategoriaAnuncio
-    // CategoriaDoc
-    // RegistrarCategoriaDoc
-    // ModificarCategoriaDoc
-    // EliminarCategoriaDoc
-    // ListarCategoriaDoc
-    // SolicitudContacto
-    // RegistrarSolicitudContacto
-    // ModificarSolicitudContacto
-    // ListarSolicitudContacto
-    //  Abogado
-    // RegistrarAbogado
-    // ModificarAbogado
-    // EliminarAbogado
-    // ListarAbogados
-    // BuscarAbogado
-    // Cliente
-    // RegistrarCliente
-    // ModificarCliente
-    // EliminarCliente
-    // ListarClientes
-    // BuscarCliente
-    // Documento
-    // RegistrarDocumento
-    // ModificarDocumento
-    // EliminarDocumento
-    // ListarDocumentos
-    // BuscarDocumento
+    
+    // CU2: CategoriaDoc
+        // RegistrarCategoriaDoc
+           public void RegistrarCategoriaDoc(String[] datos){
+               String respuesta = "";
+               if(datos.length == 2){
+                   respuesta = this.ncategoriadoc.RegistrarCategoriaDoc(datos[0], datos[1]);
+               }else if (datos.length < 2){
+                   respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+               }else{
+                   respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+               }
+               System.out.println(respuesta);
+               //this.sendMail("danielrobles1190@gmail.com", respuesta);
+           }
+        // ModificarCategoriaDoc
+           public void ModificarCategoriaDoc(String[] datos){
+               System.out.println("Realizo el modificar categoria doc");
+           }
+        // EliminarCategoriaDoc
+           public void EliminarCategoriaDoc(String[] datos){
+               System.out.println("Realizo el eliminar categoria doc");
+           }
+        // ListarCategoriaDoc
+           public void ListarCategoriaDoc(){
+               System.out.println("Realizo el listar categoria doc");
+           }
+       
+    // CU3: Gestionar Cliente
+        // RegistrarCliente
+            public void RegistrarCliente(String[] datos){
+               System.out.println("Realizo el registrar cliente");
+            }
+        // ModificarCliente
+            public void ModificarCliente(String[] datos){
+               System.out.println("Realizo el modificar cliente");
+            }
+        // EliminarCliente
+            public void EliminarCliente(String[] datos){
+               System.out.println("Realizo el eliminar cliente");
+            }
+        // ListarClientes
+            public void ListarClientes(){
+               System.out.println("Realizo el listar cliente");
+            }
+        // BuscarCliente
+            public void BuscarCliente(String[] datos){
+               System.out.println("Realizo el listar cliente");
+            }
+        // ModificarContraseñaCliente
+            public void ModificarContraseñaCliente(String[] datos){
+               System.out.println("Realizo el modificar contraseña cliente");
+            }
+    // CU4: Gestionar Abogado
+        // RegistrarAbogado
+            public void RegistrarAbogado(String[] datos){
+               System.out.println("Realizo el registrar abogado");
+            }
+        // ModificarAbogado
+            public void ModificarAbogado(String[] datos){
+               System.out.println("Realizo el modificar abogado");
+            }
+        // EliminarAbogado
+            public void EliminarAbogado(String[] datos){
+               System.out.println("Realizo el eliminar abogado");
+            }
+        // ListarAbogados
+            public void ListarAbogados(){
+               System.out.println("Realizo el listar abogado");
+            }
+        // BuscarAbogado
+            public void BuscarAbogado(String[] datos){
+               System.out.println("Realizo el buscar abogado");
+            }
+        // ModificarContraseñaAbogado
+            public void ModificarContraseñaAbogado(String[] datos){
+               System.out.println("Realizo el modificar contraseña abogado");
+            }
+    // CU5: Gestionar Comentario
+        // RegistrarComentario
+            public void RegistrarComentario(String[] datos){
+               System.out.println("Realizo el registrar comentario");
+            }
+        // ModificarComentario
+            public void ModificarComentario(String[] datos){
+               System.out.println("Realizo el modificar comentario");
+            }
+        // EliminarComentario
+            public void EliminarComentario(String[] datos){
+               System.out.println("Realizo el eliminar comentario");
+            }
+        // ListarComentario
+            public void ListarComentarios(){
+               System.out.println("Realizo el listar comentarios");
+            }
+    // CU6: Gestionar Anuncio
+        // RegistrarAnuncio
+            public void RegistrarAnuncio(String[] datos){
+               System.out.println("Realizo el registrar anuncio");
+            }
+        // ModificarAnuncio
+            public void ModificarAnuncio(String[] datos){
+               System.out.println("Realizo el modificar anuncio");
+            }
+        // EliminarAnuncio
+            public void EliminarAnuncio(String[] datos){
+               System.out.println("Realizo el eliminar anuncio");
+            }
+        // ListarAnuncio
+            public void ListarAnuncios(){
+               System.out.println("Realizo el listar anuncios");
+            }
+    // CU7: Gestionar Categoria Anuncio
+        // RegistrarCategoriaAnuncio
+            public void RegistrarCategoriaAnuncio(String[] datos){
+               System.out.println("Realizo el registrar CategoriaAnuncio");
+            }
+        // ModificarCategoriaAnuncio
+            public void ModificarCategoriaAnuncio(String[] datos){
+               System.out.println("Realizo el modificar CategoriaAnuncio");
+            }
+        // EliminarCategoriaAnuncio
+            public void EliminarCategoriaAnuncio(String[] datos){
+               System.out.println("Realizo el eliminar CategoriaAnuncio");
+            }
+        // ListarCategoriaAnuncio
+            public void ListarCategoriaAnuncios(){
+               System.out.println("Realizo el listar CategoriaAnuncio");
+            }
+    // CU8: Gestionar solicitud de contacto
+        // RegistrarSolicitudContacto
+            public void RegistrarSolicitudContacto(String[] datos){
+               System.out.println("Realizo el registrar SolicitudContacto");
+            }
+        // ModificarSolicitudContacto
+            public void ModificarSolicitudContacto(String[] datos){
+               System.out.println("Realizo el modificar SolicitudContacto");
+            }
+        // ListarSolicitudContacto
+            public void ListarSolicitudContacto(){
+               System.out.println("Realizo el listar SolicitudContacto");
+            }
+    
 }
