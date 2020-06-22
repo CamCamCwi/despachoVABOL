@@ -108,7 +108,7 @@ public class DCliente {
         Connection DBC= con.getConexion();
         return DBC;
     }
-    public void Registrar() {
+    public boolean Registrar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
         String sql = "INSERT INTO cliente (cl_nit,cl_ciudad,cl_descripcion,cl_direccion,cl_nrepresentante,cl_paginaweb,cl_pais,cl_razonsocial,cl_rubro,cl_telefono,cl_usuario) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
@@ -127,9 +127,10 @@ public class DCliente {
             ps.setInt(10, this.getTelefono());
             ps.setInt(11, this.getCl_usuario());
             ps.execute();
-
+            return true;
         } catch (SQLException e) {
             System.err.println(e);
+            return false;
         } finally {
             try {
                 con.close();
@@ -140,7 +141,7 @@ public class DCliente {
 
     }
 
-    public void Modificar() {
+    public boolean Modificar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
         String sql = "UPDATE cliente SET cl_ciudad = ?,cl_descripcion = ?,cl_direccion = ?,cl_nrepresentante = ?,cl_paginaweb = ?,cl_pais = ?,cl_razonsocial = ?,cl_rubro = ?,cl_telefono = ?,cl_usuario= ? WHERE cl_nit = ? ";
@@ -160,8 +161,10 @@ public class DCliente {
             
             ps.setInt(11, this.getNit());
             ps.execute();
+            return true;
         } catch (SQLException e) {
             System.err.println(e);
+            return false;
         } finally {
             try {
                 con.close();
@@ -172,7 +175,7 @@ public class DCliente {
 
     }
 
-    public void Eliminar() {
+    public boolean Eliminar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
         String sql = "DELETE FROM cliente WHERE cl_nit = ? ";
@@ -181,9 +184,11 @@ public class DCliente {
             ps = con.prepareStatement(sql);
             ps.setInt(1, this.getNit());
             ps.execute();
+            return true;
 
         } catch (SQLException e) {
             System.err.println(e);
+            return false;
         } finally {
             try {
                 con.close();
@@ -221,7 +226,32 @@ public class DCliente {
         }
         return imprimir;
     }
-    
-    
+    public boolean Existe(){
+        PreparedStatement ps = null;
+        Connection con = abrirConexion();
+        String sql = "SELECT * FROM cliente where cl_nit= ?";
+        ResultSet resultado = null;
+        try{
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, this.getNit());
+            resultado = ps.executeQuery();
+            if(resultado.next()) {
+                return true;
+            }else{
+                return false;
+            }
+        }catch(SQLException e){
+            return false;
+        }finally{
+            try{
+                con.close();
+            }catch(SQLException e){
+                System.err.println(e);
+            }
+        }  
+    }
+    public String find (int nit){
+        return "No se encontro el Usuario";
+    }
     
 }

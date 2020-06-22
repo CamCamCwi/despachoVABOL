@@ -1,6 +1,7 @@
 package Negocio;
 
 import Datos.DCliente;
+import Datos.DUsuario;
 
 /**
  *
@@ -8,7 +9,8 @@ import Datos.DCliente;
  */
 public class NCliente {
     DCliente dato;
-    public NCliente(int cl_nit,String cl_ciudad,String cl_descripcion,String cl_direccion,String cl_nrepresentante,String cl_paginaweb,String cl_pais,String cl_razonsocial,String cl_rubro,int cl_telefono,int cl_usuario){
+    DUsuario user;
+    public NCliente(int cl_nit,String cl_ciudad,String cl_descripcion,String cl_direccion,String cl_nrepresentante,String cl_paginaweb,String cl_pais,String cl_razonsocial,String cl_rubro,int cl_telefono,int cl_usuario,String mail, String Contraseña){
         this.dato = new DCliente();
         dato.setNit(cl_nit);
         dato.setCiudad(cl_ciudad);
@@ -21,17 +23,74 @@ public class NCliente {
         dato.setRubro(cl_rubro);
         dato.setTelefono(cl_telefono);
         dato.setCl_usuario(cl_usuario);
+        user.setUsuario(mail);
+        user.setContraseña(Contraseña);
     }
-    public void RegistrarCliente(){
-        dato.Registrar();
+    private String ValidarDatos(){
+        String res = "";
+        res += (dato.getNit()< 1) ? "Nit del cliente no puede ser nulo," : "";
+        res += (dato.getCiudad().length() < 1) ? "Ciudad no puede ser nulo," : "";
+        res += (dato.getDescripcion().length() < 1) ? "Descripcion no puede ser nulo," : "";
+        res += (dato.getDireccion().length() < 1) ? "Direccion no puede ser nulo," : "";
+        res += (dato.getnRepresentante().length() < 1) ? "Numero del representante no puede ser nulo," : "";       
+        res += (dato.getPaís().length() < 10) ? "Pais no puede ser nulo," : "";
+        res += (dato.getRazonSocial().length() < 1) ? "Razon social no puede ser nulo," : "";
+        res += (dato.getRubro().length()< 1) ? "Rubro no puede ser nulo," : "";
+        res += (dato.getTelefono()< 1) ? "Numero de telefono no puede ser nulo," : "";       
+        res += (user.getUsuario().length() < 5) ? "Mail no puede ser nulo," : "";
+        res += (user.getContraseña().length() < 8) ? "Longitud de contraseña incorrecta," : "";
+        return res;
     }
-    public void ModificarCliente(){
-        dato.Modificar();
+    public String RegistrarCliente(){
+        String res =ValidarDatos();
+        if(res.length()==1){
+//            user.setContraseña(HASH(user.getContraseña()));            
+            return dato.Registrar()&& user.registrar()? "Cliente Registrado con exito":"Fallo al registrar al Cliente";
+        }
+        return res;
     }
-    public void EliminarCliente(){
-        dato.Eliminar();
+    public String ModificarCliente(){
+        String res =ValidarDatos();
+        if(res.length()==1){                        
+            return dato.Modificar()?"Cliente Modificado con exito":"No se pudo modificar al Cliente";
+        }
+        return res;
+    }
+    public String EliminarCliente(int Nit){
+        
+        if (Nit >1 ) {
+            dato.setNit(Nit);
+            if (dato.Existe()) {
+                dato.Eliminar();
+                return"Cliente Eliminado con Exito";
+            }else{
+                return "No Existe el Cliente";
+            }            
+        }else{
+            return "Nit no es un formato valido";
+        }        
     }
     public String ListarCliente(){
         return dato.Listar();
+    }
+    public static String ModificarContraseñaCliente(String mail, String anterior_contraseña, String nueva_contraseña) {
+        DUsuario usuario = new DUsuario();
+        usuario.setUsuario(mail);
+        //aplicar hash a la anterior contraseña
+        usuario.setContraseña(anterior_contraseña);
+        if (usuario.Existe()) {
+            usuario.setContraseña(nueva_contraseña);
+            usuario.modificarContraseña();
+            return "Contraseña del usuario " + mail + " modificada con exito";
+        }
+        return "fallo al modificar, contraseña o usuario  incorrectas";
+    }
+    public String FindAbogado(int nit){
+        if (nit >1) {
+            dato.setNit(nit);
+            return dato.find(nit);            
+        }else{
+            return "Formato del NIT no valido";
+        }
     }
 }
