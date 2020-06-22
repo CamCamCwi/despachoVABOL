@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 public class DConexion {
 
     //Declaramos las constantes primero 
-    private final String base = "db_tecno";
+    private final String base = "bd_tecno";
     private final String user = "tecno";
     private final String password = "root";
     private final String url = "jdbc:postgresql://localhost:5432/" + base;
