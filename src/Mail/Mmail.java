@@ -236,6 +236,62 @@ public class Mmail {
             e.printStackTrace();
         }
     }
+    
+    public int getCantidadMails() {
+
+        String comando = "";
+        String linea = "";
+        int puerto = 110;
+        String subject = "";
+        String respuesta = "";
+        String number = "";
+
+        try {
+            Socket socket = new Socket(servidor, puerto);
+            BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
+            if (socket != null && entrada != null && salida != null) {
+                //System.out.println("S : " + entrada.readLine() + "\r\n");
+
+                comando = "USER " + usuario + "\r\n";
+                //System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                //System.out.println("S : " + entrada.readLine() + "\r\n");
+
+                comando = "PASS " + contrasena + "\r\n";
+                //System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                //System.out.println("S : " + entrada.readLine() + "\r\n");
+
+                comando = "LIST \r\n";
+                //System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                number = getLastMail(entrada);
+
+                comando = "RETR " + number + "\n";
+                //System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                //this.subject = getSubject(entrada);
+                //System.out.println("Estoy imprimiendoooooooooooooooooooooooooooooooooooooooooooooooooo" + this.subject);
+
+                comando = "QUIT\r\n";
+                //System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                //System.out.println("S : " + entrada.readLine() + "\r\n");
+            }
+
+            salida.close();
+            entrada.close();
+            socket.close();
+           
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.out.println(" S : no se pudo conectar con el servidor indicado");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Integer.parseInt(number);
+    }
 
     public String getSubject(BufferedReader in) throws IOException {
         String subject = "";
@@ -285,12 +341,12 @@ public class Mmail {
             if (line.equals(".")) {
                 break;
             }
-            System.out.println(line);
+            //System.out.println(line);
         }
 
         number = anteriorLine.substring(0, anteriorLine.indexOf(" "));
         number = number.trim();
-        System.out.println(number);
+        //System.out.println(number);
         return number;
     }
 
@@ -333,9 +389,12 @@ public class Mmail {
         String[] partesSubject = sub.split("\\[");
         String encabezado = partesSubject[0];
         String cuerpo[] = partesSubject[1].split("\\]");
-        String datos[] = cuerpo[0].split("\\,");
-        for (int i = 0; i < datos.length; i++) {
-            datos[i] = datos[i].trim();
+        String datos[] = null;
+        if (cuerpo.length != 0){
+         datos = cuerpo[0].split("\\,");   
+            for (int i = 0; i < datos.length; i++) {
+                datos[i] = datos[i].trim();
+            }
         }
         switch (encabezado) {
             //CU2: Gestionar Categoria Documento
