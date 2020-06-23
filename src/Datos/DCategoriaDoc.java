@@ -45,12 +45,11 @@ public class DCategoriaDoc {
     public boolean Registrar(){
         PreparedStatement ps = null; 
         Connection con = conexion.getConexion();
-        String sql = "INSERT INTO categoriaDoc(catDoc_id, catDoc_nombre, catDoc_descripcion) VALUES (?,?,?)";
+        String sql = "INSERT INTO categoriaDoc(catDoc_nombre, catDoc_descripcion) VALUES (?,?)";
         try{
             ps = con.prepareStatement(sql);
-            ps.setInt(1, 11);
-            ps.setString(2, this.getCatDoc_nombre());
-            ps.setString(3, this.getCatDoc_descripcion());
+            ps.setString(1, this.getCatDoc_nombre());
+            ps.setString(2, this.getCatDoc_descripcion());
             ps.execute();
             return true;
         }catch(SQLException e){

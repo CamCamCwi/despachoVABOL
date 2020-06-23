@@ -9,10 +9,10 @@ import java.util.logging.Logger;
 public class DConexion {
 
     //Declaramos las constantes primero 
-    private final String base = "bd_tecno";
-    private final String user = "tecno";
-    private final String password = "root";
-    private final String url = "jdbc:postgresql://localhost:5432/" + base;
+    private final String base = "db_grupo02sa";
+    private final String user = "grupo02sa";
+    private final String password = "grupo02grupo02";
+    private final String url = "jdbc:postgresql://tecnoweb.org.bo:5432/" + base;
     private final String driver = "org.postgresql.Driver";
     private Connection con = null;//Variable para obtener la conexion y guardarla 
 
