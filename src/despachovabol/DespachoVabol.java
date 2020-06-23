@@ -3,6 +3,7 @@ package despachovabol;
 
 import Mail.Mmail;
 import Negocio.NCategoriaDoc;
+import java.util.Date;
 
 
 public class DespachoVabol {
@@ -14,9 +15,8 @@ public class DespachoVabol {
             + "contenido del mismo)";*/
         Mmail mail = new Mmail();
         //mail.VerificarSubject(subject, "danielrobles1190@gmail.com");
-        mail.getMail();
+        //mail.getMail();
         
-       
     }
     
 }
