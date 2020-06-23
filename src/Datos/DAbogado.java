@@ -124,7 +124,7 @@ public class DAbogado {
         return DBC;
     }
 
-    public void Registrar() {
+    public boolean Registrar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
         String sql = "INSERT INTO abogado (abg_ci,abg_nombre,abg_apellidop,abg_apellidom,abg_especialidad,abg_celular,abg_fnacimiento,abg_genero,abg_nrocolabogados,abg_nrominjusticia,abg_numregcorte,abg_usuario) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);";
@@ -144,9 +144,11 @@ public class DAbogado {
             ps.setInt(11, this.getNumRegCorte());
             ps.setInt(12, this.getFk_abg_usuario());
             ps.execute();
+            return true;
 
         } catch (SQLException e) {
             System.err.println(e);
+            return false;
         } finally {
             try {
                 con.close();
@@ -157,7 +159,7 @@ public class DAbogado {
 
     }
 
-    public void Modificar() {
+    public boolean Modificar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
         String sql = "UPDATE abogado SET abg_nombre=?,abg_apellidop=?,abg_apellidom=?,abg_especialidad=?,abg_celular=?,abg_fnacimiento=?,abg_genero=?,abg_nrocolabogados=?,abg_nrominjusticia=?,abg_numregcorte=?,abg_usuario=? WHERE idLibro=? ";
@@ -176,8 +178,10 @@ public class DAbogado {
             ps.setInt(11, this.getFk_abg_usuario());
             ps.setInt(12, this.getCi());
             ps.execute();
+            return true;
         } catch (SQLException e) {
             System.err.println(e);
+            return false;
         } finally {
             try {
                 con.close();
@@ -188,7 +192,7 @@ public class DAbogado {
 
     }
 
-    public void Eliminar() {
+    public boolean Eliminar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
         String sql = "DELETE FROM abogado WHERE abg_ci=?";
@@ -197,9 +201,10 @@ public class DAbogado {
             ps = con.prepareStatement(sql);
             ps.setInt(1, this.getCi());
             ps.execute();
-
+            return true;
         } catch (SQLException e) {
             System.err.println(e);
+            return false;
         } finally {
             try {
                 con.close();
@@ -236,6 +241,33 @@ public class DAbogado {
             System.out.println("no se pudo listar los datos");
         }
         return imprimir;
+    }
+    public boolean Existe(){
+        PreparedStatement ps = null;
+        Connection con = abrirConexion();
+        String sql = "SELECT * FROM abogado where abg_ci = ?";
+        ResultSet resultado = null;
+        try{
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, this.getCi());
+            resultado = ps.executeQuery();
+            if(resultado.next()) {
+                return true;
+            }else{
+                return false;
+            }
+        }catch(SQLException e){
+            return false;
+        }finally{
+            try{
+                con.close();
+            }catch(SQLException e){
+                System.err.println(e);
+            }
+        }  
+    }
+    public String find(int ci){
+        return "no se ha encontrado";
     }
 }
 
