@@ -1,18 +1,21 @@
 package Mail;
 
 import Negocio.NCategoriaDoc;
+import Negocio.NComentario;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class Mmail {
 
     private NCategoriaDoc ncategoriadoc;
-
+    private NComentario ncomentario;
+    
     private String servidor = "mail.tecnoweb.org.bo";
     private String emisor = "grupo02sa@tecnoweb.org.bo";
     private String usuario = "grupo02sa";
@@ -26,75 +29,52 @@ public class Mmail {
             + "contenido del mismo]";
 
     public String help() {
-        String help
-                = /*"CU6. Gestionar Anuncio \n"
-                + "	Registrar anuncio:  \n"
-                + "		reg_anuncio[String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria] \n"
-                + "	Modificar anuncio: 	\n"
-                + "		mod_anuncio[int idAnuncio, String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria] \n"
-                + "	Eliminar anuncio:   \n"
-                + "		del_anuncio[int idAnuncio]\n"
-                + "	Listar anuncio:     \n"
-                + "		list_anuncio[]\n"
-                + "CU7. Gestionar Categoria de Anuncio \n"
-                + "	Registrar categoria anuncio:  \n"
-                + "		reg_catanuncio[String nombreCategoriaAnuncio, String descripcionCategoriaAnuncio] \n"
-                + "	Modificar categoria anuncio: 	\n"
-                + "		mod_catanuncio[int idCategoriaAnuncio, String nombreCategoriaAnuncio, String descripcionCategoriaAnuncio] \n"
-                + "	Eliminar categoria anuncio:   \n"
-                + "		del_catanuncio[int idCategoriaAnuncio]\n"
-                + "	Listar categoria anuncio:     \n"
-                + "		list_catanuncio[]   \n"
-                + "CU8. Registrar solicitud de contacto \n"
-                + "	Registrar solicitud de contacto:  \n"
-                + "		reg_solicitudcontacto[String nombreSolicitante, String apellidoSolicitante, int celularSolicitante, String estadoSolicitudContacto(revisado/pendiente), String emailSolicitante, String contenidoSolicitudContacto, int ciAbogado(Puede ser nulo)] \n"
-                + "	Modificar solicitud de contacto: 	\n"
-                + "		mod_solicitudcontacto[int idSolicitudContacto, String estadoSolicitudContacto(revisado/pendiente), int ciAbogado(Puede ser nulo)] \n"
-                + "	Listar solicitud de contacto:     \n"
-                + "		list_solicitudcontacto[]    \n"*/ /*"CU2: Gestionar categoría de documenton \n"
-                + "     RegistrarCategoriaDoc\n"
-                + "             reg_categoriadoc[String nombreCategoriaDocumento, String descripcionCategoriaDocumento]\n"
-                + "     ModificarCategoriaDoc\n"
-                + "             mod_categoriadoc[int idCategoriaDocumento, String nombreCategoriaDocumento, String descripcionCategoriaDocumento]\n"
-                + "     EliminarCategoriaDoc\n"
-                + "             del_categoriadoc[int idCategoriaDocumento]\n"
-                + "     ListarCategoriaDoc\n"
-                + "             list_categotiadoc[]\n"
-                + "CU3: Gestionar Cliente  \n"
-                + "     Registrar Cliente : \n"
+        String help =
+                  "CU2. Gestionar categoria documento  \n"
+                + "     Registrar categoria documento:  \n"
+                + "             reg_categoriadoc[String nombreCategoriaDocumento, String descripcionCategoriaDocumento] \n"
+                + "     Modificar categoria documento:  \n"
+                + "             mod_categoriadoc[int idCategoriaDocumento, String nombreCategoriaDocumento, String descripcionCategoriaDocumento]  \n"
+                + "     Eliminar categoria documento:   \n"
+                + "             del_categoriadoc[int idCategoriaDocumento]    \n"
+                + "     Listar categorias documento:    \n "
+                + "             list_categotiadoc[]  \n "
+                + "CU3. Gestionar Cliente  \n"
+                + "     Registrar Cliente:  \n"
                 + "             reg_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono,String Usuario,String Contraseña] \n"
-                + "     Modificar Cliente \n"
-                + "             mod_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono] \n"
-                + "     Eliminar Cliente : \n"
-                + "             del_cliente[int Nit] \n"
-                + "     Listar Clientes: \n "
-                + "             list_cliente[] \n "
-                + "     Buscar Cliente : \n"
-                + "             find_cliente[int ci] \n"
-                + "     Modificar Contraseña de Cliente : \n"
-                + "             mod_contraseña_cliente[String Usuario, String Anterior contraseña , String nueva contraseña] \n"
-                + "CU4:Gestionar Abogado \n"
-                + "     Registrar Abogado : \n"
-                + "             reg_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte,String usuario, int contraseña] \n"
-                + "     Modificar Abogado \n"
-                + "             mod_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte] \n"
-                + "     Eliminar Abogado : \n"
+                + "     Modificar Cliente:  \n"
+                + "             mod_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono]  \n"
+                + "     Eliminar Cliente:   \n"
+                + "             del_cliente[int Nit]    \n"
+                + "     Listar Clientes:    \n "
+                + "             list_cliente[]  \n "
+                + "     Buscar Cliente: \n"
+                + "             find_cliente[int ci]    \n"
+                + "     Modificar Contraseña de Cliente:    \n"
+                + "             mod_contraseña_cliente[String Usuario, String Anterior contraseña , String nueva contraseña]    \n"
+                + "CU4. Gestionar abogado   \n"
+                + "     Registrar abogado:  \n"
+                + "             reg_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte,String usuario, int contraseña]   \n"
+                + "     Modificar abogado:  \n"
+                + "             mod_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte]  \n"
+                + "     Eliminar abogado:   \n"
                 + "             del_abogado[int ci] \n"
-                + "     Listar Abogado: \n "
-                + "             list_abogado[] \n"
-                + "     Buscar Abogado : \n"
+                + "     Listar abogado: \n "
+                + "             list_abogado[]  \n"
+                + "     Buscar abogado: \n"
                 + "             find_abogado[int ci] \n"
-                + "     Modificar Contraseña de Abogado : \n"
-                + "             mod_contraseña_abogado[String Usuario, String Anterior contraseña , String nueva contraseña] \n"
-                + "CU5: Gestionar comentario\n"
-                + "     RegistrarComentario\n"
-                + "             reg_comentario[String contenidoComentario, int idDocumento, int idUsuario, int idComentario](El comentario puede ser nulo)\n"
-                + "     ModificarComentario\n"
-                + "             mod_comentario[int idComentario, String contenidoComentario]\n"
-                + "     EliminarComentario\n"
-                + "             del_comentario[int idComentario]\n"
-                + "     ListarComentario\n"
-                + "             list_comentario[]\n";*/ "CU6. Gestionar Anuncio \n"
+                + "     Modificar Contraseña de Abogado:    \n"
+                + "             mod_contraseña_abogado[String Usuario, String Anterior contraseña , String nueva contraseña]    \n"
+                + "CU5. Gestionar comentario    \n"
+                + "     Registrar comentario: \n"
+                + "             reg_comentario[String contenidoComentario, int idDocumento, int idUsuario, int idComentario](El comentario puede ser nulo)  \n"
+                + "     Modificar comentario:    \n"
+                + "             mod_comentario[int idComentario, String contenidoComentario]    \n"
+                + "     Eliminar comentario: \n"
+                + "             del_comentario[int idComentario]    \n"
+                + "     Listar comentario:  \n"
+                + "             list_comentario[]   \n"
+                + "CU6. Gestionar Anuncio \n"
                 + "	Registrar anuncio:   \n"
                 + "		reg_anuncio[String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria] \n"
                 + "	Modificar anuncio: 	\n"
@@ -422,6 +402,42 @@ public class Mmail {
             case "list_comentario":
                 this.ListarComentarios();
                 break;
+            // CU6: Gestionar anuncio
+            case "reg_anuncio":
+                this.RegistrarAnuncio(datos);
+                break;
+            case "mod_anuncio":
+                this.ModificarAnuncio(datos);
+                break;
+            case "del_anuncio":
+                this.EliminarAnuncio(datos);
+                break;
+            case "list_anuncio":
+                this.ListarAnuncios();
+                break;
+            // CU7. Gestionar Categoria de Anuncio
+            case "reg_catanuncio":
+                this.RegistrarCategoriaAnuncio(datos);
+                break;
+            case "mod_catanuncio":
+                this.ModificarCategoriaAnuncio(datos);
+                break;
+            case "del_catanuncio":
+                this.EliminarCategoriaAnuncio(datos);
+                break;
+            case "list_catanuncio":
+                this.ListarCategoriaAnuncios();
+                break;
+            // CU8. Registrar solicitud de contacto 
+            case "reg_solicitudcontacto":
+                this.RegistrarSolicitudContacto(datos);
+                break;
+            case "mod_solicitudcontacto":
+                this.ModificarSolicitudContacto(datos);
+                break;
+            case "list_solicitudcontacto":
+                this.ListarSolicitudContacto();
+                break;
             default:
                 String s = "La petición '" + encabezado + "' es incorrecta.";
                 this.sendMail("danielrobles1190@gmail.com", s);
@@ -447,17 +463,46 @@ public class Mmail {
     // ModificarCategoriaDoc
 
     public void ModificarCategoriaDoc(String[] datos) {
-        System.out.println("Realizo el modificar categoria doc");
+        String respuesta = "";
+        if (datos.length == 3) {
+            if(this.isNumericEntero(datos[0])){
+               respuesta = this.ncategoriadoc.ModificarCategoriaDoc(Integer.parseInt(datos[0]), datos[1], datos[2]); 
+            }else{
+                respuesta = "El identificador de la categoría documento que se quiere modificar, debe ser un entero y no: " + datos[0];
+            }
+            
+        } else if (datos.length < 3) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail("danielrobles1190@gmail.com", respuesta);
     }
     // EliminarCategoriaDoc
 
     public void EliminarCategoriaDoc(String[] datos) {
-        System.out.println("Realizo el eliminar categoria doc");
+        String respuesta = "";
+        if (datos.length == 1) {
+            if(this.isNumericEntero(datos[0])){
+               respuesta = this.ncategoriadoc.EliminarCategoriaDoc(Integer.parseInt(datos[0])); 
+            }else{
+                respuesta = "El identificador de la categoría documento que se quiere eliminar, debe ser un entero y no: " + datos[0];
+            }
+            
+        } else if (datos.length < 1) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail("danielrobles1190@gmail.com", respuesta);
     }
     // ListarCategoriaDoc
 
     public void ListarCategoriaDoc() {
-        System.out.println("Realizo el listar categoria doc");
+        String respuesta = this.ncategoriadoc.ListarCategoriaDoc();
+        this.sendMail("danielrobles1190@gmail.com", respuesta);
     }
 
     // CU3: Gestionar Cliente
@@ -523,22 +568,63 @@ public class Mmail {
     // CU5: Gestionar Comentario
     // RegistrarComentario
     public void RegistrarComentario(String[] datos) {
-        System.out.println("Realizo el registrar comentario");
+        String respuesta = "";
+        if (datos.length == 4) {
+            if(this.isNumericEntero(datos[1])){
+                if(this.isNumericEntero(datos[2])){
+                    if(this.isNumericEntero(datos[3])){
+                        java.util.Date fechaHoy = new Date();
+                        long d = fechaHoy.getTime();
+                        java.sql.Time horaAhora = new java.sql.Time(d);
+                        java.sql.Date fechaAhora = new java.sql.Date(d);
+                        respuesta = this.ncomentario.RegistrarComentario(fechaAhora, horaAhora, datos[0], Integer.parseInt(datos[1]), Integer.parseInt(datos[2]), Integer.parseInt(datos[2]));
+                    }else{
+                        respuesta = "El identificador del comentario del comentario a registrar, debe ser un entero y no: " + datos[2];
+                    }
+                }else{
+                    respuesta = "El identificador del usuario del comentario a registrar, debe ser un entero y no: " + datos[2];
+                }
+            }else{
+                respuesta = "El identificador del documento del comentario a registrar, debe ser un entero y no: " + datos[1];
+            }
+            
+        } else if (datos.length < 4) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail("danielrobles1190@gmail.com", respuesta);
     }
     // ModificarComentario
 
     public void ModificarComentario(String[] datos) {
-        System.out.println("Realizo el modificar comentario");
+
     }
     // EliminarComentario
 
     public void EliminarComentario(String[] datos) {
-        System.out.println("Realizo el eliminar comentario");
+        String respuesta = "";
+        if (datos.length == 1) {
+            if(this.isNumericEntero(datos[0])){
+                respuesta = this.ncomentario.EliminarComentario(Integer.parseInt(datos[0]));
+            }else{
+                respuesta = "El identificador del comentario a modificar, debe ser un entero y no: " + datos[0];
+            }
+            
+        } else if (datos.length < 1) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail("danielrobles1190@gmail.com", respuesta);
     }
     // ListarComentario
 
     public void ListarComentarios() {
-        System.out.println("Realizo el listar comentarios");
+        String respuesta = this.ncomentario.ListarComentarios();
+        this.sendMail("danielrobles1190@gmail.com", respuesta);
     }
     // CU6: Gestionar Anuncio
     // RegistrarAnuncio
@@ -595,5 +681,14 @@ public class Mmail {
     public void ListarSolicitudContacto() {
         System.out.println("Realizo el listar SolicitudContacto");
     }
+    
+    public boolean isNumericEntero(String cadena){
+	try {
+		Long.parseLong(cadena);
+		return true;
+	} catch (NumberFormatException nfe){
+		return false;
+	}
+    }
+}   
 
-}
