@@ -110,17 +110,13 @@ public class DComentario {
     public boolean Modificar(){
         PreparedStatement ps = null;
         Connection con = conexion.getConexion();
-        String sql = "UPDATE comentario SET com_fecha = ?, com_hora = ?, com_contenido = ?, com_doc = ?, com_usuario = ?, "
-                   + "com_com2 = ? where com_id = ?";
+        String sql = "UPDATE comentario SET com_fecha = ?, com_hora = ?, com_contenido = ? where com_id = ?";
         try{
             ps = con.prepareStatement(sql);
             ps.setDate(1, this.getCom_fecha());
             ps.setTime(2, this.getCom_hora());
             ps.setString(3, this.getCom_contenido());
-            ps.setInt(4, this.getCom_doc());
-            ps.setInt(5, this.getCom_usuario());
-            ps.setInt(6, this.getCom_com2());
-            ps.setInt(7, this.getCom_id());
+            ps.setInt(4, this.getCom_id());
             ps.execute();
             return true;
         }catch(SQLException e){

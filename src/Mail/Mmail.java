@@ -17,9 +17,11 @@ public class Mmail {
     private NComentario ncomentario;
     
     private String servidor = "mail.tecnoweb.org.bo";
-    private String emisor = "grupo02sa@tecnoweb.org.bo";
+    private String mailLocal = "grupo02sa@tecnoweb.org.bo";
     private String usuario = "grupo02sa";
     private String contrasena = "grupo02grupo02";
+    private String mailExterno;
+    
 
     public Mmail() {
         this.ncategoriadoc = new NCategoriaDoc();
@@ -103,7 +105,7 @@ public class Mmail {
         return help;
     }
 
-    public void sendMail(String receptor, String body) {
+    public void sendMail(String body) {
         String line;
         String comando = "";
         int puerto = 25;
@@ -121,17 +123,17 @@ public class Mmail {
 
                 System.out.println("S : " + entrada.readLine());
 
-                comando = "EHLO " + servidor + " \r\n";
+                comando = "EHLO " + this.servidor + " \r\n";
                 System.out.print("C : " + comando);
                 salida.writeBytes(comando);
                 System.out.println("S : " + getMultilineSMTP(entrada));
 
-                comando = "MAIL FROM: " + emisor + " \r\n";
+                comando = "MAIL FROM: " + this.mailLocal + " \r\n";
                 System.out.print("C : " + comando);
                 salida.writeBytes(comando);
                 System.out.println("S : " + entrada.readLine());
 
-                comando = "RCPT TO: " + receptor + " \r\n";
+                comando = "RCPT TO: " + this.mailExterno + " \r\n";
                 System.out.print("C : " + comando);
                 salida.writeBytes(comando);
                 System.out.println("S : " + entrada.readLine());
@@ -190,6 +192,7 @@ public class Mmail {
         String subject = "";
         String respuesta = "";
         String number = "";
+        String emisor = "";
 
         try {
             Socket socket = new Socket(servidor, puerto);
@@ -216,6 +219,7 @@ public class Mmail {
                 comando = "RETR " + number + "\n";
                 System.out.print("C : " + comando);
                 salida.writeBytes(comando);
+                this.mailExterno = getEmisorMail(entrada);
                 this.subject = getSubject(entrada);
                 System.out.println("Estoy imprimiendoooooooooooooooooooooooooooooooooooooooooooooooooo" + this.subject);
 
@@ -228,7 +232,7 @@ public class Mmail {
             salida.close();
             entrada.close();
             socket.close();
-            VerificarSubject(this.subject, "danielrobles1190@gmail.com");
+            VerificarSubject(this.subject);
         } catch (UnknownHostException e) {
             e.printStackTrace();
             System.out.println(" S : no se pudo conectar con el servidor indicado");
@@ -327,6 +331,28 @@ public class Mmail {
         subject = subject.trim();
         return subject;
     }
+    
+    public String getEmisorMail(BufferedReader in) throws IOException {
+        String emisor = "";
+        while (true) {
+            
+            String line = in.readLine();
+            if (line == null) {
+                throw new IOException(" S : Server unawares closed the connection.");
+            }
+            if (line.equals(".")) {
+                break;
+            }
+            String cadenaDondeBuscar = line;
+            String loQueQuieroBuscar = "From:";
+            loQueQuieroBuscar = loQueQuieroBuscar.trim();
+
+            if (cadenaDondeBuscar.contains(loQueQuieroBuscar)) {
+                    emisor = cadenaDondeBuscar.substring((cadenaDondeBuscar.indexOf("<"))+1, (cadenaDondeBuscar.indexOf(">"))+1);
+                }
+            }
+        return emisor;
+    }
 
     public String getLastMail(BufferedReader in) throws IOException {
         String number = "";
@@ -350,7 +376,7 @@ public class Mmail {
         return number;
     }
 
-    public void VerificarSubject(String sub, String receptor) {
+    public void VerificarSubject(String sub) {
         String errorFormato = "";
         // Solo lo uso para verificar el help
         String subjecthelp = sub.toLowerCase();
@@ -358,33 +384,33 @@ public class Mmail {
         //String trimear = subjecthelp.trim();
         if (subjecthelp.equals("help")) {
             String help = this.help();
-            this.sendMail(receptor, help);
+            this.sendMail(help);
         } else {
             int index1 = sub.indexOf("[");
             int index2 = sub.indexOf("]");
             if (index1 != -1 && index2 != -1) {
                 if (index1 < index2) {
                     if (index1 > 0) {
-                        this.OpcionesCase(sub, receptor);
+                        this.OpcionesCase(sub);
                     } else {
                         errorFormato = "No se reconoce el formato indicado. Verifique que está enviando los datos dentro de un encabezado.";
-                        this.sendMail(receptor, errorFormato);
+                        this.sendMail(errorFormato);
                         System.out.println(errorFormato);
                     }
                 } else {
                     errorFormato = "No se reconoce el formato indicado. Verifique que está utilizando los corchetes([]) de forma ordenada.";
-                    this.sendMail(receptor, errorFormato);
+                    this.sendMail(errorFormato);
                     System.out.println(errorFormato);
                 }
             } else {
                 errorFormato = "No se reconoce el formato indicado. Verifique que está utilizando los corchetes([]) para realizar la petición.";
-                this.sendMail(receptor, errorFormato);
+                this.sendMail(errorFormato);
                 System.out.println(errorFormato);
             }
         }
     }
 
-    public void OpcionesCase(String sub, String receptor) {
+    public void OpcionesCase(String sub) {
         sub = sub.trim();
         String[] partesSubject = sub.split("\\[");
         String encabezado = partesSubject[0];
@@ -499,7 +525,7 @@ public class Mmail {
                 break;
             default:
                 String s = "La petición '" + encabezado + "' es incorrecta.";
-                this.sendMail("danielrobles1190@gmail.com", s);
+                this.sendMail(s);
                 break;
         }
     }
@@ -517,7 +543,7 @@ public class Mmail {
             respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
         }
         System.out.println(respuesta);
-        this.sendMail("danielrobles1190@gmail.com", respuesta);
+        this.sendMail(respuesta);
     }
     // ModificarCategoriaDoc
 
@@ -536,7 +562,7 @@ public class Mmail {
             respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
         }
         System.out.println(respuesta);
-        this.sendMail("danielrobles1190@gmail.com", respuesta);
+        this.sendMail(respuesta);
     }
     // EliminarCategoriaDoc
 
@@ -555,13 +581,13 @@ public class Mmail {
             respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
         }
         System.out.println(respuesta);
-        this.sendMail("danielrobles1190@gmail.com", respuesta);
+        this.sendMail(respuesta);
     }
     // ListarCategoriaDoc
 
     public void ListarCategoriaDoc() {
         String respuesta = this.ncategoriadoc.ListarCategoriaDoc();
-        this.sendMail("danielrobles1190@gmail.com", respuesta);
+        this.sendMail(respuesta);
     }
 
     // CU3: Gestionar Cliente
@@ -653,12 +679,29 @@ public class Mmail {
             respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
         }
         System.out.println(respuesta);
-        this.sendMail("danielrobles1190@gmail.com", respuesta);
+        this.sendMail(respuesta);
     }
     // ModificarComentario
 
     public void ModificarComentario(String[] datos) {
-
+       String respuesta = "";
+        if (datos.length == 2) {
+            if(this.isNumericEntero(datos[0])){
+                java.util.Date fechaHoy = new Date();
+                long d = fechaHoy.getTime();
+                java.sql.Time horaAhora = new java.sql.Time(d);
+                java.sql.Date fechaAhora = new java.sql.Date(d);
+                respuesta = this.ncomentario.ModificarComentario(Integer.parseInt(datos[0]), fechaAhora, horaAhora, datos[1]);
+            }else{
+                respuesta = "El identificador del comentario a modificar, debe ser un entero y no: " + datos[0];
+            }   
+        } else if (datos.length < 2) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail(respuesta); 
     }
     // EliminarComentario
 
@@ -677,13 +720,13 @@ public class Mmail {
             respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
         }
         System.out.println(respuesta);
-        this.sendMail("danielrobles1190@gmail.com", respuesta);
+        this.sendMail(respuesta);
     }
     // ListarComentario
 
     public void ListarComentarios() {
         String respuesta = this.ncomentario.ListarComentarios();
-        this.sendMail("danielrobles1190@gmail.com", respuesta);
+        this.sendMail(respuesta);
     }
     // CU6: Gestionar Anuncio
     // RegistrarAnuncio
