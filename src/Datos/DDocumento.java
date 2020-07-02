@@ -197,7 +197,7 @@ public class DDocumento {
         Statement Consulta;
         ResultSet resultado = null;
         try {
-            String query = "SELECT * FROM documento";
+            String query = "SELECT * FROM documento ORDER BY doc_id";
             Connection con = conexion.getConexion();
             Consulta = (Statement) con.createStatement();
             resultado = Consulta.executeQuery(query);
