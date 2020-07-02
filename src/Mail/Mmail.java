@@ -15,24 +15,20 @@ public class Mmail {
 
     private NCategoriaDoc ncategoriadoc;
     private NComentario ncomentario;
-    
+
     private String servidor = "mail.tecnoweb.org.bo";
     private String mailLocal = "grupo02sa@tecnoweb.org.bo";
     private String usuario = "grupo02sa";
     private String contrasena = "grupo02grupo02";
     private String mailExterno;
-    
 
     public Mmail() {
         this.ncategoriadoc = new NCategoriaDoc();
     }
 
-    private String subject = "reg_categoriadoc[Contrato, Documento que compromete a ambas partes de cumplir con el "
-            + "contenido del mismo]";
-
     public String help() {
-        String help =
-                  "CU2. Gestionar categoria documento  \n"
+        String help
+                = "CU2. Gestionar categoria documento  \n"
                 + "     Registrar categoria documento:  \n"
                 + "             reg_categoriadoc[String nombreCategoriaDocumento, String descripcionCategoriaDocumento] \n"
                 + "     Modificar categoria documento:  \n"
@@ -187,12 +183,9 @@ public class Mmail {
     public void getMail() {
 
         String comando = "";
-        String linea = "";
         int puerto = 110;
         String subject = "";
-        String respuesta = "";
         String number = "";
-        String emisor = "";
 
         try {
             Socket socket = new Socket(servidor, puerto);
@@ -220,8 +213,7 @@ public class Mmail {
                 System.out.print("C : " + comando);
                 salida.writeBytes(comando);
                 this.mailExterno = getEmisorMail(entrada);
-                this.subject = getSubject(entrada);
-                System.out.println("Estoy imprimiendoooooooooooooooooooooooooooooooooooooooooooooooooo" + this.subject);
+                subject = getSubject(entrada);
 
                 comando = "QUIT\r\n";
                 System.out.print("C : " + comando);
@@ -232,7 +224,7 @@ public class Mmail {
             salida.close();
             entrada.close();
             socket.close();
-            VerificarSubject(this.subject);
+            VerificarSubject(subject);
         } catch (UnknownHostException e) {
             e.printStackTrace();
             System.out.println(" S : no se pudo conectar con el servidor indicado");
@@ -240,14 +232,12 @@ public class Mmail {
             e.printStackTrace();
         }
     }
-    
+
     public int getCantidadMails() {
 
         String comando = "";
-        String linea = "";
         int puerto = 110;
         String subject = "";
-        String respuesta = "";
         String number = "";
 
         try {
@@ -275,8 +265,7 @@ public class Mmail {
                 comando = "RETR " + number + "\n";
                 //System.out.print("C : " + comando);
                 salida.writeBytes(comando);
-                //this.subject = getSubject(entrada);
-                //System.out.println("Estoy imprimiendoooooooooooooooooooooooooooooooooooooooooooooooooo" + this.subject);
+                //this.subject = getSubject(entrada);                
 
                 comando = "QUIT\r\n";
                 //System.out.print("C : " + comando);
@@ -287,7 +276,7 @@ public class Mmail {
             salida.close();
             entrada.close();
             socket.close();
-           
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
             System.out.println(" S : no se pudo conectar con el servidor indicado");
@@ -301,7 +290,7 @@ public class Mmail {
         String subject = "";
         boolean flag = false;
         while (true) {
-            
+
             String line = in.readLine();
             if (line == null) {
                 throw new IOException(" S : Server unawares closed the connection.");
@@ -313,7 +302,7 @@ public class Mmail {
             String loQueQuieroBuscar = "Subject:";
             loQueQuieroBuscar = loQueQuieroBuscar.trim();
 
-            if (cadenaDondeBuscar.contains(loQueQuieroBuscar) || flag ) {
+            if (cadenaDondeBuscar.contains(loQueQuieroBuscar) || flag) {
 
                 if (cadenaDondeBuscar.contains("To:")) {
                     flag = false;
@@ -331,11 +320,11 @@ public class Mmail {
         subject = subject.trim();
         return subject;
     }
-    
+
     public String getEmisorMail(BufferedReader in) throws IOException {
         String emisor = "";
         while (true) {
-            
+
             String line = in.readLine();
             if (line == null) {
                 throw new IOException(" S : Server unawares closed the connection.");
@@ -348,9 +337,10 @@ public class Mmail {
             loQueQuieroBuscar = loQueQuieroBuscar.trim();
 
             if (cadenaDondeBuscar.contains(loQueQuieroBuscar)) {
-                    emisor = cadenaDondeBuscar.substring((cadenaDondeBuscar.indexOf("<"))+1, (cadenaDondeBuscar.indexOf(">"))+1);
-                }
+                emisor = cadenaDondeBuscar.substring((cadenaDondeBuscar.indexOf("<")) + 1, (cadenaDondeBuscar.indexOf(">")));
+                break;
             }
+        }
         return emisor;
     }
 
@@ -416,8 +406,8 @@ public class Mmail {
         String encabezado = partesSubject[0];
         String cuerpo[] = partesSubject[1].split("\\]");
         String datos[] = null;
-        if (cuerpo.length != 0){
-         datos = cuerpo[0].split("\\,");   
+        if (cuerpo.length != 0) {
+            datos = cuerpo[0].split("\\,");
             for (int i = 0; i < datos.length; i++) {
                 datos[i] = datos[i].trim();
             }
@@ -550,12 +540,12 @@ public class Mmail {
     public void ModificarCategoriaDoc(String[] datos) {
         String respuesta = "";
         if (datos.length == 3) {
-            if(this.isNumericEntero(datos[0])){
-               respuesta = this.ncategoriadoc.ModificarCategoriaDoc(Integer.parseInt(datos[0]), datos[1], datos[2]); 
-            }else{
+            if (this.isNumericEntero(datos[0])) {
+                respuesta = this.ncategoriadoc.ModificarCategoriaDoc(Integer.parseInt(datos[0]), datos[1], datos[2]);
+            } else {
                 respuesta = "El identificador de la categoría documento que se quiere modificar, debe ser un entero y no: " + datos[0];
             }
-            
+
         } else if (datos.length < 3) {
             respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
         } else {
@@ -569,12 +559,12 @@ public class Mmail {
     public void EliminarCategoriaDoc(String[] datos) {
         String respuesta = "";
         if (datos.length == 1) {
-            if(this.isNumericEntero(datos[0])){
-               respuesta = this.ncategoriadoc.EliminarCategoriaDoc(Integer.parseInt(datos[0])); 
-            }else{
+            if (this.isNumericEntero(datos[0])) {
+                respuesta = this.ncategoriadoc.EliminarCategoriaDoc(Integer.parseInt(datos[0]));
+            } else {
                 respuesta = "El identificador de la categoría documento que se quiere eliminar, debe ser un entero y no: " + datos[0];
             }
-            
+
         } else if (datos.length < 1) {
             respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
         } else {
@@ -620,6 +610,7 @@ public class Mmail {
     public void ModificarContraseñaCliente(String[] datos) {
         System.out.println("Realizo el modificar contraseña cliente");
     }
+
     // CU4: Gestionar Abogado
     // RegistrarAbogado
     public void RegistrarAbogado(String[] datos) {
@@ -650,29 +641,30 @@ public class Mmail {
     public void ModificarContraseñaAbogado(String[] datos) {
         System.out.println("Realizo el modificar contraseña abogado");
     }
+
     // CU5: Gestionar Comentario
     // RegistrarComentario
     public void RegistrarComentario(String[] datos) {
         String respuesta = "";
         if (datos.length == 4) {
-            if(this.isNumericEntero(datos[1])){
-                if(this.isNumericEntero(datos[2])){
-                    if(this.isNumericEntero(datos[3])){
+            if (this.isNumericEntero(datos[1])) {
+                if (this.isNumericEntero(datos[2])) {
+                    if (this.isNumericEntero(datos[3])) {
                         java.util.Date fechaHoy = new Date();
                         long d = fechaHoy.getTime();
                         java.sql.Time horaAhora = new java.sql.Time(d);
                         java.sql.Date fechaAhora = new java.sql.Date(d);
                         respuesta = this.ncomentario.RegistrarComentario(fechaAhora, horaAhora, datos[0], Integer.parseInt(datos[1]), Integer.parseInt(datos[2]), Integer.parseInt(datos[2]));
-                    }else{
+                    } else {
                         respuesta = "El identificador del comentario del comentario a registrar, debe ser un entero y no: " + datos[2];
                     }
-                }else{
+                } else {
                     respuesta = "El identificador del usuario del comentario a registrar, debe ser un entero y no: " + datos[2];
                 }
-            }else{
+            } else {
                 respuesta = "El identificador del documento del comentario a registrar, debe ser un entero y no: " + datos[1];
             }
-            
+
         } else if (datos.length < 4) {
             respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
         } else {
@@ -684,36 +676,36 @@ public class Mmail {
     // ModificarComentario
 
     public void ModificarComentario(String[] datos) {
-       String respuesta = "";
+        String respuesta = "";
         if (datos.length == 2) {
-            if(this.isNumericEntero(datos[0])){
+            if (this.isNumericEntero(datos[0])) {
                 java.util.Date fechaHoy = new Date();
                 long d = fechaHoy.getTime();
                 java.sql.Time horaAhora = new java.sql.Time(d);
                 java.sql.Date fechaAhora = new java.sql.Date(d);
                 respuesta = this.ncomentario.ModificarComentario(Integer.parseInt(datos[0]), fechaAhora, horaAhora, datos[1]);
-            }else{
+            } else {
                 respuesta = "El identificador del comentario a modificar, debe ser un entero y no: " + datos[0];
-            }   
+            }
         } else if (datos.length < 2) {
             respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
         } else {
             respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
         }
         System.out.println(respuesta);
-        this.sendMail(respuesta); 
+        this.sendMail(respuesta);
     }
     // EliminarComentario
 
     public void EliminarComentario(String[] datos) {
         String respuesta = "";
         if (datos.length == 1) {
-            if(this.isNumericEntero(datos[0])){
+            if (this.isNumericEntero(datos[0])) {
                 respuesta = this.ncomentario.EliminarComentario(Integer.parseInt(datos[0]));
-            }else{
+            } else {
                 respuesta = "El identificador del comentario a modificar, debe ser un entero y no: " + datos[0];
             }
-            
+
         } else if (datos.length < 1) {
             respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
         } else {
@@ -728,6 +720,7 @@ public class Mmail {
         String respuesta = this.ncomentario.ListarComentarios();
         this.sendMail(respuesta);
     }
+
     // CU6: Gestionar Anuncio
     // RegistrarAnuncio
     public void RegistrarAnuncio(String[] datos) {
@@ -748,6 +741,7 @@ public class Mmail {
     public void ListarAnuncios() {
         System.out.println("Realizo el listar anuncios");
     }
+
     // CU7: Gestionar Categoria Anuncio
     // RegistrarCategoriaAnuncio
     public void RegistrarCategoriaAnuncio(String[] datos) {
@@ -768,6 +762,7 @@ public class Mmail {
     public void ListarCategoriaAnuncios() {
         System.out.println("Realizo el listar CategoriaAnuncio");
     }
+
     // CU8: Gestionar solicitud de contacto
     // RegistrarSolicitudContacto
     public void RegistrarSolicitudContacto(String[] datos) {
@@ -783,14 +778,13 @@ public class Mmail {
     public void ListarSolicitudContacto() {
         System.out.println("Realizo el listar SolicitudContacto");
     }
-    
-    public boolean isNumericEntero(String cadena){
-	try {
-		Long.parseLong(cadena);
-		return true;
-	} catch (NumberFormatException nfe){
-		return false;
-	}
-    }
-}   
 
+    public boolean isNumericEntero(String cadena) {
+        try {
+            Long.parseLong(cadena);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+}

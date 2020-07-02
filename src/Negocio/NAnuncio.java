@@ -105,7 +105,7 @@ public class NAnuncio {
         return respuesta;
     }
 
-    public String ListarCategoriaDoc() {
+    public String ListarAnuncio() {
         return this.danuncio.Listar();
     }
 }
