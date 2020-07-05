@@ -28,7 +28,16 @@ public class Mmail {
 
     public String help() {
         String help
-                = "CU2. Gestionar categoria documento  \n"
+                = "CU1. Gestionar documento  \n"
+                + "     Registrar documento:  \n"
+                + "             reg_documento[String doc_titulo,String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc] \n"
+                + "     Modificar documento:  \n"
+                + "             mod_documento[int doc_id,String doc_titulo,String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc]  \n"
+                + "     Eliminar documento:   \n"
+                + "             del_documento[int doc_id]    \n"
+                + "     Listar documentos:    \n "
+                + "             list_documento[]  \n "
+                + "CU2. Gestionar categoria documento  \n"
                 + "     Registrar categoria documento:  \n"
                 + "             reg_categoriadoc[String nombreCategoriaDocumento, String descripcionCategoriaDocumento] \n"
                 + "     Modificar categoria documento:  \n"
