@@ -1,7 +1,10 @@
 package Mail;
 
+import Negocio.NAnuncio;
+import Negocio.NCategoriaAnuncio;
 import Negocio.NCategoriaDoc;
 import Negocio.NComentario;
+import Negocio.NSolicitudContacto;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,6 +18,10 @@ public class Mmail {
 
     private NCategoriaDoc ncategoriadoc;
     private NComentario ncomentario;
+    //CU6,CU7,CU8
+    private NCategoriaAnuncio ncategoriaanuncio;
+    private NAnuncio nanuncio;
+    private NSolicitudContacto nsolicitudcontacto;
 
     private String servidor = "mail.tecnoweb.org.bo";
     private String mailLocal = "grupo02sa@tecnoweb.org.bo";
@@ -24,6 +31,12 @@ public class Mmail {
 
     public Mmail() {
         this.ncategoriadoc = new NCategoriaDoc();
+        this.ncomentario = new NComentario();
+
+        //CU6,CU7,CU8
+        this.ncategoriaanuncio = new NCategoriaAnuncio();
+        this.nanuncio = new NAnuncio();
+        this.nsolicitudcontacto = new NSolicitudContacto();
     }
 
     public String help() {
@@ -101,9 +114,9 @@ public class Mmail {
                 + "		list_catanuncio[]   \n"
                 + "CU8. Registrar solicitud de contacto \n"
                 + "	Registrar solicitud de contacto:  \n"
-                + "		reg_solicitudcontacto[String nombreSolicitante, String apellidoSolicitante, int celularSolicitante, String estadoSolicitudContacto(revisado/pendiente), String emailSolicitante, String contenidoSolicitudContacto, int ciAbogado(Puede ser nulo)] \n"
+                + "		reg_solicitudcontacto[String nombreSolicitante, String apellidoSolicitante, int celularSolicitante, String estadoSolicitudContacto(revisado/pendiente), String emailSolicitante, String contenidoSolicitudContacto] \n"
                 + "	Modificar solicitud de contacto: 	\n"
-                + "		mod_solicitudcontacto[int idSolicitudContacto, String estadoSolicitudContacto(revisado/pendiente), int ciAbogado(Puede ser nulo)] \n"
+                + "		mod_solicitudcontacto[int idSolicitudContacto, String estadoSolicitudContacto(revisado/pendiente), int ciAbogado] \n"
                 + "	Listar solicitud de contacto:     \n"
                 + "		list_solicitudcontacto[]    \n";
 
@@ -733,59 +746,205 @@ public class Mmail {
     // CU6: Gestionar Anuncio
     // RegistrarAnuncio
     public void RegistrarAnuncio(String[] datos) {
-        System.out.println("Realizo el registrar anuncio");
+        String respuesta = "";
+        if (datos.length == 5) {
+            if (this.isNumericEntero(datos[2])) {
+                if (this.isNumericEntero(datos[3])) {
+                    if (this.isNumericEntero(datos[4])) {
+                        java.util.Date fechaHoy = new Date();
+                        long d = fechaHoy.getTime();
+                        java.sql.Time horaAhora = new java.sql.Time(d);
+                        java.sql.Date fechaAhora = new java.sql.Date(d);
+                        respuesta = this.nanuncio.RegistrarAnuncio(datos[0], datos[1], Integer.parseInt(datos[2]), fechaAhora, horaAhora, Integer.parseInt(datos[3]), Integer.parseInt(datos[4]));
+                    } else {
+                        respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[4];
+                    }
+                } else {
+                    respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[3];
+                }
+            } else {
+                respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[2];
+            }
+
+        } else if (datos.length < 5) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail(respuesta);
     }
     // ModificarAnuncio
 
     public void ModificarAnuncio(String[] datos) {
-        System.out.println("Realizo el modificar anuncio");
+        String respuesta = "";
+        if (datos.length == 6) {
+            if (this.isNumericEntero(datos[0])) {
+                if (this.isNumericEntero(datos[3])) {
+                    if (this.isNumericEntero(datos[4])) {
+                        if (this.isNumericEntero(datos[5])) {
+                            java.util.Date fechaHoy = new Date();
+                            long d = fechaHoy.getTime();
+                            java.sql.Time horaAhora = new java.sql.Time(d);
+                            java.sql.Date fechaAhora = new java.sql.Date(d);
+                            respuesta = this.nanuncio.ModificarAnuncio(Integer.parseInt(datos[0]), datos[1], datos[2], Integer.parseInt(datos[3]), fechaAhora, horaAhora, Integer.parseInt(datos[4]), Integer.parseInt(datos[5]));
+                        } else {
+                            respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[5];
+                        }
+                    } else {
+                        respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[4];
+                    }
+                } else {
+                    respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[3];
+                }
+            } else {
+                respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[0];
+            }
+        } else if (datos.length < 6) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail(respuesta);
     }
     // EliminarAnuncio
 
     public void EliminarAnuncio(String[] datos) {
-        System.out.println("Realizo el eliminar anuncio");
+        String respuesta = "";
+        if (datos.length == 1) {
+            if (this.isNumericEntero(datos[0])) {
+                respuesta = this.nanuncio.EliminarAnuncio(Integer.parseInt(datos[0]));
+            } else {
+                respuesta = "El identificador del anuncio a eliminar, debe ser un entero y no: " + datos[0];
+            }
+
+        } else if (datos.length < 1) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail(respuesta);
     }
     // ListarAnuncio
 
     public void ListarAnuncios() {
-        System.out.println("Realizo el listar anuncios");
+        String respuesta = this.nanuncio.ListarAnuncio();
+        this.sendMail(respuesta);
     }
 
     // CU7: Gestionar Categoria Anuncio
     // RegistrarCategoriaAnuncio
     public void RegistrarCategoriaAnuncio(String[] datos) {
-        System.out.println("Realizo el registrar CategoriaAnuncio");
+        String respuesta = "";
+        if (datos.length == 2) {
+            respuesta = this.ncategoriaanuncio.RegistrarCategoriaAnuncio(datos[0], datos[1]);
+        } else if (datos.length < 2) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo.";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo.";
+        }
+        System.out.println(respuesta);
+        this.sendMail(respuesta);
     }
     // ModificarCategoriaAnuncio
 
     public void ModificarCategoriaAnuncio(String[] datos) {
-        System.out.println("Realizo el modificar CategoriaAnuncio");
+        String respuesta = "";
+        if (datos.length == 3) {
+            if (this.isNumericEntero(datos[0])) {
+                respuesta = this.ncategoriaanuncio.ModificarCategoriaAnuncio(Integer.parseInt(datos[0]), datos[1], datos[2]);
+            } else {
+                respuesta = "El identificador de la categoría anuncio que se quiere modificar, debe ser un entero y no: " + datos[0];
+            }
+
+        } else if (datos.length < 3) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail(respuesta);
     }
     // EliminarCategoriaAnuncio
 
     public void EliminarCategoriaAnuncio(String[] datos) {
-        System.out.println("Realizo el eliminar CategoriaAnuncio");
+        String respuesta = "";
+        if (datos.length == 1) {
+            if (this.isNumericEntero(datos[0])) {
+                respuesta = this.ncategoriaanuncio.EliminarCategoriaAnuncio(Integer.parseInt(datos[0]));
+            } else {
+                respuesta = "El identificador de la categoría anuncio que se quiere eliminar, debe ser un entero y no: " + datos[0];
+            }
+
+        } else if (datos.length < 1) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail(respuesta);
     }
     // ListarCategoriaAnuncio
 
     public void ListarCategoriaAnuncios() {
-        System.out.println("Realizo el listar CategoriaAnuncio");
+        String respuesta = this.ncategoriaanuncio.ListarCategoriaAnuncio();
+        this.sendMail(respuesta);
     }
 
     // CU8: Gestionar solicitud de contacto
     // RegistrarSolicitudContacto
     public void RegistrarSolicitudContacto(String[] datos) {
-        System.out.println("Realizo el registrar SolicitudContacto");
+        String respuesta = "";
+        if (datos.length == 6) {
+            if (this.isNumericEntero(datos[2])) {
+                java.util.Date fechaHoy = new Date();
+                long d = fechaHoy.getTime();
+                java.sql.Date fechaAhora = new java.sql.Date(d);
+                respuesta = this.nsolicitudcontacto.RegistrarSolicitudContacto(datos[0], datos[1], fechaAhora, Integer.parseInt(datos[2]), datos[3], datos[4], datos[5]);
+
+            } else {
+                respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[2];
+            }
+
+        } else if (datos.length < 6) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail(respuesta);
     }
     // ModificarSolicitudContacto
 
     public void ModificarSolicitudContacto(String[] datos) {
-        System.out.println("Realizo el modificar SolicitudContacto");
+        String respuesta = "";
+        if (datos.length == 3) {
+            if (this.isNumericEntero(datos[0])) {
+                if (this.isNumericEntero(datos[2])) {
+                    respuesta = this.nsolicitudcontacto.ModificarSolicitudContacto(Integer.parseInt(datos[0]), datos[1], Integer.parseInt(datos[2]));
+
+                } else {
+                    respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[2];
+                }
+            } else {
+                respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[0];
+            }
+
+        } else if (datos.length < 3) {
+            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        } else {
+            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        }
+        System.out.println(respuesta);
+        this.sendMail(respuesta);
     }
     // ListarSolicitudContacto
 
     public void ListarSolicitudContacto() {
-        System.out.println("Realizo el listar SolicitudContacto");
+        String respuesta = this.nsolicitudcontacto.ListarSolicitudContacto();
+        this.sendMail(respuesta);
     }
 
     public boolean isNumericEntero(String cadena) {

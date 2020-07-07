@@ -102,7 +102,7 @@ public class DSolicitudContacto {
         PreparedStatement ps = null; 
         Connection con = conexion.getConexion();
         
-        String sql = "INSERT INTO solicitudcontacto (sol_nombre, sol_apellido, sol_fecha, sol_celular, sol_estado, sol_email, sol_contenido, sol_abogado) VALUES (?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO solicitudcontacto (sol_nombre, sol_apellido, sol_fecha, sol_celular, sol_estado, sol_email, sol_contenido) VALUES (?,?,?,?,?,?,?)";
         try{
             ps = con.prepareStatement(sql);
             ps.setString(1, this.getSol_nombre());
@@ -112,7 +112,6 @@ public class DSolicitudContacto {
             ps.setString(5, this.getSol_estado());
             ps.setString(6, this.getSol_email());
             ps.setString(7, this.getSol_contenido());
-            ps.setInt(8, this.getSol_abogado());
             ps.execute();
             return true;
         }catch(SQLException e){

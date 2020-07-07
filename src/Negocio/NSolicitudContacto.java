@@ -14,7 +14,7 @@ public class NSolicitudContacto {
         //dabogado = new DAbogado();
     }
 
-    public String RegistrarSolicitudContacto(String sol_nombre, String sol_apellido, Date sol_fecha, int sol_celular, String sol_estado, String sol_email, String sol_contenido, int sol_abogado) {
+    public String RegistrarSolicitudContacto(String sol_nombre, String sol_apellido, Date sol_fecha, int sol_celular, String sol_estado, String sol_email, String sol_contenido) {
         if (sol_nombre.length() != 0 && sol_apellido.length() != 0 && sol_estado.length() != 0
                 && sol_email.length() != 0 && sol_contenido.length() != 0
                 && Integer.toString(sol_celular).length() != 0) {
@@ -31,9 +31,7 @@ public class NSolicitudContacto {
                                 this.dsolicitudcontacto.setSol_estado(sol_estado);
                                 this.dsolicitudcontacto.setSol_email(sol_email);
                                 this.dsolicitudcontacto.setSol_contenido(sol_contenido);
-                                //if (dabogado.Existe(anu_abogado)) {
-                                this.dsolicitudcontacto.setSol_abogado(sol_abogado);
-                                //}
+
                                 if (this.dsolicitudcontacto.Registrar()) {
                                     respuesta = "Se registró correctamente la solicitud de contacto";
                                 } else {
