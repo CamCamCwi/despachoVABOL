@@ -87,13 +87,13 @@ public class Mmail {
                 + "             mod_contraseña_abogado[String Usuario, String Anterior contraseña , String nueva contraseña]    \n"
                 + "CU5. Gestionar comentario    \n"
                 + "     Registrar comentario: \n"
-                + "             reg_comentario[String contenidoComentario, int idDocumento, int idUsuario, int idComentario](El comentario puede ser nulo)  \n"
+                + "             reg_comentario[String contenidoComentario, int idDocumento, int idUsuario, int idComentario](El idComentario puede ser nulo, si lo es, ingrese un '-')  \n"
                 + "     Modificar comentario:    \n"
                 + "             mod_comentario[int idComentario, String contenidoComentario]    \n"
                 + "     Eliminar comentario: \n"
                 + "             del_comentario[int idComentario]    \n"
                 + "     Listar comentario:  \n"
-                + "             list_comentario[]   \n"
+                + "             list_comentario[int doc_id]   \n"
                 + "CU6. Gestionar Anuncio \n"
                 + "	Registrar anuncio:   \n"
                 + "		reg_anuncio[String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria] \n"
@@ -497,7 +497,7 @@ public class Mmail {
                 this.EliminarComentario(datos);
                 break;
             case "list_comentario":
-                this.ListarComentarios();
+                this.ListarComentarios(datos);
                 break;
             // CU6: Gestionar anuncio
             case "reg_anuncio":
@@ -671,14 +671,14 @@ public class Mmail {
         if (datos.length == 4) {
             if (this.isNumericEntero(datos[1])) {
                 if (this.isNumericEntero(datos[2])) {
-                    if (this.isNumericEntero(datos[3])) {
+                    if (this.isNumericEntero(datos[3]) || datos[3].equals('-')) {
                         java.util.Date fechaHoy = new Date();
                         long d = fechaHoy.getTime();
                         java.sql.Time horaAhora = new java.sql.Time(d);
                         java.sql.Date fechaAhora = new java.sql.Date(d);
-                        respuesta = this.ncomentario.RegistrarComentario(fechaAhora, horaAhora, datos[0], Integer.parseInt(datos[1]), Integer.parseInt(datos[2]), Integer.parseInt(datos[2]));
+                        respuesta = this.ncomentario.RegistrarComentario(fechaAhora, horaAhora, datos[0], Integer.parseInt(datos[1]), Integer.parseInt(datos[2]), datos[3]);
                     } else {
-                        respuesta = "El identificador del comentario del comentario a registrar, debe ser un entero y no: " + datos[2];
+                        respuesta = "El identificador del comentario del comentario a registrar, debe ser un entero o un '-' y no: " + datos[2];
                     }
                 } else {
                     respuesta = "El identificador del usuario del comentario a registrar, debe ser un entero y no: " + datos[2];
@@ -738,8 +738,8 @@ public class Mmail {
     }
     // ListarComentario
 
-    public void ListarComentarios() {
-        String respuesta = this.ncomentario.ListarComentarios();
+    public void ListarComentarios(String[] datos) {
+        String respuesta = this.ncomentario.ListarComentarios(Integer.parseInt(datos[0]));
         this.sendMail(respuesta);
     }
 
