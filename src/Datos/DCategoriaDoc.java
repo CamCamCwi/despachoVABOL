@@ -107,9 +107,23 @@ public class DCategoriaDoc {
     }
     
     public String Listar(){
-        String imprimir="";
+        String tabla = "";
         Statement Consulta;
-        ResultSet resultado = null;        
+        ResultSet resultado = null; 
+        tabla = "Content-Type: text/html; charset=\"UTF-8\"\n" +
+"\n" +
+"<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
+"\n" +
+"  <tr>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Hoy</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Mañana</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Miércoles</th>\n" +
+"\n" +
+"  </tr>\n" +
+"\n";
         try {
             String query = "SELECT * FROM categoriaDoc ORDER BY catDoc_id";            
             Connection con = conexion.getConexion();            
@@ -118,19 +132,32 @@ public class DCategoriaDoc {
             ResultSetMetaData rsMd = resultado.getMetaData();
             int cantidadColumnas = rsMd.getColumnCount();
             while (resultado.next()) {
+                tabla = tabla +
+"  <tr>\n" +
+"\n";
                 for (int i = 0; i < cantidadColumnas; i++) {
-                    imprimir =imprimir  +resultado.getString(i+1)+ " ";
+                    //tabla = tabla + "<td style = \"text-align: left; padding: 8px; border: 2px solid black;\">"+resultado.getString(i+1)+"</td>\n" + "\n";
+                    tabla = tabla +
+"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Soleado</td>\n" +
+"\n";
                 }
-                imprimir += "\n";
+                //tabla = tabla + "  </tr>\n" + "\n";
+                tabla = tabla +
+"  </tr>\n" +
+"\n" ;
             }
+            tabla = tabla +
+"\n" +
+"</table>";
             Consulta.close();
             
             con.close();
             
         } catch (Exception e) {
-            imprimir = "No se pudieron listar los datos";
+            tabla = "No se pudieron listar los datos";
         }
-        return imprimir;
+        System.out.println(tabla + "ESTAAAAAAAAAAAA");
+        return tabla;
     }
     
     public boolean Existe(int catDoc_id){

@@ -58,7 +58,7 @@ public class Mmail {
                 + "     Eliminar categoria documento:   \n"
                 + "             del_categoriadoc[int idCategoriaDocumento]    \n"
                 + "     Listar categorias documento:    \n "
-                + "             list_categotiadoc[]  \n "
+                + "             list_categoriadoc[]  \n "
                 + "CU3. Gestionar Cliente  \n"
                 + "     Registrar Cliente:  \n"
                 + "             reg_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono,String Usuario,String Contraseña] \n"
@@ -445,7 +445,7 @@ public class Mmail {
             case "del_categoriadoc":
                 this.EliminarCategoriaDoc(datos);
                 break;
-            case "list_categotiadoc":
+            case "list_categoriadoc":
                 this.ListarCategoriaDoc();
                 break;
             // CU3: Gestionar Cliente
