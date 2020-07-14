@@ -19,7 +19,7 @@ public class NCategoriaDoc {
                         this.dcategoriadoc.setCatDoc_nombre(catDoc_nombre);
                         this.dcategoriadoc.setCatDoc_descripcion(catDoc_descripcion);
                         if(this.dcategoriadoc.Registrar()){
-                            respuesta = "Se registró correctamente la categoría documento\n\n";
+                            respuesta = "Se registró correctamente la categoría documento\n";
                             respuesta = respuesta + this.dcategoriadoc.Listar();
                         }else{
                             respuesta = "No se pudo registrar la categoría documento";
@@ -46,7 +46,7 @@ public class NCategoriaDoc {
                         this.dcategoriadoc.setCatDoc_nombre(catDoc_nombre);
                         this.dcategoriadoc.setCatDoc_descripcion(catDoc_descripcion);
                         if(this.dcategoriadoc.Modificar()){
-                            respuesta = "Se modificó correctamente la categoría documento\n\n";
+                            respuesta = "Se modificó correctamente la categoría documento\n";
                             respuesta = respuesta + this.dcategoriadoc.Listar();
                         }else{
                             respuesta = "No se pudo modificar la categoría documento";
@@ -72,7 +72,7 @@ public class NCategoriaDoc {
             if(this.dcategoriadoc.Existe(catDoc_id)){
                 this.dcategoriadoc.setCatDoc_id(catDoc_id);
                 if(this.dcategoriadoc.Eliminar()){
-                    respuesta = "Se eliminó correctamente la categoría documento\n\n";
+                    respuesta = "Se eliminó correctamente la categoría documento\n";
                     respuesta = respuesta + this.dcategoriadoc.Listar();
                 }else{
                     respuesta = "No se pudo eliminar la categoría documento";
