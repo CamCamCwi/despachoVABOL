@@ -151,9 +151,32 @@ public class DComentario {
     }
     
     public String Listar(int doc_id){
-        String imprimir="ID, FECHA, HORA, CONTENIDO, IDDOCUMENTO, IDUSUARIO, IDCOMENTARIO \n";
+        String tabla = "";
         Statement Consulta;
-        ResultSet resultado = null;        
+        ResultSet resultado = null; 
+        tabla = "Content-Type: text/html; charset=\"UTF-8\"\n" +
+"\n" +
+"<h1>Comentarios del documento con id: "+ doc_id + "</h1>"+
+"<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
+"\n" +
+"  <tr>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Fecha</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Hora</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Contenido</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Documento</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Usuario</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Comentario</th>\n" +
+"\n" +
+"  </tr>\n" +
+"\n";
         try {
             String query = "SELECT * FROM comentario WHERE com_doc = " + doc_id +" ORDER BY com_id";            
             Connection con = conexion.getConexion();            
@@ -162,19 +185,29 @@ public class DComentario {
             ResultSetMetaData rsMd = resultado.getMetaData();
             int cantidadColumnas = rsMd.getColumnCount();
             while (resultado.next()) {
+                tabla = tabla +
+"  <tr>\n" +
+"\n";
                 for (int i = 0; i < cantidadColumnas; i++) {
-                    imprimir =imprimir  +resultado.getString(i+1)+ ", ";
+                    tabla = tabla +
+"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">" + resultado.getString(i+1) + "</td>\n" +
+"\n";
                 }
-                imprimir += "\n";
+                tabla = tabla +
+"  </tr>\n" +
+"\n" ;
             }
+            tabla = tabla +
+"\n" +
+"</table>";
             Consulta.close();
             
             con.close();
             
         } catch (Exception e) {
-           imprimir = "No se pudieron listar los datos";
+           tabla = "No se pudieron listar los datos";
         }
-        return imprimir;
+        return tabla;
     }
     
     public boolean Existe(int com_id){
