@@ -116,11 +116,11 @@ public class DCategoriaDoc {
 "\n" +
 "  <tr>\n" +
 "\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Hoy</th>\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID</th>\n" +
 "\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Mañana</th>\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Nombre</th>\n" +
 "\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Miércoles</th>\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Descripción</th>\n" +
 "\n" +
 "  </tr>\n" +
 "\n";
@@ -138,7 +138,7 @@ public class DCategoriaDoc {
                 for (int i = 0; i < cantidadColumnas; i++) {
                     //tabla = tabla + "<td style = \"text-align: left; padding: 8px; border: 2px solid black;\">"+resultado.getString(i+1)+"</td>\n" + "\n";
                     tabla = tabla +
-"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Soleado</td>\n" +
+"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">" + resultado.getString(i+1) + "</td>\n" +
 "\n";
                 }
                 //tabla = tabla + "  </tr>\n" + "\n";
