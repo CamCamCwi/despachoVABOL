@@ -19,8 +19,8 @@ public class NCategoriaDoc {
                         this.dcategoriadoc.setCatDoc_nombre(catDoc_nombre);
                         this.dcategoriadoc.setCatDoc_descripcion(catDoc_descripcion);
                         if(this.dcategoriadoc.Registrar()){
-                            respuesta = "Se registró correctamente la categoría documento\n";
-                            respuesta = respuesta + this.dcategoriadoc.Listar();
+                            //respuesta = "Se registró correctamente la categoría documento\n";
+                            respuesta = this.dcategoriadoc.Listar("Se registró correctamente la categoría documento");
                         }else{
                             respuesta = "No se pudo registrar la categoría documento";
                         }
@@ -46,8 +46,8 @@ public class NCategoriaDoc {
                         this.dcategoriadoc.setCatDoc_nombre(catDoc_nombre);
                         this.dcategoriadoc.setCatDoc_descripcion(catDoc_descripcion);
                         if(this.dcategoriadoc.Modificar()){
-                            respuesta = "Se modificó correctamente la categoría documento\n";
-                            respuesta = respuesta + this.dcategoriadoc.Listar();
+                            //respuesta = "Se modificó correctamente la categoría documento\n";
+                            respuesta = this.dcategoriadoc.Listar("Se modificó correctamente la categoría documento");
                         }else{
                             respuesta = "No se pudo modificar la categoría documento";
                         }
@@ -72,8 +72,8 @@ public class NCategoriaDoc {
             if(this.dcategoriadoc.Existe(catDoc_id)){
                 this.dcategoriadoc.setCatDoc_id(catDoc_id);
                 if(this.dcategoriadoc.Eliminar()){
-                    respuesta = "Se eliminó correctamente la categoría documento\n";
-                    respuesta = respuesta + this.dcategoriadoc.Listar();
+                    //respuesta = "Se eliminó correctamente la categoría documento\n";
+                    respuesta = this.dcategoriadoc.Listar("Se eliminó correctamente la categoría documento");
                 }else{
                     respuesta = "No se pudo eliminar la categoría documento";
                 }
@@ -88,7 +88,7 @@ public class NCategoriaDoc {
     }
     
     public String ListarCategoriaDoc(){
-        return this.dcategoriadoc.Listar();
+        return this.dcategoriadoc.Listar("");
     }
     
 }

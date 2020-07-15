@@ -106,12 +106,14 @@ public class DCategoriaDoc {
         }  
     }
     
-    public String Listar(){
+    public String Listar(String mensaje){
         String tabla = "";
         Statement Consulta;
         ResultSet resultado = null; 
         tabla = "Content-Type: text/html; charset=\"UTF-8\"\n" +
 "\n" +
+"<h3>"+ mensaje +"</h3>\n"+
+"\n"+
 "<h1>Categoría documentos: </h1>"+
 "<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
 "\n" +

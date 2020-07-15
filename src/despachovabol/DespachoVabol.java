@@ -1,8 +1,8 @@
 
 package despachovabol;
 
+import Datos.DComentario;
 import Mail.Mmail;
-import Negocio.NCategoriaDoc;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,10 +11,10 @@ import java.util.logging.Logger;
 public class DespachoVabol {
 
     public static void main(String[] args) {
-      /*
-        Mmail mail = new Mmail();
-        mail.getMail(); */
-        
+  
+        /*Mmail mail = new Mmail();
+        mail.getMail();*/
+      
         Mmail mail = new Mmail();
         
         int cantMails = mail.getCantidadMails();
