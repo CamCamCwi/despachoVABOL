@@ -85,7 +85,13 @@ public class DComentario {
     public boolean Registrar(){
         PreparedStatement ps = null; 
         Connection con = conexion.getConexion();
-        String sql = "INSERT INTO comentario(com_fecha, com_hora, com_contenido, com_doc, com_usuario, com_com2) VALUES (?,?,?,?,?,?)";
+        String sql = "";
+        if(this.getCom_com2() == 0){
+                sql = "INSERT INTO comentario(com_fecha, com_hora, com_contenido, com_doc, com_usuario, com_com2) VALUES (?,?,?,?,?,null)";
+            }else{
+                sql = "INSERT INTO comentario(com_fecha, com_hora, com_contenido, com_doc, com_usuario, com_com2) VALUES (?,?,?,?,?,?)";
+            }
+        
         try{
             ps = con.prepareStatement(sql);
             ps.setDate(1, this.getCom_fecha());
@@ -93,9 +99,7 @@ public class DComentario {
             ps.setString(3, this.getCom_contenido());
             ps.setInt(4, this.getCom_doc());
             ps.setInt(5, this.getCom_usuario());
-            if(this.getCom_com2() == 0){
-                ps.setString(6, null);
-            }else{
+            if(this.getCom_com2() != 0){
                 ps.setInt(6, this.getCom_com2());
             }
             
@@ -185,7 +189,7 @@ public class DComentario {
 "  </tr>\n" +
 "\n";
         try {
-            String query = "SELECT * FROM comentario WHERE com_doc = " + doc_id +" ORDER BY com_id";            
+            String query = "SELECT * FROM comentario WHERE com_doc = " + doc_id +" ORDER BY com_fecha, com_hora";            
             Connection con = conexion.getConexion();            
             Consulta = (Statement) con.createStatement();
             resultado = Consulta.executeQuery(query);            
