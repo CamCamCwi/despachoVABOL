@@ -47,12 +47,11 @@ public class DCategoriaAnuncio {
         PreparedStatement ps = null;
         Connection con = conexion.getConexion();
         
-        String sql = "INSERT INTO categoriaanuncio (cat_nombre, cat_descripcion, cat_id) VALUES (?,?,?)";
+        String sql = "INSERT INTO categoriaanuncio (cat_nombre, cat_descripcion) VALUES (?,?)";
         try {
             ps = con.prepareStatement(sql);
             ps.setString(1, this.getCat_nombre());
             ps.setString(2, this.getCat_descripcion());
-            ps.setInt(3, 1);
             ps.execute();
             return true;
         } catch (SQLException e) {
