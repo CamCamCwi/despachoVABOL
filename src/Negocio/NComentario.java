@@ -106,8 +106,8 @@ public class NComentario {
                 this.dcomentario.setCom_id(com_id);
                 if(this.dcomentario.Eliminar()){
                     //respuesta = "Se eliminó correctamente el comentario: Comentario[" + this.dcomentario.getCom_id() + "]";
-                    int doc_id = Integer.parseInt(this.dcomentario.getValue("com_doc"));
-                    respuesta = this.dcomentario.Listar(doc_id,"Se eliminó correctamente el comentario");
+                    String doc_id = this.dcomentario.getValue("com_doc");
+                    respuesta = this.dcomentario.Listar(Integer.parseInt(doc_id),"Se eliminó correctamente el comentario");
                 }else{
                     respuesta = "No se pudo eliminar el comentario";
                 }
