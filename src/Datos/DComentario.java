@@ -150,12 +150,12 @@ public class DComentario {
         }  
     }
     
-    public String Listar(){
-        String imprimir="";
+    public String Listar(int doc_id){
+        String imprimir="ID, FECHA, HORA, CONTENIDO, IDDOCUMENTO, IDUSUARIO, IDCOMENTARIO \n";
         Statement Consulta;
         ResultSet resultado = null;        
         try {
-            String query = "SELECT * FROM comentario";            
+            String query = "SELECT * FROM comentario WHERE com_doc = " + doc_id +" ORDER BY com_id";            
             Connection con = conexion.getConexion();            
             Consulta = (Statement) con.createStatement();
             resultado = Consulta.executeQuery(query);            
@@ -163,7 +163,7 @@ public class DComentario {
             int cantidadColumnas = rsMd.getColumnCount();
             while (resultado.next()) {
                 for (int i = 0; i < cantidadColumnas; i++) {
-                    imprimir =imprimir  +resultado.getString(i+1)+ " ";
+                    imprimir =imprimir  +resultado.getString(i+1)+ ", ";
                 }
                 imprimir += "\n";
             }
