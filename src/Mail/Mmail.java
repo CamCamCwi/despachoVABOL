@@ -39,88 +39,8 @@ public class Mmail {
         this.nsolicitudcontacto = new NSolicitudContacto();
     }
 
-    public String help() {
-        String help
-                = "CU1. Gestionar documento  \n"
-                + "     Registrar documento:  \n"
-                + "             reg_documento[String doc_titulo,String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc] \n"
-                + "     Modificar documento:  \n"
-                + "             mod_documento[int doc_id,String doc_titulo,String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc]  \n"
-                + "     Eliminar documento:   \n"
-                + "             del_documento[int doc_id]    \n"
-                + "     Listar documentos:    \n "
-                + "             list_documento[]  \n "
-                + "CU2. Gestionar categoria documento  \n"
-                + "     Registrar categoria documento:  \n"
-                + "             reg_categoriadoc[String nombreCategoriaDocumento, String descripcionCategoriaDocumento] \n"
-                + "     Modificar categoria documento:  \n"
-                + "             mod_categoriadoc[int idCategoriaDocumento, String nombreCategoriaDocumento, String descripcionCategoriaDocumento]  \n"
-                + "     Eliminar categoria documento:   \n"
-                + "             del_categoriadoc[int idCategoriaDocumento]    \n"
-                + "     Listar categorias documento:    \n "
-                + "             list_categoriadoc[]  \n "
-                + "CU3. Gestionar Cliente  \n"
-                + "     Registrar Cliente:  \n"
-                + "             reg_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono,String Usuario,String Contraseña] \n"
-                + "     Modificar Cliente:  \n"
-                + "             mod_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono]  \n"
-                + "     Eliminar Cliente:   \n"
-                + "             del_cliente[int Nit]    \n"
-                + "     Listar Clientes:    \n "
-                + "             list_cliente[]  \n "
-                + "     Buscar Cliente: \n"
-                + "             find_cliente[int ci]    \n"
-                + "     Modificar Contraseña de Cliente:    \n"
-                + "             mod_contraseña_cliente[String Usuario, String Anterior contraseña , String nueva contraseña]    \n"
-                + "CU4. Gestionar abogado   \n"
-                + "     Registrar abogado:  \n"
-                + "             reg_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte,String usuario, int contraseña]   \n"
-                + "     Modificar abogado:  \n"
-                + "             mod_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte]  \n"
-                + "     Eliminar abogado:   \n"
-                + "             del_abogado[int ci] \n"
-                + "     Listar abogado: \n "
-                + "             list_abogado[]  \n"
-                + "     Buscar abogado: \n"
-                + "             find_abogado[int ci] \n"
-                + "     Modificar Contraseña de Abogado:    \n"
-                + "             mod_contraseña_abogado[String Usuario, String Anterior contraseña , String nueva contraseña]    \n"
-                + "CU5. Gestionar comentario    \n"
-                + "     Registrar comentario: \n"
-                + "             reg_comentario[String contenidoComentario, int idDocumento, int idUsuario, int idComentario](El idComentario puede ser nulo, si lo es, ingrese un '-')  \n"
-                + "     Modificar comentario:    \n"
-                + "             mod_comentario[int idComentario, String contenidoComentario]    \n"
-                + "     Eliminar comentario: \n"
-                + "             del_comentario[int idComentario]    \n"
-                + "     Listar comentario:  \n"
-                + "             list_comentario[int doc_id]   \n"
-                + "CU6. Gestionar Anuncio \n"
-                + "	Registrar anuncio:   \n"
-                + "		reg_anuncio[String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria] \n"
-                + "	Modificar anuncio: 	\n"
-                + "		mod_anuncio[int idAnuncio, String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria] \n"
-                + "	Eliminar anuncio:   \n"
-                + "		del_anuncio[int idAnuncio]\n"
-                + "	Listar anuncio:     \n"
-                + "		list_anuncio[]\n"
-                + "CU7. Gestionar Categoria de Anuncio \n"
-                + "	Registrar categoria anuncio:  \n"
-                + "		reg_catanuncio[String nombreCategoriaAnuncio, String descripcionCategoriaAnuncio] \n"
-                + "	Modificar categoria anuncio: 	\n"
-                + "		mod_catanuncio[int idCategoriaAnuncio, String nombreCategoriaAnuncio, String descripcionCategoriaAnuncio] \n"
-                + "	Eliminar categoria anuncio:   \n"
-                + "		del_catanuncio[int idCategoriaAnuncio]\n"
-                + "	Listar categoria anuncio:     \n"
-                + "		list_catanuncio[]   \n"
-                + "CU8. Registrar solicitud de contacto \n"
-                + "	Registrar solicitud de contacto:  \n"
-                + "		reg_solicitudcontacto[String nombreSolicitante, String apellidoSolicitante, int celularSolicitante, String estadoSolicitudContacto(revisado/pendiente), String emailSolicitante, String contenidoSolicitudContacto] \n"
-                + "	Modificar solicitud de contacto: 	\n"
-                + "		mod_solicitudcontacto[int idSolicitudContacto, String estadoSolicitudContacto(revisado/pendiente), int ciAbogado] \n"
-                + "	Listar solicitud de contacto:     \n"
-                + "		list_solicitudcontacto[]    \n";
-        
-        String help2 =  "Content-Type: text/html; charset=\"UTF-8\"\n" +
+    public String help() {        
+        String help =  "Content-Type: text/html; charset=\"UTF-8\"\n" +
                         "\n" +
                         "<h1>HELP:  </h1>"+
                         "<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
@@ -488,7 +408,7 @@ public class Mmail {
                         "\n" +
                         "</table>";
 
-        return help2;
+        return help;
     }
 
     public void sendMail(String body) {
@@ -803,6 +723,8 @@ public class Mmail {
             }
         }
         switch (encabezado) {
+            
+
             //CU2: Gestionar Categoria Documento
             case "reg_categoriadoc":
                 this.RegistrarCategoriaDoc(datos);
