@@ -106,6 +106,6 @@ public class NAnuncio {
     }
 
     public String ListarAnuncio() {
-        return this.danuncio.Listar();
+        return this.danuncio.Listar("");
     }
 }

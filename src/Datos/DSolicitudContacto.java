@@ -148,31 +148,70 @@ public class DSolicitudContacto {
         }  
     }
 
-    public String Listar(){
-        String imprimir="";
+    public String Listar(String mensaje){
+        String tabla = "";
         Statement Consulta;
-        ResultSet resultado = null;        
+        ResultSet resultado = null; 
+        tabla = "Content-Type: text/html; charset=\"UTF-8\"\n" +
+"\n" +
+"<h3>"+ mensaje +"</h3>\n"+
+"\n"+
+"<h1>Solicitud de Contacto: </h1>"+
+"<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
+"\n" +
+"  <tr>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Nombre</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Apellido</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Fecha</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Celular</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Estado</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Email</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Contenido</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Abogado</th>\n" +
+"\n" +                
+"  </tr>\n" +
+"\n"; 
         try {
-            String query = "SELECT * FROM solicitudcontacto";            
+            String query = "SELECT * FROM solicitudcontacto ORDER BY sol_id";            
             Connection con = conexion.getConexion();            
             Consulta = (Statement) con.createStatement();
             resultado = Consulta.executeQuery(query);            
             ResultSetMetaData rsMd = resultado.getMetaData();
             int cantidadColumnas = rsMd.getColumnCount();
             while (resultado.next()) {
+                tabla = tabla +
+"  <tr>\n" +
+"\n";
                 for (int i = 0; i < cantidadColumnas; i++) {
-                    imprimir = imprimir  + resultado.getString(i+1) + " ";
+                    tabla = tabla +
+"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">" + resultado.getString(i+1) + "</td>\n" +
+"\n";
                 }
-                imprimir += "\n";
+                tabla = tabla +
+"  </tr>\n" +
+"\n" ;
             }
+            tabla = tabla +
+"\n" +
+"</table>";
             Consulta.close();
             
             con.close();
             
         } catch (Exception e) {
-            imprimir = "No se pudieron listar los datos";
+            tabla = "No se pudieron listar los datos";
         }
-        return imprimir;
+        return tabla;
     }
     
     public boolean Existe(int sol_id){

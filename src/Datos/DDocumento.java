@@ -145,19 +145,14 @@ public class DDocumento {
         PreparedStatement ps = null;
         Connection con = conexion.getConexion();
         
-        String sql = "UPDATE documento SET doc_titulo=?,doc_descripcion=?,doc_fechasubida=?,doc_horasubida=?,doc_url=?,doc_cliente=?,doc_abogado=?,doc_categoriadoc=?,doc_idmail=? where doc_id = ?";
+        String sql = "UPDATE documento SET doc_descripcion=?,doc_fechasubida=?,doc_horasubida=?,doc_categoriadoc=? where doc_id = ?";
         try {
             ps = con.prepareStatement(sql);
-            ps.setString(1, this.getDoc_titulo());
-            ps.setString(2, this.getDoc_descripcion());
-            ps.setDate(3, this.getDoc_fechasubida());
-            ps.setTime(4, this.getDoc_horasubida());
-            ps.setString(5, this.getDoc_url());
-            ps.setString(6, this.getDoc_cliente());
-            ps.setInt(7, this.getDoc_abogado());
-            ps.setInt(8, this.getDoc_categoriadoc());
-            ps.setInt(9, this.getDoc_idmail());
-            ps.setInt(10, this.getDoc_id());
+            ps.setString(1, this.getDoc_descripcion());
+            ps.setDate(2, this.getDoc_fechasubida());
+            ps.setTime(3, this.getDoc_horasubida());
+            ps.setInt(4, this.getDoc_categoriadoc());
+            ps.setInt(5, this.getDoc_id());
             ps.execute();
             return true;
         } catch (SQLException e) {
@@ -192,10 +187,90 @@ public class DDocumento {
         }
     }
     
-    public String Listar() {
+    public boolean EliminarPorTitulo() {
+        PreparedStatement ps = null;
+        Connection con = conexion.getConexion();
+        String sql = "DELETE from documento where doc_titulo = ?";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, this.getDoc_titulo());
+            ps.execute();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.err.println(e);
+            }
+        }
+    }
+    
+    public String BuscarDocumento() {
         String imprimir = "";
+        PreparedStatement ps = null;
+        ResultSet resultado = null;
+        try {
+            String query = "SELECT * FROM documento where doc_titulo = ?";
+            Connection con = conexion.getConexion();
+            
+            ps = con.prepareStatement(query);
+            ps.setString(1, this.getDoc_titulo());
+            resultado = ps.executeQuery();
+            
+            ResultSetMetaData rsMd = resultado.getMetaData();
+            int cantidadColumnas = rsMd.getColumnCount();
+            if (resultado.next()) {
+                for (int i = 0; i < cantidadColumnas; i++) {
+                    imprimir = imprimir + resultado.getString(i + 1) + " ";
+                }
+                imprimir += "\n";
+            }
+
+            con.close();
+
+        } catch (Exception e) {
+            imprimir = "No se pudo encontrar el documento.";
+        }
+        return imprimir;
+    }
+    
+    public String Listar(String mensaje) {
+        String tabla = "";
         Statement Consulta;
         ResultSet resultado = null;
+        tabla = "Content-Type: text/html; charset=\"UTF-8\"\n" +
+"\n" +
+"<h3>"+ mensaje +"</h3>\n"+
+"\n"+
+"<h1>Documentos: </h1>"+
+"<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
+"\n" +
+"  <tr>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Titulo</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Descripcion</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Fecha Subida</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Hora Subida</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Url</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Cliente</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Abogado</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Categoria</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Mail</th>\n" +
+"\n" +                
+"  </tr>\n" +
+"\n";   
         try {
             String query = "SELECT * FROM documento ORDER BY doc_id";
             Connection con = conexion.getConexion();
@@ -204,19 +279,29 @@ public class DDocumento {
             ResultSetMetaData rsMd = resultado.getMetaData();
             int cantidadColumnas = rsMd.getColumnCount();
             while (resultado.next()) {
+                tabla = tabla +
+"  <tr>\n" +
+"\n";
                 for (int i = 0; i < cantidadColumnas; i++) {
-                    imprimir = imprimir + resultado.getString(i + 1) + " ";
+                    tabla = tabla +
+"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">" + resultado.getString(i+1) + "</td>\n" +
+"\n";
                 }
-                imprimir += "\n";
+                tabla = tabla +
+"  </tr>\n" +
+"\n";
             }
+            tabla = tabla +
+"\n" +
+"</table>";
             Consulta.close();
 
             con.close();
 
         } catch (Exception e) {
-            imprimir = "No se pudieron listar los datos";
+            tabla = "No se pudieron listar los datos";
         }
-        return imprimir;
+        return tabla;
     }
     
     public boolean Existe(int doc_id){
@@ -244,7 +329,32 @@ public class DDocumento {
         }  
     }
     
-    public int getDocPorTitulo(String doc_titulo){
+    public boolean ExistePorTitulo(String doc_titulo){
+        PreparedStatement ps = null;
+        Connection con = conexion.getConexion();
+        String sql = "SELECT * FROM documento where doc_titulo = ?";
+        ResultSet resultado = null;
+        try{
+            ps = con.prepareStatement(sql);
+            ps.setString(1, doc_titulo);
+            resultado = ps.executeQuery();
+            if(resultado.next()) {
+                return true;
+            }else{
+                return false;
+            }
+        }catch(SQLException e){
+            return false;
+        }finally{
+            try{
+                con.close();
+            }catch(SQLException e){
+                System.err.println(e);
+            }
+        }  
+    }
+    //Decuelve el ID MAIL del documento con ese titulo. Si no existe devuelve -1.
+    public int getIDMailPorTitulo(String doc_titulo){
         PreparedStatement ps = null;
         int idMail = -1;
         Connection con = conexion.getConexion();

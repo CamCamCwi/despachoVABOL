@@ -81,6 +81,6 @@ public class NCategoriaAnuncio {
     }
 
     public String ListarCategoriaAnuncio() {
-        return this.dcategoriaanuncio.Listar();
+        return this.dcategoriaanuncio.Listar("");
     }
 }
