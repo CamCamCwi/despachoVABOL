@@ -14,7 +14,7 @@ public class NCategoriaAnuncio {
     public String RegistrarCategoriaAnuncio(String cat_nombre, String cat_descripcion) {
         if (cat_nombre.length() != 0 && cat_descripcion.length() != 0) {
             if (cat_nombre.length() <= 125) {
-                if (cat_descripcion.length() <= 125) {
+                if (cat_descripcion.length() <= 300) {
                     this.dcategoriaanuncio.setCat_nombre(cat_nombre);
                     this.dcategoriaanuncio.setCat_descripcion(cat_descripcion);
                     if (this.dcategoriaanuncio.Registrar()) {
@@ -81,6 +81,6 @@ public class NCategoriaAnuncio {
     }
 
     public String ListarCategoriaAnuncio() {
-        return this.dcategoriaanuncio.Listar();
+        return this.dcategoriaanuncio.Listar("");
     }
 }

@@ -84,6 +84,6 @@ public class NSolicitudContacto {
     }
 
     public String ListarSolicitudContacto() {
-        return this.dsolicitudcontacto.Listar();
+        return this.dsolicitudcontacto.Listar("");
     }
 }
