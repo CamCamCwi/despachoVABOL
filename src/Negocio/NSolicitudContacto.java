@@ -33,7 +33,7 @@ public class NSolicitudContacto {
                                 this.dsolicitudcontacto.setSol_contenido(sol_contenido);
 
                                 if (this.dsolicitudcontacto.Registrar()) {
-                                    respuesta = "Se registró correctamente la solicitud de contacto";
+                                    respuesta = this.dsolicitudcontacto.Listar("Se registró correctamente la solicitud de contacto.");
                                 } else {
                                     respuesta = "No se pudo registrar la solicitud de contacto";
                                 }
@@ -70,7 +70,7 @@ public class NSolicitudContacto {
                 //}
 
                 if (this.dsolicitudcontacto.Modificar()) {
-                    respuesta = "Se modificó correctamente la solicitud de contacto";
+                    respuesta = this.dsolicitudcontacto.Listar("Se modificó correctamente la solicitud de contacto.");
                 } else {
                     respuesta = "No se pudo registrar la solicitud de contacto";
                 }

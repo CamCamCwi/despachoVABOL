@@ -166,27 +166,7 @@ public class DDocumento {
             }
         }
     }
-    
-    public boolean Eliminar() {
-        PreparedStatement ps = null;
-        Connection con = conexion.getConexion();
-        String sql = "DELETE from documento where doc_id = ?";
-        try {
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, this.getDoc_id());
-            ps.execute();
-            return true;
-        } catch (SQLException e) {
-            return false;
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.err.println(e);
-            }
-        }
-    }
-    
+
     public boolean EliminarPorTitulo() {
         PreparedStatement ps = null;
         Connection con = conexion.getConexion();
@@ -259,20 +239,22 @@ public class DDocumento {
 "\n" +
 "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Hora Subida</th>\n" +
 "\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Url</th>\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NIT Cliente</th>\n" +
 "\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Cliente</th>\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Razon Social</th>\n" +
 "\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Abogado</th>\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Abogado</th>\n" +
 "\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Categoria</th>\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Apellido Abogado</th>\n" +
 "\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Mail</th>\n" +
-"\n" +                
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Categoria</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Nombre Categoria</th>\n" +
+"\n" +                  
 "  </tr>\n" +
 "\n";   
         try {
-            String query = "SELECT * FROM documento ORDER BY doc_id";
+            String query = "SELECT doc_id,doc_titulo,doc_descripcion,doc_fechasubida,doc_horasubida,doc_cliente,cl_razonsocial,doc_abogado, abg_apellidop,doc_categoriadoc,catdoc_nombre FROM documento,cliente,abogado,categoriadoc WHERE doc_cliente=cl_nit AND doc_abogado=abg_ci AND doc_categoriadoc=catdoc_id ORDER BY doc_id";
             Connection con = conexion.getConexion();
             Consulta = (Statement) con.createStatement();
             resultado = Consulta.executeQuery(query);

@@ -33,7 +33,7 @@ public class NAnuncio {
                         this.danuncio.setAnu_abogado(anu_abogado);
                         this.danuncio.setAnu_categoria(anu_categoria);
                         if (this.danuncio.Registrar()) {
-                            respuesta = "Se registró correctamente el anuncio";
+                            respuesta = this.danuncio.Listar("Se registró correctamente el anuncio.");
                         } else {
                             respuesta = "No se pudo registrar el anuncio";
                         }
@@ -68,7 +68,7 @@ public class NAnuncio {
                         this.danuncio.setAnu_abogado(anu_abogado);
                         this.danuncio.setAnu_categoria(anu_categoria);
                         if (this.danuncio.Modificar()) {
-                            respuesta = "Se modificó correctamente el anuncio";
+                            respuesta = this.danuncio.Listar("Se modificó correctamente el anuncio.");
                         } else {
                             respuesta = "No se pudo modificar el anuncio";
                         }
@@ -92,7 +92,7 @@ public class NAnuncio {
             if (this.danuncio.Existe(anu_id)) {
                 this.danuncio.setAnu_id(anu_id);
                 if (this.danuncio.Eliminar()) {
-                    respuesta = "Se eliminó correctamente el anuncio";
+                    respuesta = this.danuncio.Listar("Se eliminó correctamente el anuncio.");
                 } else {
                     respuesta = "No se pudo eliminar el anuncio";
                 }

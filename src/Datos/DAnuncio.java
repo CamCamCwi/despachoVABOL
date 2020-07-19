@@ -192,12 +192,18 @@ public class DAnuncio {
 "\n" +
 "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Abogado</th>\n" +
 "\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Categoria</th>\n" +
-"\n" +                
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Nombre Abogado</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Apellido Abogado</th>\n" +
+"\n" + 
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Categoria</th>\n" +
+"\n" + 
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Nombre Categoria</th>\n" +
+"\n" +                 
 "  </tr>\n" +
 "\n";    
         try {
-            String query = "SELECT * FROM anuncio ORDER BY anu_id";
+            String query = "SELECT anu_id,anu_titulo,anu_contenido,anu_estado,anu_fechapub,anu_horapub,anu_abogado,abg_nombre,abg_apellidop,anu_categoria,cat_nombre FROM anuncio,abogado,categoriaanuncio WHERE anu_abogado = abg_ci and anu_categoria = cat_id order by anu_id";
             Connection con = conexion.getConexion();
             Consulta = (Statement) con.createStatement();
             resultado = Consulta.executeQuery(query);
