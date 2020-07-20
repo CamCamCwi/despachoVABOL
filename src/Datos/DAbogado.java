@@ -14,7 +14,7 @@ public class DAbogado {
     private String apellidoP;
     private String apellidoM;
     private String nombre;
-    private String fNacimiento;
+    private Date fNacimiento;
     private String genero;
     private String especialidad;
     private int celular;
@@ -63,11 +63,11 @@ public class DAbogado {
         this.nombre = nombre;
     }
 
-    public String getfNacimiento() {
+    public Date getfNacimiento() {
         return fNacimiento;
     }
 
-    public void setfNacimiento(String fNacimiento) {
+    public void setfNacimiento(Date fNacimiento) {
         this.fNacimiento = fNacimiento;
     }
 
@@ -137,7 +137,7 @@ public class DAbogado {
             ps.setString(4, this.getApellidoM());
             ps.setString(5, this.getEspecialidad());
             ps.setInt(6, this.getCelular());
-            ps.setString(7, this.getfNacimiento());
+            ps.setDate(7, this.getfNacimiento());
             ps.setString(8, this.getGenero());
             ps.setInt(9, this.getNroColAbogado());
             ps.setInt(10, this.getNroMinJusticia());
@@ -170,7 +170,7 @@ public class DAbogado {
             ps.setString(3, this.getApellidoM());
             ps.setString(4, this.getEspecialidad());
             ps.setInt(5, this.getCelular());
-            ps.setString(6, this.getfNacimiento());
+            ps.setDate(6, this.getfNacimiento());
             ps.setString(7, this.getGenero());
             ps.setInt(8, this.getNroColAbogado());
             ps.setInt(9, this.getNroMinJusticia());
@@ -242,7 +242,8 @@ public class DAbogado {
         }
         return imprimir;
     }
-    public boolean Existe(){
+    public boolean Existe(int ci){
+        setCi(ci);
         PreparedStatement ps = null;
         Connection con = abrirConexion();
         String sql = "SELECT * FROM abogado where abg_ci = ?";
@@ -268,6 +269,24 @@ public class DAbogado {
     }
     public String find(int ci){
         return "no se ha encontrado";
+    }
+     public String ObtenerMailbyCI(){
+        PreparedStatement ps = null;
+        Connection con = abrirConexion();
+
+        String sql = "SELECT usu_email FROM usuario,abogado WHERE abg_usuario = usu_id and abg_ci = ?";
+        ResultSet resultado = null;
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, this.ci);            
+            resultado = ps.executeQuery();
+            resultado.next();
+            return resultado.getString("usu_email");
+            
+        } catch (Exception e) {
+        }
+        return "-1";
+        
     }
 }
 
