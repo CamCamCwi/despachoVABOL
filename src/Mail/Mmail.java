@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 public class Mmail {
+
     private NDocumento ndocumento;
     private NCategoriaDoc ncategoriadoc;
     private NComentario ncomentario;
@@ -34,7 +35,7 @@ public class Mmail {
     public Mmail() {
         this.ncategoriadoc = new NCategoriaDoc();
         this.ncomentario = new NComentario();
-
+        this.ndocumento = new NDocumento();
         //CU6,CU7,CU8
         this.ncategoriaanuncio = new NCategoriaAnuncio();
         this.nanuncio = new NAnuncio();
@@ -63,7 +64,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar documento</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_titulo,String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc]</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -73,7 +74,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar documento</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_documento[int doc_id,String doc_titulo,String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_documento[int doc_id,String doc_descripcion,int doc_categoriadoc]</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -83,7 +84,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar documento</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_documento[int doc_id]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_documento[String doc_titulo]</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -862,6 +863,7 @@ public class Mmail {
     // CU1: Gestionar Documento
     //Registrar Documento 
     public void RegistrarDocumento(String[] datos) {
+        GuardarMail(datos);
 
     }
 
@@ -882,7 +884,7 @@ public class Mmail {
 
     //Buscar Documento 
     public void BuscarDocumento(String[] datos) {
-
+        this.getDocFromMail(datos);
     }
 
     // CU2: CategoriaDoc
@@ -1297,12 +1299,13 @@ public class Mmail {
             return false;
         }
     }
+
     public void GuardarMail(String[] datos) {
         String comando = "";
         int puerto = 110;
         String nombre = "";
         String number = "";
-        String respuesta="";
+        String respuesta = "";
         try {
             Socket socket = new Socket(servidor, puerto);
             BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -1340,7 +1343,11 @@ public class Mmail {
             salida.close();
             entrada.close();
             socket.close();
-           // respuesta=ndocumento.RegistrarDocumento(nombre, datos[0],datos[1],Time.valueOf(datos[2]),datos[3], Integer.parseInt(datos[5]), Integer.parseInt(datos[6]), number);
+            java.util.Date fechaHoy = new Date();
+            long d = fechaHoy.getTime();
+            java.sql.Time horaAhora = new java.sql.Time(d);
+            java.sql.Date fechaAhora = new java.sql.Date(d);
+            respuesta = ndocumento.RegistrarDocumento(nombre, datos[0], fechaAhora, horaAhora,"/docs", datos[1], Integer.parseInt(datos[2]), Integer.parseInt(datos[3]), Integer.parseInt(number));
             sendMail(respuesta);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -1350,7 +1357,7 @@ public class Mmail {
         }
     }
 
-    public void getDocFromMail(String nombre) {
+    public void getDocFromMail(String [] datos) {
         String comando = "";
         int puerto = 110;
         String encodeDoc = "";
@@ -1372,7 +1379,7 @@ public class Mmail {
                 salida.writeBytes(comando);
                 System.out.println("S : " + entrada.readLine() + "\r\n");
 
-                number = "123";
+                number = String.valueOf(ndocumento.getIDMailPorTitulo(datos[0]));
                 //verificar si existe el mail
                 comando = "RETR " + number + "\n";
                 System.out.print("C : " + comando);
