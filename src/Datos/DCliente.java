@@ -4,7 +4,7 @@ import java.sql.*;
 
 
 public class DCliente {
-    private int    nit;
+    private String    nit;
     private String nRepresentante;
     private String razonSocial;
     private String rubro;
@@ -24,11 +24,11 @@ public class DCliente {
         this.cl_usuario = cl_usuario;
     }
 
-    public int getNit() {
+    public String getNit() {
         return nit;
     }
 
-    public void setNit(int nit) {
+    public void setNit(String nit) {
         this.nit = nit;
     }
 
@@ -115,7 +115,7 @@ public class DCliente {
         try {
             ps = con.prepareStatement(sql);
 
-            ps.setInt(1, this.getNit());
+            ps.setString(1, this.getNit());
             ps.setString(2, this.getCiudad());
             ps.setString(3, this.getDescripcion());
             ps.setString(4, this.getDireccion());
@@ -159,7 +159,7 @@ public class DCliente {
             ps.setInt(9, this.getTelefono());
             ps.setInt(10, this.getCl_usuario());
             
-            ps.setInt(11, this.getNit());
+            ps.setString(11, this.getNit());
             ps.execute();
             return true;
         } catch (SQLException e) {
@@ -182,7 +182,7 @@ public class DCliente {
 
         try {
             ps = con.prepareStatement(sql);
-            ps.setInt(1, this.getNit());
+            ps.setString(1, this.getNit());
             ps.execute();
             return true;
 
@@ -226,14 +226,15 @@ public class DCliente {
         }
         return imprimir;
     }
-    public boolean Existe(){
+    public boolean Existe(String nit){
+        setNit(nit);
         PreparedStatement ps = null;
         Connection con = abrirConexion();
-        String sql = "SELECT * FROM cliente where cl_nit= ?";
+        String sql = "SELECT * FROM cliente WHERE cl_nit= ?";
         ResultSet resultado = null;
         try{
             ps = con.prepareStatement(sql);
-            ps.setInt(1, this.getNit());
+            ps.setString(1, this.getNit());
             resultado = ps.executeQuery();
             if(resultado.next()) {
                 return true;
@@ -250,8 +251,26 @@ public class DCliente {
             }
         }  
     }
-    public String find (int nit){
+    public String find (String nit){
         return "No se encontro el Usuario";
     }
+    public String ObtenerMailbyNIT(){
+        PreparedStatement ps = null;
+        Connection con = abrirConexion();
+
+        String sql = "SELECT usu_email FROM usuario,cliente WHERE cl_usuario = usu_id and cl_nit = ?";
+        ResultSet resultado = null;
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, this.nit);            
+            resultado = ps.executeQuery();
+            resultado.next();
+            return resultado.getString("usu_email");
+            
+        } catch (Exception e) {
+        }
+        return "-1";
+    }
+    
     
 }
