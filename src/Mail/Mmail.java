@@ -4,6 +4,7 @@ import Negocio.NAnuncio;
 import Negocio.NCategoriaAnuncio;
 import Negocio.NCategoriaDoc;
 import Negocio.NComentario;
+import Negocio.NDocumento;
 import Negocio.NSolicitudContacto;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -11,11 +12,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.Time;
 import java.util.Date;
 import java.util.regex.Pattern;
 
 public class Mmail {
 
+    private NDocumento ndocumento;
     private NCategoriaDoc ncategoriadoc;
     private NComentario ncomentario;
     //CU6,CU7,CU8
@@ -32,391 +35,391 @@ public class Mmail {
     public Mmail() {
         this.ncategoriadoc = new NCategoriaDoc();
         this.ncomentario = new NComentario();
-
+        this.ndocumento = new NDocumento();
         //CU6,CU7,CU8
         this.ncategoriaanuncio = new NCategoriaAnuncio();
         this.nanuncio = new NAnuncio();
         this.nsolicitudcontacto = new NSolicitudContacto();
     }
 
-    public String help() {        
-        String help =  "Content-Type: text/html; charset=\"UTF-8\"\n" +
-                        "\n" +
-                        "<h1>HELP:  </h1>"+
-                        "<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n" +
-                        "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Caso de uso</th>\n" +
-                        "\n" +
-                        "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Método</th>\n" +
-                        "\n" +
-                        "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Comando</th>\n" +
-                        "\n" +
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_titulo,String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_documento[int doc_id,String doc_titulo,String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_documento[int doc_id]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar documentos</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_documento[]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Buscar documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">find_documento[String doc_titulo]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" + 
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU2. Gestionar categoria documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar categoria documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_categoriadoc[String nombreCategoriaDocumento, String descripcionCategoriaDocumento]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU2. Gestionar categoria documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar categoria documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_categoriadoc[int idCategoriaDocumento, String nombreCategoriaDocumento, String descripcionCategoriaDocumento]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU2. Gestionar categoria documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar categoria documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_categoriadoc[int idCategoriaDocumento]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU2. Gestionar categoria documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar categorias documento</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_categoriadoc[]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono,String Usuario,String Contraseña]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_cliente[int Nit]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar Clientes</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_cliente[]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Buscar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">find_cliente[int ci]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\"> Modificar Contraseña de Cliente</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_contraseña_cliente[String Usuario, String Anterior contraseña , String nueva contraseña]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte,String usuario, int contraseña]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_abogado[int ci]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\"> list_abogado[]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Buscar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">find_abogado[int ci]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\"> Modificar Contraseña de Abogado</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_contraseña_abogado[String Usuario, String Anterior contraseña , String nueva contraseña]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU5. Gestionar comentario</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar comentario</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_comentario[String contenidoComentario, int idDocumento, int idUsuario, int idComentario](El idComentario puede ser nulo, si lo es, ingrese un '-')</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU5. Gestionar comentario</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar comentario</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_comentario[int idComentario, String contenidoComentario]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU5. Gestionar comentario</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar comentario</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_comentario[int idComentario]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU5. Gestionar comentario</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar comentario</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_comentario[int doc_id]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU6. Gestionar Anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_anuncio[String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU6. Gestionar Anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_anuncio[int idAnuncio, String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU6. Gestionar Anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_anuncio[int idAnuncio]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU6. Gestionar Anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_anuncio[]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU7. Gestionar Categoria de Anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar categoria anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_catanuncio[String nombreCategoriaAnuncio, String descripcionCategoriaAnuncio]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU7. Gestionar Categoria de Anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar categoria anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_catanuncio[int idCategoriaAnuncio, String nombreCategoriaAnuncio, String descripcionCategoriaAnuncio]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU7. Gestionar Categoria de Anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar categoria anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_catanuncio[int idCategoriaAnuncio]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU7. Gestionar Categoria de Anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar categoria anuncio</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_catanuncio[]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU8. Registrar solicitud de contacto</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar solicitud de contacto</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_solicitudcontacto[String nombreSolicitante, String apellidoSolicitante, int celularSolicitante, String estadoSolicitudContacto(revisado/pendiente), String emailSolicitante, String contenidoSolicitudContacto]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n"+
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU8. Registrar solicitud de contacto</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar solicitud de contacto</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_solicitudcontacto[int idSolicitudContacto, String estadoSolicitudContacto(revisado/pendiente), int ciAbogado]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "  <tr>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU8. Registrar solicitud de contacto</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar solicitud de contacto</td>\n" +
-                        "\n"+
-                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_solicitudcontacto[]</td>\n" +
-                        "\n"+
-                        "  </tr>\n" +
-                        "\n" +
-                        "\n" +
-                        "</table>";
+    public String help() {
+        String help = "Content-Type: text/html; charset=\"UTF-8\"\n"
+                + "\n"
+                + "<h1>HELP:  </h1>"
+                + "<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Caso de uso</th>\n"
+                + "\n"
+                + "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Método</th>\n"
+                + "\n"
+                + "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Comando</th>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_documento[int doc_id,String doc_descripcion,int doc_categoriadoc]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_documento[String doc_titulo]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar documentos</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_documento[]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Buscar documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">find_documento[String doc_titulo]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU2. Gestionar categoria documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar categoria documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_categoriadoc[String nombreCategoriaDocumento, String descripcionCategoriaDocumento]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU2. Gestionar categoria documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar categoria documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_categoriadoc[int idCategoriaDocumento, String nombreCategoriaDocumento, String descripcionCategoriaDocumento]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU2. Gestionar categoria documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar categoria documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_categoriadoc[int idCategoriaDocumento]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU2. Gestionar categoria documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar categorias documento</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_categoriadoc[]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono,String Usuario,String Contraseña]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_cliente[int Nit]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar Clientes</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_cliente[]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Buscar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">find_cliente[int ci]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU3. Gestionar Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\"> Modificar Contraseña de Cliente</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_contraseña_cliente[String Usuario, String Anterior contraseña , String nueva contraseña]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte,String usuario, int contraseña]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_abogado[int ci, String nombre,String apellido Paterno ,String apellido Materno,String especialidad,int celular, String fecha de nacimiento,String genero,int numero en colegio de abogados, int numero en ministerio de justicia, int numero de registro en Corte]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_abogado[int ci]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\"> list_abogado[]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Buscar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">find_abogado[int ci]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU4. Gestionar abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\"> Modificar Contraseña de Abogado</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_contraseña_abogado[String Usuario, String Anterior contraseña , String nueva contraseña]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU5. Gestionar comentario</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar comentario</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_comentario[String contenidoComentario, int idDocumento, int idUsuario, int idComentario](El idComentario puede ser nulo, si lo es, ingrese un '-')</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU5. Gestionar comentario</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar comentario</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_comentario[int idComentario, String contenidoComentario]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU5. Gestionar comentario</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar comentario</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_comentario[int idComentario]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU5. Gestionar comentario</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar comentario</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_comentario[int doc_id]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU6. Gestionar Anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_anuncio[String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU6. Gestionar Anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_anuncio[int idAnuncio, String tituloAnuncio, String contenidoAnuncio, int estadoAnuncio (0-1), int ciAbogado, int idCategoria]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU6. Gestionar Anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_anuncio[int idAnuncio]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU6. Gestionar Anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_anuncio[]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU7. Gestionar Categoria de Anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar categoria anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_catanuncio[String nombreCategoriaAnuncio, String descripcionCategoriaAnuncio]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU7. Gestionar Categoria de Anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar categoria anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_catanuncio[int idCategoriaAnuncio, String nombreCategoriaAnuncio, String descripcionCategoriaAnuncio]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU7. Gestionar Categoria de Anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar categoria anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_catanuncio[int idCategoriaAnuncio]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU7. Gestionar Categoria de Anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar categoria anuncio</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_catanuncio[]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU8. Registrar solicitud de contacto</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar solicitud de contacto</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_solicitudcontacto[String nombreSolicitante, String apellidoSolicitante, int celularSolicitante, String estadoSolicitudContacto(revisado/pendiente), String emailSolicitante, String contenidoSolicitudContacto]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU8. Registrar solicitud de contacto</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar solicitud de contacto</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_solicitudcontacto[int idSolicitudContacto, String estadoSolicitudContacto(revisado/pendiente), int ciAbogado]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "  <tr>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU8. Registrar solicitud de contacto</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Listar solicitud de contacto</td>\n"
+                + "\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_solicitudcontacto[]</td>\n"
+                + "\n"
+                + "  </tr>\n"
+                + "\n"
+                + "\n"
+                + "</table>";
 
         return help;
     }
@@ -734,19 +737,19 @@ public class Mmail {
         }
         switch (encabezado) {
             // CU1: Gestionar documentos
-            case "reg_documento": 
+            case "reg_documento":
                 this.RegistrarDocumento(datos);
                 break;
-            case "mod_documento": 
+            case "mod_documento":
                 this.ModificarDocumento(datos);
                 break;
-            case "del_documento": 
+            case "del_documento":
                 this.EliminarDocumento(datos);
                 break;
-            case "list_documentos": 
+            case "list_documentos":
                 this.ListarDocumentos();
                 break;
-            case "find_documento": 
+            case "find_documento":
                 this.BuscarDocumento(datos);
                 break;
             //CU2: Gestionar Categoria Documento
@@ -857,28 +860,33 @@ public class Mmail {
     }
 
     // Métodos de cada clase. 
-    
     // CU1: Gestionar Documento
     //Registrar Documento 
     public void RegistrarDocumento(String[] datos) {
-        
+        GuardarMail(datos);
+
     }
+
     //Modificar Documento 
     public void ModificarDocumento(String[] datos) {
-        
+
     }
+
     //Eliminar Documento 
     public void EliminarDocumento(String[] datos) {
-        
+
     }
+
     //Listar Documento 
     public void ListarDocumentos() {
-        
+
     }
+
     //Buscar Documento 
     public void BuscarDocumento(String[] datos) {
-        
+        this.getDocFromMail(datos);
     }
+
     // CU2: CategoriaDoc
     // RegistrarCategoriaDoc
     public void RegistrarCategoriaDoc(String[] datos) {
@@ -1290,5 +1298,166 @@ public class Mmail {
         } catch (NumberFormatException nfe) {
             return false;
         }
+    }
+
+    public void GuardarMail(String[] datos) {
+        String comando = "";
+        int puerto = 110;
+        String nombre = "";
+        String number = "";
+        String respuesta = "";
+        try {
+            Socket socket = new Socket(servidor, puerto);
+            BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
+            if (socket != null && entrada != null && salida != null) {
+                System.out.println("S : " + entrada.readLine() + "\r\n");
+
+                comando = "USER " + usuario + "\r\n";
+                System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                System.out.println("S : " + entrada.readLine() + "\r\n");
+
+                comando = "PASS " + contrasena + "\r\n";
+                System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                System.out.println("S : " + entrada.readLine() + "\r\n");
+
+                comando = "LIST \r\n";
+                System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                number = getLastMail(entrada);
+
+                comando = "RETR " + number + "\n";
+                System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                this.mailExterno = getEmisorMail(entrada);
+                nombre = getNameFromMime(entrada);
+
+                comando = "QUIT\r\n";
+                System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                System.out.println("S : " + entrada.readLine() + "\r\n");
+            }
+
+            salida.close();
+            entrada.close();
+            socket.close();
+            java.util.Date fechaHoy = new Date();
+            long d = fechaHoy.getTime();
+            java.sql.Time horaAhora = new java.sql.Time(d);
+            java.sql.Date fechaAhora = new java.sql.Date(d);
+            respuesta = ndocumento.RegistrarDocumento(nombre, datos[0], fechaAhora, horaAhora,"/docs", datos[1], Integer.parseInt(datos[2]), Integer.parseInt(datos[3]), Integer.parseInt(number));
+            sendMail(respuesta);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.out.println(" S : no se pudo conectar con el servidor indicado");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getDocFromMail(String [] datos) {
+        String comando = "";
+        int puerto = 110;
+        String encodeDoc = "";
+        String number = "";
+        try {
+            Socket socket = new Socket(servidor, puerto);
+            BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
+            if (socket != null && entrada != null && salida != null) {
+                System.out.println("S : " + entrada.readLine() + "\r\n");
+
+                comando = "USER " + usuario + "\r\n";
+                System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                System.out.println("S : " + entrada.readLine() + "\r\n");
+
+                comando = "PASS " + contrasena + "\r\n";
+                System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                System.out.println("S : " + entrada.readLine() + "\r\n");
+
+                number = String.valueOf(ndocumento.getIDMailPorTitulo(datos[0]));
+                //verificar si existe el mail
+                comando = "RETR " + number + "\n";
+                System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                this.mailExterno = getEmisorMail(entrada);
+                encodeDoc = getEncodeMime(entrada);
+                System.out.println(encodeDoc);
+
+                comando = "QUIT\r\n";
+                System.out.print("C : " + comando);
+                salida.writeBytes(comando);
+                System.out.println("S : " + entrada.readLine() + "\r\n");
+            }
+
+            salida.close();
+            entrada.close();
+            socket.close();
+            sendMail(encodeDoc);
+            //   VerificarSubject(subject);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.out.println(" S : no se pudo conectar con el servidor indicado");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getEncodeMime(BufferedReader in) throws IOException {
+        String respuesta = "";
+        String linea_anterior = "";
+        String linea_actual = "";
+        boolean flag = false;
+        while (true) {
+            String line = in.readLine();
+            if (line == null) {
+                throw new IOException(" S : Server unawares closed the connection.");
+            }
+            if (line.equals(".")) {
+                break;
+            }
+            linea_anterior = linea_actual;
+            linea_actual = line;
+            if (linea_anterior.contains("Content-Type:") && linea_actual.contains("name=") && flag == false) {
+                flag = true;
+            }
+            if (linea_actual.contains("--") && flag) {
+                respuesta += linea_anterior;
+                flag = false;
+            }
+            if (flag) {
+                respuesta += linea_anterior + "\n";
+            }
+        }
+        return respuesta;
+    }
+
+    public String getNameFromMime(BufferedReader in) throws IOException {
+        String respuesta = "";
+        String linea_anterior = "";
+        String linea_actual = "";
+        boolean flag = false;
+        while (true) {
+            String line = in.readLine();
+            if (line == null) {
+                throw new IOException(" S : Server unawares closed the connection.");
+            }
+            if (line.equals(".")) {
+                break;
+            }
+            linea_anterior = linea_actual;
+            linea_actual = line;
+            if (linea_anterior.contains("Content-Type:") && linea_actual.contains("name=") && flag == false) {
+                respuesta = linea_actual;
+                respuesta = respuesta.replaceAll("name=", "");
+                respuesta = respuesta.trim();
+            }
+
+        }
+        return respuesta;
     }
 }

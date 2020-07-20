@@ -52,7 +52,7 @@ public class DUsuario {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
 
-        String sql = "INSERT INTO usuario (usu_contraseña,usu_email) VALUES (?,?)";
+        String sql = "INSERT INTO usuario (usu_email,usu_contraseña) VALUES (?,?)";
 
         try {
             ps = con.prepareStatement(sql);
@@ -79,7 +79,7 @@ public class DUsuario {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
 
-        String sql = "UPDATE usuario SET usu_contraseña=? WHERE usu_mail=? ";
+        String sql = "UPDATE usuario SET usu_contraseña=? WHERE usu_email=? ";
 
         try {
             ps = con.prepareStatement(sql);
@@ -105,7 +105,7 @@ public class DUsuario {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
 
-        String sql = "DELETE FROM usuario WHERE usu_mail = ?";
+        String sql = "DELETE FROM usuario WHERE usu_email = ?";
 
         try {
             ps = con.prepareStatement(sql);
@@ -127,13 +127,13 @@ public class DUsuario {
     public boolean Existe(){
         PreparedStatement ps = null;
         Connection con = abrirConexion();
-        String sql = "SELECT * FROM usuario where usu_contraseña = ? and usu_email = ?";
+        String sql = "SELECT * FROM usuario where usu_email = ? and usu_contraseña = ?";
         ResultSet resultado = null;
         try{
             ps = con.prepareStatement(sql);
             ps.setString(1, this.getUsuario());
             ps.setString(2, this.getContraseña());
-            resultado = ps.executeQuery();
+            resultado = ps.executeQuery();            
             if(resultado.next()) {
                 return true;
             }else{
@@ -149,4 +149,23 @@ public class DUsuario {
             }
         }  
     }
+    public int ObtenerID(){
+        PreparedStatement ps = null;
+        Connection con = abrirConexion();
+
+        String sql = "SELECT * FROM usuario WHERE usu_email = ? and usu_contraseña = ?";
+        ResultSet resultado = null;
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, this.getUsuario());
+            ps.setString(2, this.getContraseña());
+            resultado = ps.executeQuery();
+            resultado.next();
+            return resultado.getInt("usu_id");
+            
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+   
 }
