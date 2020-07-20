@@ -178,13 +178,12 @@ public class DSolicitudContacto {
 "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Contenido</th>\n" +
 "\n" +
 "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Abogado</th>\n" +
-"\n" +
-"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Apellido Abogado</th>\n" +
-"\n" +                
+"\n" +               
 "  </tr>\n" +
 "\n"; 
         try {
-            String query = "SELECT sol_id,sol_nombre,sol_apellido,sol_fecha,sol_celular,sol_estado,sol_email,sol_contenido,sol_abogado,abg_apellidop FROM solicitudcontacto,abogado WHERE sol_abogado=abg_ci ORDER BY sol_id";            
+            //String query = "SELECT sol_id,sol_nombre,sol_apellido,sol_fecha,sol_celular,sol_estado,sol_email,sol_contenido,sol_abogado,abg_apellidop FROM solicitudcontacto,abogado WHERE sol_abogado=abg_ci ORDER BY sol_id";            
+            String query = "SELECT sol_id,sol_nombre,sol_apellido,sol_fecha,sol_celular,sol_estado,sol_email,sol_contenido,sol_abogado FROM solicitudcontacto ORDER BY sol_id";            
             Connection con = conexion.getConexion();            
             Consulta = (Statement) con.createStatement();
             resultado = Consulta.executeQuery(query);            
