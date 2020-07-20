@@ -94,6 +94,16 @@ public class Mmail {
                         "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">list_documento[]</td>\n" +
                         "\n"+
                         "  </tr>\n" +
+                        "\n" +
+                        "  <tr>\n" +
+                        "\n"+
+                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">CU1. Gestionar documento</td>\n" +
+                        "\n"+
+                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Buscar documento</td>\n" +
+                        "\n"+
+                        "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">find_documento[String doc_titulo]</td>\n" +
+                        "\n"+
+                        "  </tr>\n" +
                         "\n" + 
                         "  <tr>\n" +
                         "\n"+
@@ -723,8 +733,22 @@ public class Mmail {
             }
         }
         switch (encabezado) {
-            
-
+            // CU1: Gestionar documentos
+            case "reg_documento": 
+                this.RegistrarDocumento(datos);
+                break;
+            case "mod_documento": 
+                this.ModificarDocumento(datos);
+                break;
+            case "del_documento": 
+                this.EliminarDocumento(datos);
+                break;
+            case "list_documentos": 
+                this.ListarDocumentos();
+                break;
+            case "find_documento": 
+                this.BuscarDocumento(datos);
+                break;
             //CU2: Gestionar Categoria Documento
             case "reg_categoriadoc":
                 this.RegistrarCategoriaDoc(datos);
@@ -833,6 +857,28 @@ public class Mmail {
     }
 
     // Métodos de cada clase. 
+    
+    // CU1: Gestionar Documento
+    //Registrar Documento 
+    public void RegistrarDocumento(String[] datos) {
+        
+    }
+    //Modificar Documento 
+    public void ModificarDocumento(String[] datos) {
+        
+    }
+    //Eliminar Documento 
+    public void EliminarDocumento(String[] datos) {
+        
+    }
+    //Listar Documento 
+    public void ListarDocumentos() {
+        
+    }
+    //Buscar Documento 
+    public void BuscarDocumento(String[] datos) {
+        
+    }
     // CU2: CategoriaDoc
     // RegistrarCategoriaDoc
     public void RegistrarCategoriaDoc(String[] datos) {
