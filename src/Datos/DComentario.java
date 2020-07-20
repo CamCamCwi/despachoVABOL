@@ -189,7 +189,10 @@ public class DComentario {
 "  </tr>\n" +
 "\n";
         try {
-            String query = "SELECT * FROM comentario WHERE com_doc = " + doc_id +" ORDER BY com_fecha, com_hora";            
+            String query = "SELECT comentario.com_id,comentario.com_fecha,comentario.com_hora,comentario.com_contenido,"
+                    + "comentario.com_doc, documento.doc_titulo,comentario.com_usuario,usuario.usu_email,comentario.com_com2  FROM comentario,"
+                    + " usuario, documento WHERE comentario.com_usuario=usuario.usu_id and comentario.com_doc=documento.doc_id and com_doc = " + doc_id +" ORDER BY com_fecha, "
+                    + "com_hora";            
             Connection con = conexion.getConexion();            
             Consulta = (Statement) con.createStatement();
             resultado = Consulta.executeQuery(query);            
