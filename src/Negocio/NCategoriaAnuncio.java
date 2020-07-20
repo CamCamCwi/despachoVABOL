@@ -18,7 +18,7 @@ public class NCategoriaAnuncio {
                     this.dcategoriaanuncio.setCat_nombre(cat_nombre);
                     this.dcategoriaanuncio.setCat_descripcion(cat_descripcion);
                     if (this.dcategoriaanuncio.Registrar()) {
-                        respuesta = "Se registró correctamente la categoría anuncio";
+                        respuesta = this.dcategoriaanuncio.Listar("Se registró correctamente la categoría anuncio.");
                     } else {
                         respuesta = "No se pudo registrar la categoría anuncio";
                     }
@@ -43,7 +43,7 @@ public class NCategoriaAnuncio {
                         this.dcategoriaanuncio.setCat_nombre(cat_nombre);
                         this.dcategoriaanuncio.setCat_descripcion(cat_descripcion);
                         if (this.dcategoriaanuncio.Modificar()) {
-                            respuesta = "Se modificó correctamente la categoría anuncio";
+                            respuesta = this.dcategoriaanuncio.Listar("Se modificó correctamente la categoría anuncio.");
                         } else {
                             respuesta = "No se pudo modificar la categoría anuncio";
                         }
@@ -67,7 +67,7 @@ public class NCategoriaAnuncio {
             if (this.dcategoriaanuncio.Existe(cat_id)) {
                 this.dcategoriaanuncio.setCat_id(cat_id);
                 if (this.dcategoriaanuncio.Eliminar()) {
-                    respuesta = "Se eliminó correctamente la categoria anuncio";
+                    respuesta = this.dcategoriaanuncio.Listar("Se eliminó correctamente la categoría anuncio.");
                 } else {
                     respuesta = "No se pudo eliminar la categoria anuncio";
                 }

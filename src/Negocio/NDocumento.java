@@ -39,7 +39,7 @@ public class NDocumento {
                             this.ddocumento.setDoc_idmail(doc_idmail);
 
                             if (this.ddocumento.Registrar()) {
-                                respuesta = "Se registró correctamente el documento";
+                                respuesta = this.ddocumento.Listar("Se registró correctamente el documento.");
                             } else {
                                 respuesta = "No se pudo registrar el documento";
                             }
@@ -75,7 +75,7 @@ public class NDocumento {
                 this.ddocumento.setDoc_categoriadoc(doc_categoriadoc);
 
                 if (this.ddocumento.Modificar()) {
-                    respuesta = "Se Modificó correctamente el documento";
+                    respuesta = this.ddocumento.Listar("Se Modificó correctamente el documento.");
                 } else {
                     respuesta = "No se pudo modificar el documento";
                 }
@@ -88,54 +88,18 @@ public class NDocumento {
         return respuesta;
     }
 
-    public String EliminarDocumento(int doc_id) {
-        if (Integer.toString(doc_id).length() != 0) {
-            if (this.ddocumento.Existe(doc_id)) {
-                this.ddocumento.setDoc_id(doc_id);
-                if (this.ddocumento.Eliminar()) {
-                    respuesta = "Se eliminó correctamente el documento";
-                } else {
-                    respuesta = "No se pudo eliminar el documento";
-                }
-            } else {
-                respuesta = "El documento que quiere eliminar no existe";
-            }
-        } else {
-            respuesta = "No se permiten datos vacios o nulos";
-        }
-        return respuesta;
-    }
-
-    //BUSCAR POR NOMBRE.LISTO.
     //Decuelve el ID MAIL del documento con ese titulo. Si no existe devuelve -1.
     public int getIDMailPorTitulo(String doc_titulo) {
         return this.ddocumento.getIDMailPorTitulo(doc_titulo);
     }
 
-    //PONER UNIQUE EN EL NOMBRE EN LA BASE.LISTO.
-    //HACER FUNCION PARA VERIFICAR SI EXISTE ESE DOCUMENTO POR TITULO.LISTO.
-    //BUSCAR POR NOMBRE. Lista los atributos de un documento segun el nombre en un String.
-    public String BuscarDocumento(String doc_titulo) {
-        if (doc_titulo.length() != 0) {
-            if (this.ddocumento.ExistePorTitulo(doc_titulo)) {
-                this.ddocumento.setDoc_titulo(doc_titulo);
-                respuesta = this.ddocumento.BuscarDocumento();
-            } else {
-                respuesta = "El documento que quiere buscar no existe";
-            }
-        } else {
-            respuesta = "No se permiten datos vacios o nulos";
-        }
-        return respuesta;
-    }
-
-    //ELIMINAR POR Titulo. Listo.
+    //ELIMINAR POR Titulo.
     public String EliminarPorTitulo(String doc_titulo) {
         if (doc_titulo.length() != 0) {
             if (this.ddocumento.ExistePorTitulo(doc_titulo)) {
                 this.ddocumento.setDoc_titulo(doc_titulo);
                 if (this.ddocumento.EliminarPorTitulo()) {
-                    respuesta = "Se eliminó correctamente el documento";
+                    respuesta = this.ddocumento.Listar("Se eliminó correctamente el documento.");
                 } else {
                     respuesta = "No se pudo eliminar el documento";
                 }
