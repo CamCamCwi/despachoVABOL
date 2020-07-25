@@ -1,17 +1,18 @@
 package Negocio;
 
+import Datos.DAbogado;
 import Datos.DSolicitudContacto;
 import java.sql.Date;
 
 public class NSolicitudContacto {
 
     private DSolicitudContacto dsolicitudcontacto;
-    //private DAbogado dabogado;
+    private DAbogado dabogado;
     private String respuesta = "";
 
     public NSolicitudContacto() {
         dsolicitudcontacto = new DSolicitudContacto();
-        //dabogado = new DAbogado();
+        dabogado = new DAbogado();
     }
 
     public String RegistrarSolicitudContacto(String sol_nombre, String sol_apellido, Date sol_fecha, int sol_celular, String sol_estado, String sol_email, String sol_contenido) {
@@ -65,9 +66,9 @@ public class NSolicitudContacto {
 
                 this.dsolicitudcontacto.setSol_id(sol_id);
                 this.dsolicitudcontacto.setSol_estado(sol_estado);
-                //if (dabogado.Existe(anu_abogado)) {
+                if (dabogado.Existe(sol_abogado)) {
                 this.dsolicitudcontacto.setSol_abogado(sol_abogado);
-                //}
+                }
 
                 if (this.dsolicitudcontacto.Modificar()) {
                     respuesta = this.dsolicitudcontacto.Listar("Se modificó correctamente la solicitud de contacto.");
