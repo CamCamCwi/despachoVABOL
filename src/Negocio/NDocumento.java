@@ -23,7 +23,7 @@ public class NDocumento {
         if (doc_titulo.length() != 0 && doc_descripcion.length() != 0 && doc_url.length() != 0
                 && doc_cliente.length() != 0 && Integer.toString(doc_idmail).length() != 0
                 && Integer.toString(doc_abogado).length() != 0 && Integer.toString(doc_categoriadoc).length() != 0
-                && dcategoriadoc.Existe(doc_categoriadoc) /*&& dabogado.Existe(doc_abogado)*/) {
+                && dcategoriadoc.Existe(doc_categoriadoc) && dabogado.Existe(doc_abogado)) {
             if (doc_titulo.length() <= 125) {
                 if (doc_descripcion.length() <= 255) {
                     if (doc_url.length() <= 1000) {
