@@ -842,7 +842,7 @@ public class Mmail {
             case "list_catanuncio":
                 this.ListarCategoriaAnuncios();
                 break;
-            // CU8. Registrar solicitud de contacto 
+            // CU8. Gestionar solicitud de contacto 
             case "reg_solicitudcontacto":
                 this.RegistrarSolicitudContacto(datos);
                 break;
