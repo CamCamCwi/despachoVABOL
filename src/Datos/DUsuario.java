@@ -153,6 +153,31 @@ public class DUsuario {
             }
         }
     }
+    public boolean ExisteBYid(int ident) {
+        this.setId(ident);
+        PreparedStatement ps = null;
+        Connection con = abrirConexion();
+        String sql = "SELECT * FROM usuario where usu_id = ? ";
+        ResultSet resultado = null;
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, this.getUsuario());
+            resultado = ps.executeQuery();
+            if (resultado.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.err.println(e);
+            }
+        }
+    }
 
     public int ObtenerID() {
         PreparedStatement ps = null;
