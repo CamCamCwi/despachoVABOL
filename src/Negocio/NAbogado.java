@@ -127,7 +127,7 @@ public class NAbogado {
         return "fallo al modificar , usuario o contraseña incorrectas";
     }
     public String FindAbogado(int ci){
-        if (ci >1) {
+        if (ci >0) {
             dato.setCi(ci);
             return dato.find(ci);            
         }else{

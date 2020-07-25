@@ -6,6 +6,9 @@
 package Datos;
 
 import java.sql.*;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -38,7 +41,7 @@ public class DUsuario {
     }
 
     public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+        this.contraseña = getMD5(contraseña);
     }
 
     private Connection abrirConexion() {
@@ -124,32 +127,34 @@ public class DUsuario {
         }
 
     }
-    public boolean Existe(){
+
+    public boolean Existe() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
         String sql = "SELECT * FROM usuario where usu_email = ? and usu_contraseña = ?";
         ResultSet resultado = null;
-        try{
+        try {
             ps = con.prepareStatement(sql);
             ps.setString(1, this.getUsuario());
             ps.setString(2, this.getContraseña());
-            resultado = ps.executeQuery();            
-            if(resultado.next()) {
+            resultado = ps.executeQuery();
+            if (resultado.next()) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             return false;
-        }finally{
-            try{
+        } finally {
+            try {
                 con.close();
-            }catch(SQLException e){
+            } catch (SQLException e) {
                 System.err.println(e);
             }
-        }  
+        }
     }
-    public int ObtenerID(){
+
+    public int ObtenerID() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
 
@@ -162,10 +167,26 @@ public class DUsuario {
             resultado = ps.executeQuery();
             resultado.next();
             return resultado.getInt("usu_id");
-            
+
         } catch (Exception e) {
         }
         return 0;
     }
-   
+
+    public  String getMD5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            String hashtext = number.toString(16);
+
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
