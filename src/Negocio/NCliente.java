@@ -105,7 +105,7 @@ public class NCliente {
         return dato.Listar();
     }
 
-    public static String ModificarContraseñaCliente(String mail, String anterior_contraseña, String nueva_contraseña) {
+    public String ModificarContraseñaCliente(String mail, String anterior_contraseña, String nueva_contraseña) {
         DUsuario usuario = new DUsuario();
         usuario.setUsuario(mail);
         //aplicar hash a la anterior contraseña
@@ -118,8 +118,8 @@ public class NCliente {
         return "fallo al modificar, contraseña o usuario  incorrectas";
     }
 
-    public String FindAbogado(String nit) {
-        if (nit.length()< 1) {
+    public String FindCliente(String nit) {
+        if (nit.length()>0) {
             dato.setNit(nit);
             return dato.find(nit);
         } else {

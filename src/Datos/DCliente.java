@@ -252,7 +252,21 @@ public class DCliente {
         }  
     }
     public String find (String nit){
-        return "No se encontro el Usuario";
+        PreparedStatement ps = null;
+        Connection con = abrirConexion();
+        this.setNit(nit);
+        String sql = "SELECT * FROM Cliente WHERE cl_nit = ?";
+        ResultSet resultado = null;
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, this.getNit());            
+            resultado = ps.executeQuery();
+            resultado.next();
+            return (resultado.getString("cl_nit") + " " + resultado.getString("cl_ciudad") + " " + resultado.getString("cl_descripcion")  + " " + resultado.getString("cl_direccion") + " " + resultado.getString("cl_nrepresentante") + " " + resultado.getString("cl_paginaweb") + " " + resultado.getString("cl_pais") + " " + resultado.getString("cl_razonsocial") + " " + resultado.getString("cl_rubro") + " " + String.valueOf(resultado.getInt("cl_telefono")));
+
+        } catch (Exception e) {
+        }
+        return "No se pudo encontrar el Cliente";
     }
     public String ObtenerMailbyNIT(){
         PreparedStatement ps = null;

@@ -268,7 +268,21 @@ public class DAbogado {
         }  
     }
     public String find(int ci){
-        return "no se ha encontrado";
+        PreparedStatement ps = null;
+        Connection con = abrirConexion();
+        this.setCi(ci);
+        String sql = "SELECT * FROM Abogado WHERE abg_ci = ?";
+        ResultSet resultado = null;
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, this.getCi());            
+            resultado = ps.executeQuery();
+            resultado.next();
+            return (String.valueOf(resultado.getInt("abg_ci")) + " " + resultado.getString("abg_nombre") + " " + resultado.getString("abg_apellidop") + " " + resultado.getString("abg_apellidom") + " " + resultado.getString("abg_especialidad") + " " + resultado.getString("abg_celular") + " " + String.valueOf(resultado.getDate("abg_fnacimiento")) + " " + resultado.getString("abg_genero") + " " + String.valueOf(resultado.getString("abg_nrocolabogados")) + " " + String.valueOf(resultado.getInt("abg_nrominjusticia")) + " " + String.valueOf(resultado.getInt("abg_numregcorte")));
+
+        } catch (Exception e) {
+        }
+        return "No se pudo encontrar el Abogado";
     }
      public String ObtenerMailbyCI(){
         PreparedStatement ps = null;
