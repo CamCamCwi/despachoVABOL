@@ -87,7 +87,8 @@ public class NAbogado {
         res += (dato.getNroColAbogado() < 1) ? "Numero en Colegio de Abogados no puede ser nulo," : "";
         res += (dato.getNroMinJusticia() < 1) ? "Numero en Ministerio de justicia no puede ser nulo," : "";
         res += (dato.getNumRegCorte() < 1) ? "Numero de Registro en la corte no puede ser nulo," : "";
-        if (res.length() == 1) {
+        int s = res.length();
+        if (s == 0) {
             return dato.Modificar() ? "Abogado Modificado con exito" : "no se pudo modificar al Abogado";
         }
         return res;
