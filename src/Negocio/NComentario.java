@@ -24,7 +24,7 @@ public class NComentario {
         this.respuesta = "";
         if(com_contenido.length()!=0 && Integer.toString(com_doc).length()!=0 && Integer.toString(com_usuario).length()!=0 && com_com2.length()!=0){
             if(com_contenido.length() <= 125){
-                if(this.ddocumento.Existe(com_doc)){
+                if(this.ddocumento.Existe(com_doc) && this.dusuario.ExisteBYid(com_usuario)){
                     
                     this.dcomentario.setCom_fecha(com_fecha);
                     this.dcomentario.setCom_hora(com_hora);
