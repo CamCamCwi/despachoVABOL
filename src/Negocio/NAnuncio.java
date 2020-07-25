@@ -1,5 +1,6 @@
 package Negocio;
 
+import Datos.DAbogado;
 import Datos.DCategoriaAnuncio;
 import Datos.DAnuncio;
 import java.sql.Date;
@@ -9,19 +10,19 @@ public class NAnuncio {
 
     private DCategoriaAnuncio dcategoriaanuncio;
     private DAnuncio danuncio;
-    //private DAbogado dabogado;
+    private DAbogado dabogado;
     private String respuesta = "";
 
     public NAnuncio() {
         dcategoriaanuncio = new DCategoriaAnuncio();
         danuncio = new DAnuncio();
-        //dabogado = new DAbogado();
+        dabogado = new DAbogado();
     }
 
     public String RegistrarAnuncio(String anu_titulo, String anu_contenido, int anu_estado, Date anu_fechapub, Time anu_horapub, int anu_abogado, int anu_categoria) {
         if (anu_titulo.length() != 0 && anu_contenido.length() != 0 && Integer.toString(anu_categoria).length() != 0
                && Integer.toString(anu_abogado).length() != 0 && dcategoriaanuncio.Existe(anu_categoria) 
-                /*&& dabogado.Existe(anu_abogado) */) {
+                && dabogado.Existe(anu_abogado) ) {
             if (anu_titulo.length() <= 125) {
                 if (anu_contenido.length() <= 255) {
                     if (anu_estado >= 0 && anu_estado < 2) {
@@ -55,7 +56,7 @@ public class NAnuncio {
     public String ModificarAnuncio(int anu_id, String anu_titulo, String anu_contenido, int anu_estado, Date anu_fechapub, Time anu_horapub, int anu_abogado, int anu_categoria) {
         if (anu_titulo.length() != 0 && anu_contenido.length() != 0 && Integer.toString(anu_categoria).length() != 0
                && Integer.toString(anu_abogado).length() != 0 && dcategoriaanuncio.Existe(anu_categoria)
-                /*&& dabogado.Existe(anu_abogado) */ && Integer.toString(anu_id).length() != 0 && danuncio.Existe(anu_id)) {
+                && dabogado.Existe(anu_abogado)  && Integer.toString(anu_id).length() != 0 && danuncio.Existe(anu_id)) {
             if (anu_titulo.length() <= 125) {
                 if (anu_contenido.length() <= 255) {
                     if (anu_estado >= 0 && anu_estado < 2) {
