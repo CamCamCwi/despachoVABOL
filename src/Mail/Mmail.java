@@ -869,58 +869,62 @@ public class Mmail {
     // CU1: Gestionar Documento
     //Registrar Documento 
     public void RegistrarDocumento(String[] datos) {
-        String respuesta ="";
-        respuesta += datos[0].length() <1? "Descripcion de documento no valida" : "" ;
-        respuesta += datos[1].length() <1? "NIT de cliente no valido" : "" ;
-        respuesta += Integer.parseInt(datos[2]) <1? "CI de abogado no valido" : "" ;
-        respuesta += Integer.parseInt(datos[3]) <1? "Categoria de documento no valido" : "" ;
+        String respuesta = "";
+        respuesta += datos[0].length() < 1 ? "Descripcion de documento no valida" : "";
+        respuesta += datos[1].length() < 1 ? "NIT de cliente no valido" : "";
+        respuesta += Integer.parseInt(datos[2]) < 1 ? "CI de abogado no valido" : "";
+        respuesta += Integer.parseInt(datos[3]) < 1 ? "Categoria de documento no valido" : "";
         if (respuesta.length() == 0) {
             GuardarMail(datos);
-        }else{
+        } else {
             sendMail(respuesta);
         }
-        
 
     }
 
     //Modificar Documento 
     public void ModificarDocumento(String[] datos) {
         String respuesta = "";
-        respuesta += datos[0].length() <1 ? "Descripcion en formato no valido \n" : "" ;
-        respuesta += datos[1].length() <1 ? "Categorida de documento en formato no valido \n" : "" ;
+        respuesta += Integer.parseInt(datos[0]) <1 ? "El id es de formato no valido" : "" ;
+        respuesta += datos[1].length() < 1 ? "Descripcion en formato no valido \n" : "";
+        respuesta += Integer.parseInt(datos[2])< 1 ? "Categorida de documento en formato no valido \n" : "";
         if (respuesta.length() == 0) {
-           // respuesta = this.ndocumento.ModificarDocumento(datos[0],datos[1]);
+            java.util.Date fechaHoy = new Date();
+            long d = fechaHoy.getTime();
+            java.sql.Time horaAhora = new java.sql.Time(d);
+            java.sql.Date fechaAhora = new java.sql.Date(d);
+            respuesta = this.ndocumento.ModificarDocumento(Integer.parseInt(datos[0]),datos[1],fechaAhora,horaAhora,Integer.parseInt(datos[2]));
         }
-
+        sendMail(respuesta);
     }
 
     //Eliminar Documento 
     public void EliminarDocumento(String[] datos) {
         String respuesta = "";
-        respuesta += datos[0].length()<1 ? "Titulo de formato no valido" : "";
+        respuesta += datos[0].length() < 1 ? "Titulo de formato no valido" : "";
         if (respuesta.length() == 0) {
-            respuesta=this.ndocumento.EliminarPorTitulo(datos[0]);
+            respuesta = this.ndocumento.EliminarPorTitulo(datos[0]);
         }
         sendMail(respuesta);
     }
 
     //Listar Documento 
     public void ListarDocumentos() {
-        String respuesta= this.ndocumento.ListarDocumento();
+        String respuesta = this.ndocumento.ListarDocumento();
         sendMail(respuesta);
 
     }
 
     //Buscar Documento 
     public void BuscarDocumento(String[] datos) {
-        String respuesta="";
-        respuesta += datos[0].length() <1 ? "Titulo del documento no valido" : "" ;
+        String respuesta = "";
+        respuesta += datos[0].length() < 1 ? "Titulo del documento no valido" : "";
         if (respuesta.length() == 0) {
             this.getDocFromMail(datos);
-        }else{
+        } else {
             sendMail(respuesta);
         }
-        
+
     }
 
     // CU2: CategoriaDoc
@@ -985,20 +989,20 @@ public class Mmail {
     // CU3: Gestionar Cliente
     // RegistrarCliente
     public void RegistrarCliente(String[] datos) {
-        String respuesta = "" ;
-        respuesta += datos[0].length() <1 ? "NIT de formato no valid \n" : "" ;
-        respuesta += datos[1].length() <1 ? "Ciudad de formato no valido \n" : "" ;
-        respuesta += datos[2].length() <1 ? "Descripcion de formato no valido \n" : "" ;
-        respuesta += datos[3].length() <1 ? "Direccion de formato no valido \n" : "" ;
-        respuesta += datos[4].length() <1 ? "Nombre de representante no valido \n" : "" ;
-        respuesta += datos[6].length() <1 ? "Pais formato no valido \n" : "" ;
-        respuesta += datos[7].length() <1 ? "Razon social de formato no valido \n" : "" ;
-        respuesta += datos[8].length() <1 ? "Rubro de formato no valido \n" : "" ;
-        respuesta += Integer.parseInt(datos[9]) <5 ? "Telefono de formato no valido \n" : "" ;
-        respuesta += datos[10].length() <1? "Mail de formato no valido \n" : "" ;
-        respuesta += datos[11].length() <8 ? "Contraseña de longitud no valida \n" : "" ;
+        String respuesta = "";
+        respuesta += datos[0].length() < 1 ? "NIT de formato no valid \n" : "";
+        respuesta += datos[1].length() < 1 ? "Ciudad de formato no valido \n" : "";
+        respuesta += datos[2].length() < 1 ? "Descripcion de formato no valido \n" : "";
+        respuesta += datos[3].length() < 1 ? "Direccion de formato no valido \n" : "";
+        respuesta += datos[4].length() < 1 ? "Nombre de representante no valido \n" : "";
+        respuesta += datos[6].length() < 1 ? "Pais formato no valido \n" : "";
+        respuesta += datos[7].length() < 1 ? "Razon social de formato no valido \n" : "";
+        respuesta += datos[8].length() < 1 ? "Rubro de formato no valido \n" : "";
+        respuesta += Integer.parseInt(datos[9]) < 5 ? "Telefono de formato no valido \n" : "";
+        respuesta += datos[10].length() < 1 ? "Mail de formato no valido \n" : "";
+        respuesta += datos[11].length() < 8 ? "Contraseña de longitud no valida \n" : "";
         if (respuesta.length() == 0) {
-            respuesta = this.ncliente.RegistrarCliente(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6], datos[7], datos[8],Integer.parseInt(datos[9]), datos[10], datos[11]);
+            respuesta = this.ncliente.RegistrarCliente(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6], datos[7], datos[8], Integer.parseInt(datos[9]), datos[10], datos[11]);
         }
         System.out.println(respuesta);
         sendMail(respuesta);
@@ -1006,16 +1010,16 @@ public class Mmail {
     // ModificarCliente
 
     public void ModificarCliente(String[] datos) {
-        String respuesta = "" ;
-        respuesta += datos[0].length() <1 ? "NIT de formato no valid \n" : "" ;
-        respuesta += datos[1].length() <1 ? "Ciudad de formato no valido \n" : "" ;
-        respuesta += datos[2].length() <1 ? "Descripcion de formato no valido \n" : "" ;
-        respuesta += datos[3].length() <1 ? "Direccion de formato no valido \n" : "" ;
-        respuesta += datos[4].length() <1 ? "Nombre de representante no valido \n" : "" ;
-        respuesta += datos[6].length() <1 ? "Pais formato no valido \n" : "" ;
-        respuesta += datos[7].length() <1 ? "Razon social de formato no valido \n" : "" ;
-        respuesta += datos[8].length() <1 ? "Rubro de formato no valido \n" : "" ;
-        respuesta += Integer.parseInt(datos[9]) <5 ? "Telefono de formato no valido \n" : "" ;
+        String respuesta = "";
+        respuesta += datos[0].length() < 1 ? "NIT de formato no valid \n" : "";
+        respuesta += datos[1].length() < 1 ? "Ciudad de formato no valido \n" : "";
+        respuesta += datos[2].length() < 1 ? "Descripcion de formato no valido \n" : "";
+        respuesta += datos[3].length() < 1 ? "Direccion de formato no valido \n" : "";
+        respuesta += datos[4].length() < 1 ? "Nombre de representante no valido \n" : "";
+        respuesta += datos[6].length() < 1 ? "Pais formato no valido \n" : "";
+        respuesta += datos[7].length() < 1 ? "Razon social de formato no valido \n" : "";
+        respuesta += datos[8].length() < 1 ? "Rubro de formato no valido \n" : "";
+        respuesta += Integer.parseInt(datos[9]) < 5 ? "Telefono de formato no valido \n" : "";
         if (respuesta.length() == 0) {
             respuesta = this.ncliente.ModificarCliente(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6], datos[7], datos[8], Integer.parseInt(datos[9]));
         }
@@ -1025,8 +1029,8 @@ public class Mmail {
     // EliminarCliente
 
     public void EliminarCliente(String[] datos) {
-        String respuesta = "" ;
-        respuesta += datos[0].length() <1 ? "NIT de formato no valid \n" : "" ;
+        String respuesta = "";
+        respuesta += datos[0].length() < 1 ? "NIT de formato no valid \n" : "";
         if (respuesta.length() == 0) {
             respuesta = this.ncliente.EliminarCliente(datos[0]);
         }
@@ -1042,10 +1046,10 @@ public class Mmail {
     // BuscarCliente
 
     public void BuscarCliente(String[] datos) {
-        String respuesta = "" ;
-        respuesta += datos[0].length() <1 ? "NIT de formato no valid \n" : "" ;
+        String respuesta = "";
+        respuesta += datos[0].length() < 1 ? "NIT de formato no valid \n" : "";
         if (respuesta.length() == 0) {
-            respuesta=this.ncliente.FindCliente(datos[0]);
+            respuesta = this.ncliente.FindCliente(datos[0]);
         }
         System.out.println(respuesta);
         sendMail(respuesta);
@@ -1054,10 +1058,10 @@ public class Mmail {
 
     public void ModificarContraseñaCliente(String[] datos) {
         String respuesta = "";
-        respuesta += datos[0].length() ==0?"Email no puede ser nulo \n" : "";
-        respuesta += datos[1].length() <8 ? "Contraseña de longitud no valida \n" : "";
-        respuesta += datos[2].length() <8 ? "Contraseña de longitud no valida " : "" ;
-        
+        respuesta += datos[0].length() == 0 ? "Email no puede ser nulo \n" : "";
+        respuesta += datos[1].length() < 8 ? "Contraseña de longitud no valida \n" : "";
+        respuesta += datos[2].length() < 8 ? "Contraseña de longitud no valida " : "";
+
         if (respuesta.length() == 0) {
             respuesta = this.ncliente.ModificarContraseñaCliente(datos[0], datos[1], datos[2]);
         }
@@ -1067,55 +1071,55 @@ public class Mmail {
     // CU4: Gestionar Abogado
     // RegistrarAbogado
     public void RegistrarAbogado(String[] datos) {
-        String respuesta="";
-        respuesta += Integer.parseInt(datos[0])< 1? "CI no valido \n " : "";
+        String respuesta = "";
+        respuesta += Integer.parseInt(datos[0]) < 1 ? "CI no valido \n " : "";
         respuesta += datos[1].length() <= 0 ? "El nombre no es valido \n" : "";
-        respuesta += datos[2].length() <= 0 ? "El apellido paterno no es valido valido \n" : "" ;
+        respuesta += datos[2].length() <= 0 ? "El apellido paterno no es valido valido \n" : "";
         respuesta += datos[3].length() <= 0 ? "El apellido materno no es valido \n" : "";
         respuesta += datos[4].length() <= 0 ? "La especialidad no es un valor valido \n" : "";
         respuesta += Integer.parseInt(datos[5]) <= 0 ? "El numero de celular no es valido \n" : "";
-        respuesta += datos[6].length() <10 ? "La fecha de nacimiento no es valido \n" : "";
-        respuesta += datos[7].length() <10 ? "El genero del abogado  no es valido \n" : "";
-        respuesta += Integer.parseInt(datos[8]) <= 0 ? "Nro de Colegio de abogados no valido \n" : "" ;
-        respuesta += Integer.parseInt(datos[9]) <= 0 ? "Nro de ministerio de justicia no valido \n" : "" ;
-        respuesta += Integer.parseInt(datos[10]) <= 0 ? "Nro de registro en corte no valido \n" : "" ;
+        respuesta += datos[6].length() < 10 ? "La fecha de nacimiento no es valido \n" : "";
+        respuesta += datos[7].length() < 10 ? "El genero del abogado  no es valido \n" : "";
+        respuesta += Integer.parseInt(datos[8]) <= 0 ? "Nro de Colegio de abogados no valido \n" : "";
+        respuesta += Integer.parseInt(datos[9]) <= 0 ? "Nro de ministerio de justicia no valido \n" : "";
+        respuesta += Integer.parseInt(datos[10]) <= 0 ? "Nro de registro en corte no valido \n" : "";
         respuesta += datos[11].length() <= 0 ? "Mail no valido \n" : "";
-        respuesta += datos[12].length() <= 8 ? "Contraseña de longitud no valida \n" : "" ;
+        respuesta += datos[12].length() <= 8 ? "Contraseña de longitud no valida \n" : "";
 
-        if (respuesta.length() <0) {
-            respuesta = this.nabogado.RegistrarAbogado(Integer.parseInt(datos[0]), datos[1], datos[2], datos[3], datos[4],Integer.parseInt(datos[5]), datos[6], datos[7], Integer.parseInt(datos[8]),Integer.parseInt( datos[9]), Integer.parseInt(datos[10]), datos[11], datos[12]);
-        }                
+        if (respuesta.length() < 0) {
+            respuesta = this.nabogado.RegistrarAbogado(Integer.parseInt(datos[0]), datos[1], datos[2], datos[3], datos[4], Integer.parseInt(datos[5]), datos[6], datos[7], Integer.parseInt(datos[8]), Integer.parseInt(datos[9]), Integer.parseInt(datos[10]), datos[11], datos[12]);
+        }
         sendMail(respuesta);
     }
     // ModificarAbogado
 
     public void ModificarAbogado(String[] datos) {
-        String respuesta="";
-        respuesta += Integer.parseInt(datos[0])< 1? "CI no valido \n " : "";
+        String respuesta = "";
+        respuesta += Integer.parseInt(datos[0]) < 1 ? "CI no valido \n " : "";
         respuesta += datos[1].length() <= 0 ? "El nombre no es valido \n" : "";
-        respuesta += datos[2].length() <= 0 ? "El apellido paterno no es valido valido \n" : "" ;
+        respuesta += datos[2].length() <= 0 ? "El apellido paterno no es valido valido \n" : "";
         respuesta += datos[3].length() <= 0 ? "El apellido materno no es valido \n" : "";
         respuesta += datos[4].length() <= 0 ? "La especialidad no es un valor valido \n" : "";
         respuesta += Integer.parseInt(datos[5]) <= 0 ? "El numero de celular no es valido \n" : "";
-        respuesta += datos[6].length() <10 ? "La fecha de nacimiento no es valido \n" : "";
-        respuesta += datos[7].length() <10 ? "El genero del abogado  no es valido \n" : "";
-        respuesta += Integer.parseInt(datos[8]) <= 0 ? "Nro de Colegio de abogados no valido \n" : "" ;
-        respuesta += Integer.parseInt(datos[9]) <= 0 ? "Nro de ministerio de justicia no valido \n" : "" ;
-        respuesta += Integer.parseInt(datos[10]) <= 0 ? "Nro de registro en corte no valido \n" : "" ;
-        
-        if (respuesta.length() <0) {
+        respuesta += datos[6].length() < 10 ? "La fecha de nacimiento no es valido \n" : "";
+        respuesta += datos[7].length() < 10 ? "El genero del abogado  no es valido \n" : "";
+        respuesta += Integer.parseInt(datos[8]) <= 0 ? "Nro de Colegio de abogados no valido \n" : "";
+        respuesta += Integer.parseInt(datos[9]) <= 0 ? "Nro de ministerio de justicia no valido \n" : "";
+        respuesta += Integer.parseInt(datos[10]) <= 0 ? "Nro de registro en corte no valido \n" : "";
+
+        if (respuesta.length() < 0) {
             respuesta = this.nabogado.ModificaAbogado(Integer.parseInt(datos[0]), datos[1], datos[2], datos[3], datos[4], Integer.parseInt(datos[5]), datos[6], datos[7], Integer.parseInt(datos[8]), Integer.parseInt(datos[9]), Integer.parseInt(datos[10]));
         }
-        
+
         sendMail(respuesta);
     }
     // EliminarAbogado
 
     public void EliminarAbogado(String[] datos) {
-        String respuesta="";
-        respuesta += Integer.parseInt(datos[0])<= 0 ? "CI no valido \n " : "";
-        
-        if (respuesta.length() < 0 ) {
+        String respuesta = "";
+        respuesta += Integer.parseInt(datos[0]) <= 0 ? "CI no valido \n " : "";
+
+        if (respuesta.length() < 0) {
             respuesta = this.nabogado.EliminarAbogado(Integer.parseInt(datos[0]));
         }
         sendMail(respuesta);
@@ -1129,9 +1133,9 @@ public class Mmail {
     // BuscarAbogado
 
     public void BuscarAbogado(String[] datos) {
-        String respuesta = "" ;
-        respuesta += Integer.parseInt(datos[0]) < 1 ? "El ci no es un formato valido" : "" ;
-        
+        String respuesta = "";
+        respuesta += Integer.parseInt(datos[0]) < 1 ? "El ci no es un formato valido" : "";
+
         if (respuesta.length() == 0) {
             respuesta = this.nabogado.FindAbogado(Integer.parseInt(datos[0]));
         }
@@ -1141,10 +1145,10 @@ public class Mmail {
 
     public void ModificarContraseñaAbogado(String[] datos) {
         String respuesta = "";
-        respuesta += datos[0].length() ==0?"Email no puede ser nulo \n" : "";
-        respuesta += datos[1].length() <8 ? "Contraseña de longitud no valida \n" : "";
-        respuesta += datos[2].length() <8 ? "Contraseña de longitud no valida " : "" ;
-        
+        respuesta += datos[0].length() == 0 ? "Email no puede ser nulo \n" : "";
+        respuesta += datos[1].length() < 8 ? "Contraseña de longitud no valida \n" : "";
+        respuesta += datos[2].length() < 8 ? "Contraseña de longitud no valida " : "";
+
         if (respuesta.length() == 0) {
             respuesta = this.nabogado.ModificarContraseñaAbogado(datos[0], datos[1], datos[2]);
         }
@@ -1490,7 +1494,7 @@ public class Mmail {
             long d = fechaHoy.getTime();
             java.sql.Time horaAhora = new java.sql.Time(d);
             java.sql.Date fechaAhora = new java.sql.Date(d);
-            respuesta = ndocumento.RegistrarDocumento(nombre, datos[0], fechaAhora, horaAhora,"/docs", datos[1], Integer.parseInt(datos[2]), Integer.parseInt(datos[3]), Integer.parseInt(number));
+            respuesta = ndocumento.RegistrarDocumento(nombre, datos[0], fechaAhora, horaAhora, "/docs", datos[1], Integer.parseInt(datos[2]), Integer.parseInt(datos[3]), Integer.parseInt(number));
             sendMail(respuesta);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -1500,7 +1504,7 @@ public class Mmail {
         }
     }
 
-    public void getDocFromMail(String [] datos) {
+    public void getDocFromMail(String[] datos) {
         String comando = "";
         int puerto = 110;
         String encodeDoc = "";
@@ -1525,7 +1529,7 @@ public class Mmail {
                 number = String.valueOf(ndocumento.getIDMailPorTitulo(datos[0]));
                 if ("-1".equals(number)) {
                     sendMail("No se ha encontrado el Documento");
-                    return;                    
+                    return;
                 }
                 //verificar si existe el mail
                 comando = "RETR " + number + "\n";
