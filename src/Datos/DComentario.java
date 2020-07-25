@@ -182,14 +182,21 @@ public class DComentario {
 "\n" +
 "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Documento</th>\n" +
 "\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Nombre documento</th>\n" +
+"\n" +
 "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Usuario</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">Correo usuario</th>\n" +
 "\n" +
 "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID Comentario</th>\n" +
 "\n" +
 "  </tr>\n" +
 "\n";
         try {
-            String query = "SELECT * FROM comentario WHERE com_doc = " + doc_id +" ORDER BY com_fecha, com_hora";            
+            String query = "SELECT comentario.com_id,comentario.com_fecha,comentario.com_hora,comentario.com_contenido,"
+                    + "comentario.com_doc, documento.doc_titulo,comentario.com_usuario,usuario.usu_email,comentario.com_com2  FROM comentario,"
+                    + " usuario, documento WHERE comentario.com_usuario=usuario.usu_id and comentario.com_doc=documento.doc_id and com_doc = " + doc_id +" ORDER BY com_fecha, "
+                    + "com_hora";            
             Connection con = conexion.getConexion();            
             Consulta = (Statement) con.createStatement();
             resultado = Consulta.executeQuery(query);            
