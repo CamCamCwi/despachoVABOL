@@ -174,8 +174,7 @@ public class DAbogado {
             ps.setString(7, this.getGenero());
             ps.setInt(8, this.getNroColAbogado());
             ps.setInt(9, this.getNroMinJusticia());
-            ps.setInt(10, this.getNumRegCorte());
-            ps.setInt(11, this.getFk_abg_usuario());
+            ps.setInt(10, this.getNumRegCorte());           
             ps.setInt(12, this.getCi());
             ps.execute();
             return true;
