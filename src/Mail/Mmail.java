@@ -1085,7 +1085,7 @@ public class Mmail {
         respuesta += datos[4].length() <= 0 ? "La especialidad no es un valor valido \n" : "";
         respuesta += !isNumericEntero(datos[5])? "El numero de celular no es valido \n" : "";
         respuesta += datos[6].length() < 10 ? "La fecha de nacimiento no es valido \n" : "";
-        respuesta += datos[7].length() < 10 ? "El genero del abogado  no es valido \n" : "";
+        respuesta += datos[7].length() < 1 ? "El genero del abogado  no es valido \n" : "";
         respuesta += !isNumericEntero(datos[8])? "Nro de Colegio de abogados no valido \n" : "";
         respuesta += !isNumericEntero(datos[9]) ? "Nro de ministerio de justicia no valido \n" : "";
         respuesta += !isNumericEntero(datos[10])? "Nro de registro en corte no valido \n" : "";
@@ -1109,7 +1109,7 @@ public class Mmail {
         respuesta += datos[4].length() <= 0 ? "La especialidad no es un valor valido \n" : "";
         respuesta += !isNumericEntero(datos[5]) ? "El numero de celular no es valido \n" : "";
         respuesta += datos[6].length() < 10 ? "La fecha de nacimiento no es valido \n" : "";
-        respuesta += datos[7].length() < 10 ? "El genero del abogado  no es valido \n" : "";
+        respuesta += datos[7].length() < 1 ? "El genero del abogado  no es valido \n" : "";
         respuesta += !isNumericEntero(datos[8]) ? "Nro de Colegio de abogados no valido \n" : "";
         respuesta += !isNumericEntero(datos[9])? "Nro de ministerio de justicia no valido \n" : "";
         respuesta += !isNumericEntero(datos[10]) ? "Nro de registro en corte no valido \n" : "";

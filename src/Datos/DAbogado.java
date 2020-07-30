@@ -162,7 +162,7 @@ public class DAbogado {
     public boolean Modificar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
-        String sql = "UPDATE abogado SET abg_nombre=?,abg_apellidop=?,abg_apellidom=?,abg_especialidad=?,abg_celular=?,abg_fnacimiento=?,abg_genero=?,abg_nrocolabogados=?,abg_nrominjusticia=?,abg_numregcorte=?,abg_usuario=? WHERE idLibro=? ";
+        String sql = "UPDATE abogado SET abg_nombre=?,abg_apellidop=?,abg_apellidom=?,abg_especialidad=?,abg_celular=?,abg_fnacimiento=?,abg_genero=?,abg_nrocolabogados=?,abg_nrominjusticia=?,abg_numregcorte=? WHERE abg_ci=? ";
         try {
             ps = con.prepareStatement(sql);
             ps.setString(1, this.getNombre());
