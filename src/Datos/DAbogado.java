@@ -175,7 +175,7 @@ public class DAbogado {
             ps.setInt(8, this.getNroColAbogado());
             ps.setInt(9, this.getNroMinJusticia());
             ps.setInt(10, this.getNumRegCorte());           
-            ps.setInt(12, this.getCi());
+            ps.setInt(11, this.getCi());
             ps.execute();
             return true;
         } catch (SQLException e) {
