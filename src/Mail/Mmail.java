@@ -634,7 +634,7 @@ public class Mmail {
 
             if (cadenaDondeBuscar.contains(loQueQuieroBuscar) || flag) {
                
-                if(cadenaDondeBuscar.equalsIgnoreCase("help")){
+                if(cadenaDondeBuscar.equalsIgnoreCase("Subject:help")){
                     flag = false;
                     subject = cadenaDondeBuscar;
                     subject = subject.trim();
