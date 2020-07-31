@@ -196,10 +196,40 @@ public class DCliente {
         }
     }
 
-    public String Listar() {
-        String imprimir = "";
+    public String Listar(String mensaje) {        
         Statement Consulta;
         ResultSet resultado = null;
+        String imprimir = "Content-Type: text/html; charset=\"UTF-8\"\n" +
+"\n" +
+"<h3>"+ mensaje +"</h3>\n"+
+"\n"+
+"<h1>Listado de Clientes</h1>"+
+"<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
+"\n" +
+"  <tr>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NIT</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">CIUDAD</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">DESCRIPCION</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">DIRECCION</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NOMBRE DEL REPRESENTANTE</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">PAGINA WEB</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">PAIS</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">RAZON SOCIAL</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">RUBRO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">TELEFONO</th>\n" +
+"\n" +              
+"  </tr>\n" +
+"\n";
         try {
             String query = "SELECT *"
                     + "FROM cliente";
@@ -209,12 +239,21 @@ public class DCliente {
             ResultSetMetaData rsMd = resultado.getMetaData();
             int cantidadColumnas = rsMd.getColumnCount();
             while (resultado.next()) {
-                for (int i = 0; i < cantidadColumnas; i++) {
-                    imprimir = imprimir + resultado.getString(i + 1) + " ";
-                    //datos[i] = resultado.getString(i+1);
+                imprimir= imprimir+
+"  <tr>\n" +
+"\n";                               
+                for (int i = 0; i < cantidadColumnas-1; i++) {
+                    imprimir= imprimir+
+"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">" + resultado.getString(i+1) + "</td>\n" +
+"\n";
                 }
-                imprimir += "\n";
+                imprimir=imprimir+
+"  </tr>\n" +
+"\n" ; 
             }
+            imprimir=imprimir+
+"\n" +
+"</table>";              
             Consulta.close();
 
             con.close();

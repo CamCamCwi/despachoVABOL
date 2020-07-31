@@ -102,7 +102,7 @@ public class NCliente {
     }
 
     public String ListarCliente() {
-        return dato.Listar();
+        return dato.Listar("");
     }
 
     public String ModificarContraseñaCliente(String mail, String anterior_contraseña, String nueva_contraseña) {
