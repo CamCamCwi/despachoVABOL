@@ -157,7 +157,7 @@ public class DCliente {
             ps.setString(7, this.getRazonSocial());
             ps.setString(8, this.getRubro());
             ps.setInt(9, this.getTelefono());
-            ps.setInt(11, this.getCl_usuario());                        
+            ps.setInt(10, this.getCl_usuario());                        
             ps.execute();
             return true;
         } catch (SQLException e) {
