@@ -70,7 +70,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar documento</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_descripcion,String doc_cliente,int doc_abogado,int doc_categoriadoc]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_descripcion*String doc_cliente*int doc_abogado*int doc_categoriadoc];</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -120,7 +120,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar categoria documento</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_categoriadoc[String nombreCategoriaDocumento, String descripcionCategoriaDocumento]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_categoriadoc[String nombreCategoriaDocumento ;; String descripcionCategoriaDocumento;; ];</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -360,7 +360,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar categoria anuncio</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_catanuncio[String nombreCategoriaAnuncio, String descripcionCategoriaAnuncio]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_catanuncio[String nombreCategoriaAnuncio* String descripcionCategoriaAnuncio];</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -633,8 +633,11 @@ public class Mmail {
 
             if (cadenaDondeBuscar.contains(loQueQuieroBuscar) || flag) {
 
-                if (cadenaDondeBuscar.contains("To:")) {
+                if (cadenaDondeBuscar.contains("];")) {
                     flag = false;
+                    subject = subject + cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length()-1);
+                    subject = subject.trim();
+                    
                 } else {
                     System.out.println("Encontrado");
                     subject = subject + cadenaDondeBuscar;
@@ -736,7 +739,7 @@ public class Mmail {
         String cuerpo[] = partesSubject[1].split("\\]");
         String datos[] = null;
         if (cuerpo.length != 0) {
-            datos = cuerpo[0].split("\\,");
+            datos = cuerpo[0].split("\\;;");
             for (int i = 0; i < datos.length; i++) {
                 datos[i] = datos[i].trim();
             }

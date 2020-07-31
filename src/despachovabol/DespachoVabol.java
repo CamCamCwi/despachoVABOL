@@ -17,7 +17,7 @@ public class DespachoVabol {
        
        Mmail mail = new Mmail();
         
-        int cantMails = mail.getCantidadMails();
+       int cantMails = mail.getCantidadMails();
         
         while (true) { 
             int cantMailsNew = mail.getCantidadMails();
