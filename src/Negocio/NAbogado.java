@@ -112,7 +112,7 @@ public class NAbogado {
     }
 
     public String ListarAbogado() {
-        return dato.Listar();
+        return dato.Listar("");
     }
 
     public String ModificarContraseñaAbogado(String email, String anterior_contraseña, String nueva_contraseña) {
