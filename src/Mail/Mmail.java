@@ -628,22 +628,29 @@ public class Mmail {
                 break;
             }
             String cadenaDondeBuscar = line;
+            cadenaDondeBuscar = cadenaDondeBuscar.trim();
             String loQueQuieroBuscar = "Subject:";
             loQueQuieroBuscar = loQueQuieroBuscar.trim();
 
             if (cadenaDondeBuscar.contains(loQueQuieroBuscar) || flag) {
-
-                if (cadenaDondeBuscar.contains("];")) {
+               
+                if(cadenaDondeBuscar.equalsIgnoreCase("help")){
                     flag = false;
-                    subject = subject + cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length()-1);
+                    subject = cadenaDondeBuscar;
                     subject = subject.trim();
-                    
-                } else {
-                    System.out.println("Encontrado");
-                    subject = subject + cadenaDondeBuscar;
-                    subject = subject.trim();
-                    flag = true;
-                }
+                }else{
+                    if (cadenaDondeBuscar.contains("];")) {
+                        flag = false;
+                        subject = subject + cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length()-1);
+                        subject = subject.trim();
+
+                    } else {
+                        System.out.println("Encontrado");
+                        subject = subject + cadenaDondeBuscar;
+                        subject = subject.trim();
+                        flag = true;
+                    }
+                } 
             }
 
             System.out.println(line);
