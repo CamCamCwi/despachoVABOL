@@ -144,7 +144,7 @@ public class DCliente {
     public boolean Modificar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
-        String sql = "UPDATE cliente SET cl_ciudad = ?,cl_descripcion = ?,cl_direccion = ?,cl_nrepresentante = ?,cl_paginaweb = ?,cl_pais = ?,cl_razonsocial = ?,cl_rubro = ?,cl_telefono = ?,cl_usuario= ? WHERE cl_nit = ? ";
+        String sql = "UPDATE cliente SET cl_ciudad = ?,cl_descripcion = ?,cl_direccion = ?,cl_nrepresentante = ?,cl_paginaweb = ?,cl_pais = ?,cl_razonsocial = ?,cl_rubro = ?,cl_telefono = ? WHERE cl_nit = ? ";
         try {
             ps = con.prepareStatement(sql);
             
@@ -157,9 +157,7 @@ public class DCliente {
             ps.setString(7, this.getRazonSocial());
             ps.setString(8, this.getRubro());
             ps.setInt(9, this.getTelefono());
-            ps.setInt(10, this.getCl_usuario());
-            
-            ps.setString(11, this.getNit());
+            ps.setInt(11, this.getCl_usuario());                        
             ps.execute();
             return true;
         } catch (SQLException e) {
