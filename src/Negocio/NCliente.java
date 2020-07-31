@@ -75,7 +75,7 @@ public class NCliente {
         res += (dato.getDescripcion().length() < 1) ? "Descripcion no puede ser nulo," : "";
         res += (dato.getDireccion().length() < 1) ? "Direccion no puede ser nulo," : "";
         res += (dato.getnRepresentante().length() < 1) ? "Numero del representante no puede ser nulo," : "";
-        res += (dato.getPaís().length() < 10) ? "Pais no puede ser nulo," : "";
+        res += (dato.getPaís().length() < 1) ? "Pais no puede ser nulo," : "";
         res += (dato.getRazonSocial().length() < 1) ? "Razon social no puede ser nulo," : "";
         res += (dato.getRubro().length() < 1) ? "Rubro no puede ser nulo," : "";
         res += (dato.getTelefono() < 1) ? "Numero de telefono no puede ser nulo," : "";

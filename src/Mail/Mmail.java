@@ -160,7 +160,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar Cliente</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono,String Usuario,String Contraseña]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_cliente[String Nit,String Ciudad,String Descripcion,String Direccion,String Nombre del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono,String Usuario,String Contraseña]</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -170,7 +170,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar Cliente</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_cliente[int Nit,String Ciudad,String Descripcion,String Direccion,String Numero del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_cliente[String Nit,String Ciudad,String Descripcion,String Direccion,String Nombre del Representante,String Pagina Web,String Pais,String Razon social,String Rubro,int Telefono]</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -180,7 +180,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Eliminar Cliente</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_cliente[int Nit]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">del_cliente[String Nit]</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -200,7 +200,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Buscar Cliente</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">find_cliente[int ci]</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">find_cliente[String Nit]</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -787,7 +787,7 @@ public class Mmail {
             case "find_cliente":
                 this.BuscarCliente(datos);
                 break;
-            case "mod_contraseña_cliente":
+            case "mod_contrasena_cliente":
                 this.ModificarContraseñaCliente(datos);
                 break;
             // CU4: Gestionar Abogado
@@ -804,9 +804,9 @@ public class Mmail {
                 this.ListarAbogados();
                 break;
             case "find_abogado":
-                this.BuscarCliente(datos);
+                this.BuscarAbogado(datos);
                 break;
-            case "mod_contraseña_abogado":
+            case "mod_contrasena_abogado":
                 this.ModificarContraseñaCliente(datos);
                 break;
             // CU5: Gestionar comentario
@@ -1001,7 +1001,7 @@ public class Mmail {
         respuesta += datos[8].length() < 1 ? "Rubro de formato no valido \n" : "";
         respuesta += !isNumericEntero(datos[9]) ? "Telefono de formato no valido \n" : "";
         respuesta += datos[10].length() < 1 ? "Mail de formato no valido \n" : "";
-        respuesta += datos[11].length() < 8 ? "Contraseña de longitud no valida \n" : "";
+        respuesta += datos[11].length() <= 8 ? "Contraseña de longitud no valida \n" : "";
         if (respuesta.length() == 0) {
             respuesta = this.ncliente.RegistrarCliente(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6], datos[7], datos[8], Integer.parseInt(datos[9]), datos[10], datos[11]);
         }

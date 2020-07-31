@@ -14,7 +14,7 @@ public class DespachoVabol {
 
         Mmail mail = new Mmail();
         mail.getMail();
-      /* 
+    /*   
        Mmail mail = new Mmail();
         
         int cantMails = mail.getCantidadMails();
@@ -30,8 +30,8 @@ public class DespachoVabol {
             } catch (InterruptedException ex) {
                 Logger.getLogger(DespachoVabol.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }*/
-    
+        }
+    */
     }
     
 }
