@@ -52,7 +52,7 @@ public class NCliente {
             if (user.registrar()) {  
                 int id_usuario=user.ObtenerID();               
                 dato.setCl_usuario(id_usuario);
-                return dato.Registrar() ? "Cliente Registrado con exito" : "Fallo al registrar al Cliente";
+                return dato.Registrar() ? dato.Listar("Cliente Registrado con exito") : "Fallo al registrar al Cliente";
             }
         }
         return res;
@@ -80,7 +80,7 @@ public class NCliente {
         res += (dato.getRubro().length() < 1) ? "Rubro no puede ser nulo," : "";
         res += (dato.getTelefono() < 1) ? "Numero de telefono no puede ser nulo," : "";
         if (res.length() == 0) {
-            return dato.Modificar() ? "Cliente Modificado con exito" : "No se pudo modificar al Cliente";
+            return dato.Modificar() ? dato.Listar("Cliente Modificado con exito") : "No se pudo modificar al Cliente";
         }
         return res;
     }
@@ -90,9 +90,8 @@ public class NCliente {
         if (! Nit.isEmpty()) {
             dato.setNit(Nit);
             if (dato.Existe(Nit)) {
-                user.setUsuario(dato.ObtenerMailbyNIT());
-                user.eliminar();                
-                return "Cliente Eliminado con Exito";
+                user.setUsuario(dato.ObtenerMailbyNIT());                               
+                return  user.eliminar()? dato.Listar("Cliente Eliminado con Exito"):"Fallo al eliminar cliente";
             } else {
                 return "No Existe el Cliente";
             }
