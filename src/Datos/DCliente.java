@@ -227,7 +227,9 @@ public class DCliente {
 "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">RUBRO</th>\n" +
 "\n" +
 "    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">TELEFONO</th>\n" +
-"\n" +              
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID USUARIO</th>\n" +
+"\n" +                 
 "  </tr>\n" +
 "\n";
         try {
@@ -242,7 +244,7 @@ public class DCliente {
                 imprimir= imprimir+
 "  <tr>\n" +
 "\n";                               
-                for (int i = 0; i < cantidadColumnas-1; i++) {
+                for (int i = 0; i < cantidadColumnas; i++) {
                     imprimir= imprimir+
 "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">" + resultado.getString(i+1) + "</td>\n" +
 "\n";
