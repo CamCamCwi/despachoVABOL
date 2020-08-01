@@ -80,7 +80,7 @@ public class NCliente {
         res += (dato.getRubro().length() < 1) ? "Rubro no puede ser nulo," : "";
         res += (dato.getTelefono() < 1) ? "Numero de telefono no puede ser nulo," : "";
         if (res.length() == 0) {
-            return dato.Modificar() ? dato.Listar("Cliente Modificado con exito") : "No se pudo modificar al Cliente";
+            return dato.Existe(dato.getNit()) && dato.Modificar() ? dato.Listar("Cliente Modificado con exito") : "No se pudo modificar al Cliente";
         }
         return res;
     }

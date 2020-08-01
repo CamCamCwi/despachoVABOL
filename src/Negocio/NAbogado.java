@@ -89,7 +89,7 @@ public class NAbogado {
         res += (dato.getNumRegCorte() < 1) ? "Numero de Registro en la corte no puede ser nulo," : "";
         int s = res.length();
         if (s == 0) {
-            return dato.Modificar() ? dato.Listar("Abogado Modificado con exito") : "no se pudo modificar al Abogado";
+            return dato.Existe(dato.getCi()) && dato.Modificar() ? dato.Listar("Abogado Modificado con exito") : "no se pudo modificar al Abogado";
         }
         return res;
     }
