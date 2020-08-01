@@ -144,6 +144,7 @@ public class DCliente {
     public boolean Modificar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
+        ResultSet resultado = null;
         String sql = "UPDATE cliente SET cl_ciudad = ?,cl_descripcion = ?,cl_direccion = ?,cl_nrepresentante = ?,cl_paginaweb = ?,cl_pais = ?,cl_razonsocial = ?,cl_rubro = ?,cl_telefono = ? WHERE cl_nit = ? ";
         try {
             ps = con.prepareStatement(sql);
@@ -158,8 +159,12 @@ public class DCliente {
             ps.setString(8, this.getRubro());
             ps.setInt(9, this.getTelefono());
             ps.setString(10, this.getNit());                        
-            ps.execute();
-            return true;
+            resultado = ps.executeQuery();
+            if(resultado.next()) {
+                return true;
+            }else{
+                return false;
+            }
         } catch (SQLException e) {
             System.err.println(e);
             return false;
