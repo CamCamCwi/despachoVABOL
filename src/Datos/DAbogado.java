@@ -162,7 +162,7 @@ public class DAbogado {
     public boolean Modificar() {
         PreparedStatement ps = null;
         Connection con = abrirConexion();
-        String sql = "UPDATE abogado SET abg_nombre=?,abg_apellidop=?,abg_apellidom=?,abg_especialidad=?,abg_celular=?,abg_fnacimiento=?,abg_genero=?,abg_nrocolabogados=?,abg_nrominjusticia=?,abg_numregcorte=?,abg_usuario=? WHERE idLibro=? ";
+        String sql = "UPDATE abogado SET abg_nombre=?,abg_apellidop=?,abg_apellidom=?,abg_especialidad=?,abg_celular=?,abg_fnacimiento=?,abg_genero=?,abg_nrocolabogados=?,abg_nrominjusticia=?,abg_numregcorte=? WHERE abg_ci=? ";
         try {
             ps = con.prepareStatement(sql);
             ps.setString(1, this.getNombre());
@@ -174,9 +174,8 @@ public class DAbogado {
             ps.setString(7, this.getGenero());
             ps.setInt(8, this.getNroColAbogado());
             ps.setInt(9, this.getNroMinJusticia());
-            ps.setInt(10, this.getNumRegCorte());
-            ps.setInt(11, this.getFk_abg_usuario());
-            ps.setInt(12, this.getCi());
+            ps.setInt(10, this.getNumRegCorte());           
+            ps.setInt(11, this.getCi());
             ps.execute();
             return true;
         } catch (SQLException e) {
@@ -214,10 +213,44 @@ public class DAbogado {
         }
     }
 
-    public String Listar() {
-        String imprimir = "";
+    public String Listar(String mensaje) {
         Statement Consulta;
         ResultSet resultado = null;
+        String imprimir = "Content-Type: text/html; charset=\"UTF-8\"\n" +
+"\n" +
+"<h3>"+ mensaje +"</h3>\n"+
+"\n"+
+"<h1>Listado de Abogados</h1>"+
+"<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
+"\n" +
+"  <tr>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">CI</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NOMBRE</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">APELLIDO PATERNO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">APELLIDO MATERNO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ESPECIALIDAD</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">CELULAR</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">FECHA DE NACIMIENTO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">GENERO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NR EN COLEGIO DE ABOGADOS</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NRO MINISTERIO DE JUSTICIA</th>\n" +
+"\n" +                
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NRO DE REGISTRO EN LA CORTE</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID USUARIO</th>\n" +
+"\n" +                
+"  </tr>\n" +
+"\n";
         try {
             String query = "SELECT *"
                     + "FROM abogado";
@@ -227,12 +260,22 @@ public class DAbogado {
             ResultSetMetaData rsMd = resultado.getMetaData();
             int cantidadColumnas = rsMd.getColumnCount();
             while (resultado.next()) {
+                imprimir= imprimir+
+"  <tr>\n" +
+"\n";                        
                 for (int i = 0; i < cantidadColumnas; i++) {
-                    imprimir = imprimir + resultado.getString(i + 1) + " ";
-                    //datos[i] = resultado.getString(i+1);
+                    imprimir= imprimir+
+"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">" + resultado.getString(i+1) + "</td>\n" +
+"\n";                    
+                    
                 }
-                imprimir += "\n";
+                imprimir=imprimir+
+"  </tr>\n" +
+"\n" ;                        
             }
+            imprimir=imprimir+
+"\n" +
+"</table>";                    
             Consulta.close();
 
             con.close();

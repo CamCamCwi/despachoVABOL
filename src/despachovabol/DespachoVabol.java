@@ -13,9 +13,9 @@ public class DespachoVabol {
     public static void main(String[] args) {
 
         Mmail mail = new Mmail();
-        mail.getMail();
-       
-       /*Mmail mail = new Mmail();
+        mail.getMail(); 
+    
+    /*   Mmail mail = new Mmail();
         
         int cantMails = mail.getCantidadMails();
         

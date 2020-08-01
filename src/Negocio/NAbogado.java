@@ -58,7 +58,7 @@ public class NAbogado {
                 int id_usuario=user.ObtenerID();
                 dato.setFk_abg_usuario(id_usuario);                
             }                                            
-            return dato.Registrar()?"Abogado Registrado con exito":"Fallo al Registrar el Abogado";
+            return dato.Registrar()? dato.Listar("Se Registro Correctamente el Abogado"):"Fallo al Registrar el Abogado";
         }
         return res;
     }
@@ -89,7 +89,7 @@ public class NAbogado {
         res += (dato.getNumRegCorte() < 1) ? "Numero de Registro en la corte no puede ser nulo," : "";
         int s = res.length();
         if (s == 0) {
-            return dato.Modificar() ? "Abogado Modificado con exito" : "no se pudo modificar al Abogado";
+            return dato.Existe(dato.getCi()) && dato.Modificar() ? dato.Listar("Abogado Modificado con exito") : "no se pudo modificar al Abogado";
         }
         return res;
     }
@@ -99,8 +99,8 @@ public class NAbogado {
             dato.setCi(ci);                
             if (dato.Existe(ci)) {                
                 user.setUsuario(dato.ObtenerMailbyCI());
-                user.eliminar();                
-                return "Abogado Eliminado con Exito";
+                               
+                return user.eliminar()? dato.Listar("Abogado eliminado exitosamente"): "Fallo al Eliminar el abogado";
             } else {
                 return "El Abogado no existe";
             }
@@ -112,7 +112,7 @@ public class NAbogado {
     }
 
     public String ListarAbogado() {
-        return dato.Listar();
+        return dato.Listar("");
     }
 
     public String ModificarContraseñaAbogado(String email, String anterior_contraseña, String nueva_contraseña) {
