@@ -1015,7 +1015,7 @@ public class Mmail {
 
     public void ModificarCliente(String[] datos) {
         String respuesta = "";
-        if (datos.length<1 || datos.length>10) {
+        if (datos.length<1 || datos.length>1) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
