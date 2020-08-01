@@ -153,6 +153,7 @@ public class DUsuario {
             }
         }
     }
+
     public boolean ExisteBYid(int ident) {
         this.setId(ident);
         PreparedStatement ps = null;
@@ -198,7 +199,7 @@ public class DUsuario {
         return 0;
     }
 
-    public  String getMD5(String input) {
+    public String getMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(input.getBytes());
@@ -212,6 +213,56 @@ public class DUsuario {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String Login()  {
+        DConexion DB = new DConexion();
+        Connection con = DB.getConexion();
+        PreparedStatement ps;        
+        try {
+            ResultSet resultado = null;
+            ResultSet resultado2 = null;
+            try {
+                ps=null;
+                String sql = "SELECT * FROM usuario,abogado WHERE usu_email = ? and usu_contraseña = ? and usu_id=abg_usuario";
+                ps = con.prepareStatement(sql);
+                ps.setString(1, this.getUsuario());
+                ps.setString(2, this.getContraseña());
+                resultado = ps.executeQuery();
+                if (resultado.next()) {
+                    return "Abogado";
+                }
+
+            } catch (SQLException e) {
+            } finally {
+                resultado.close();
+            }
+
+            try {
+                ps=null;
+                String sql = "SELECT * FROM usuario,cliente WHERE usu_email = ? and usu_contraseña = ? and usu_id=cl_usuario";
+                ps = con.prepareStatement(sql);
+                ps.setString(1, this.getUsuario());
+                ps.setString(2, this.getContraseña());
+                resultado2 = ps.executeQuery();
+                if (resultado2.next()) {
+                    return "Cliente";
+                }
+
+            } catch (SQLException e) {
+            } finally {
+                resultado2.close();
+            }
+
+        } catch (Exception e) {
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.err.println(e);
+            }
+        }
+        return "";
     }
 
 }
