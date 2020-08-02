@@ -879,6 +879,10 @@ public class Mmail {
     // CU1: Gestionar Documento
     //Registrar Documento 
     public void RegistrarDocumento(String[] datos) {
+        if (datos.length<4 || datos.length>4) {
+            sendMail("Cantidad de parametros incorrecta");
+            return;
+        }
         String respuesta = "";
         respuesta += datos[0].length() < 1 ? "Descripcion de documento no valida" : "";
         respuesta += datos[1].length() < 1 ? "NIT de cliente no valido" : "";
@@ -894,6 +898,10 @@ public class Mmail {
 
     //Modificar Documento 
     public void ModificarDocumento(String[] datos) {
+        if (datos.length<3 || datos.length>3) {
+            sendMail("Cantidad de parametros incorrecta");
+            return;
+        }
         String respuesta = "";
         respuesta += !isNumericEntero(datos[0])? "El id es de formato no valido" : "" ;
         respuesta += datos[1].length() < 1 ? "Descripcion en formato no valido \n" : "";
@@ -910,6 +918,10 @@ public class Mmail {
 
     //Eliminar Documento 
     public void EliminarDocumento(String[] datos) {
+        if (datos.length<1 || datos.length>1) {
+            sendMail("Cantidad de parametros incorrecta");
+            return;
+        }
         String respuesta = "";
         respuesta += datos[0].length() < 1 ? "Titulo de formato no valido" : "";
         if (respuesta.length() == 0) {
@@ -927,6 +939,10 @@ public class Mmail {
 
     //Buscar Documento 
     public void BuscarDocumento(String[] datos) {
+        if (datos.length<1 || datos.length>1) {
+            sendMail("Cantidad de parametros incorrecta");
+            return;
+        }
         String respuesta = "";
         respuesta += datos[0].length() < 1 ? "Titulo del documento no valido" : "";
         if (respuesta.length() == 0) {
@@ -1545,6 +1561,9 @@ public class Mmail {
             long d = fechaHoy.getTime();
             java.sql.Time horaAhora = new java.sql.Time(d);
             java.sql.Date fechaAhora = new java.sql.Date(d);
+            if (nombre=="") {
+                sendMail("No existe un Documento");
+            }
             respuesta = ndocumento.RegistrarDocumento(nombre, datos[0], fechaAhora, horaAhora, "/docs", datos[1], Integer.parseInt(datos[2]), Integer.parseInt(datos[3]), Integer.parseInt(number));
             sendMail(respuesta);
         } catch (UnknownHostException e) {
@@ -1656,6 +1675,7 @@ public class Mmail {
             if (linea_anterior.contains("Content-Type:") && linea_actual.contains("name=") && flag == false) {
                 respuesta = linea_actual;
                 respuesta = respuesta.replaceAll("name=", "");
+                respuesta = respuesta.replaceAll("Content-Disposition:attachment;file", "");
                 respuesta = respuesta.replaceAll("\"" , "");
                 respuesta = respuesta.trim();
             }
