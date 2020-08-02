@@ -16,9 +16,33 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Time;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class Mmail {
+
+    public static void main(String[] args) {
+        /*Mmail mail = new Mmail();
+        mail.getMail();*/
+        Mmail mail = new Mmail();
+        
+        int cantMails = mail.getCantidadMails();
+        
+        while (true) { 
+            int cantMailsNew = mail.getCantidadMails();
+            if (cantMails != cantMailsNew){
+                cantMails = cantMailsNew;
+                mail.getMail();  
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Mmail.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
 
     private NAbogado nabogado;
     private NCliente ncliente;
@@ -544,10 +568,10 @@ public class Mmail {
                 salida.writeBytes(comando);
                 this.mailExterno = getEmisorMail(entrada);
                 subject = getSubject(entrada);
-                if(subject.equals("")){
+                if (subject.equals("")) {
                     return;
                 }
-                
+
                 comando = "QUIT\r\n";
                 System.out.print("C : " + comando);
                 salida.writeBytes(comando);
@@ -644,13 +668,13 @@ public class Mmail {
                     subject = cadenaDondeBuscar;
                     subject = subject.trim();
                 } else {
-                    if(contador == 4){
+                    if (contador == 4) {
                         this.sendMail("Formato del comando erroneo, finalice el comando con ;");
                         return "";
                     }
                     if (cadenaDondeBuscar.contains("];")) {
                         flag = false;
-                        subject = subject +" " +cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length() - 1);
+                        subject = subject + " " + cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length() - 1);
                         subject = subject.trim();
 
                     } else {
@@ -888,7 +912,7 @@ public class Mmail {
     // CU1: Gestionar Documento
     //Registrar Documento 
     public void RegistrarDocumento(String[] datos) {
-        if (datos.length<4 || datos.length>4) {
+        if (datos.length < 4 || datos.length > 4) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -907,7 +931,7 @@ public class Mmail {
 
     //Modificar Documento 
     public void ModificarDocumento(String[] datos) {
-        if (datos.length<3 || datos.length>3) {
+        if (datos.length < 3 || datos.length > 3) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -927,7 +951,7 @@ public class Mmail {
 
     //Eliminar Documento 
     public void EliminarDocumento(String[] datos) {
-        if (datos.length<1 || datos.length>1) {
+        if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -948,7 +972,7 @@ public class Mmail {
 
     //Buscar Documento 
     public void BuscarDocumento(String[] datos) {
-        if (datos.length<1 || datos.length>1) {
+        if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -1575,7 +1599,7 @@ public class Mmail {
             long d = fechaHoy.getTime();
             java.sql.Time horaAhora = new java.sql.Time(d);
             java.sql.Date fechaAhora = new java.sql.Date(d);
-            if (nombre=="") {
+            if (nombre == "") {
                 sendMail("No existe un Documento");
                 return;
             }
@@ -1691,7 +1715,7 @@ public class Mmail {
                 respuesta = linea_actual;
                 respuesta = respuesta.replaceAll("name=", "");
                 respuesta = respuesta.replaceAll("Content-Disposition: attachment; file", "");
-                respuesta = respuesta.replaceAll("\"" , "");
+                respuesta = respuesta.replaceAll("\"", "");
                 respuesta = respuesta.trim();
             }
 
