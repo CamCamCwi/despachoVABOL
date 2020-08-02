@@ -1675,7 +1675,7 @@ public class Mmail {
             if (linea_anterior.contains("Content-Type:") && linea_actual.contains("name=") && flag == false) {
                 respuesta = linea_actual;
                 respuesta = respuesta.replaceAll("name=", "");
-                respuesta = respuesta.replaceAll("Content-Disposition:attachment;file", "");
+                respuesta = respuesta.replaceAll("Content-Disposition: attachment; file", "");
                 respuesta = respuesta.replaceAll("\"" , "");
                 respuesta = respuesta.trim();
             }
