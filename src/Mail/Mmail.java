@@ -1563,6 +1563,7 @@ public class Mmail {
             java.sql.Date fechaAhora = new java.sql.Date(d);
             if (nombre=="") {
                 sendMail("No existe un Documento");
+                return;
             }
             respuesta = ndocumento.RegistrarDocumento(nombre, datos[0], fechaAhora, horaAhora, "/docs", datos[1], Integer.parseInt(datos[2]), Integer.parseInt(datos[3]), Integer.parseInt(number));
             sendMail(respuesta);
