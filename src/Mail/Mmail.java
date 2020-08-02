@@ -52,6 +52,7 @@ public class Mmail {
         String help = "Content-Type: text/html; charset=\"UTF-8\"\n"
                 + "\n"
                 + "<h1>HELP:  </h1>"
+                + "<h2>Por favor no utilizar tildes (´) o (ñ) en los datos de los comandos</h2>"
                 + "<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n"
                 + "\n"
                 + "  <tr>\n"
@@ -633,15 +634,15 @@ public class Mmail {
             loQueQuieroBuscar = loQueQuieroBuscar.trim();
 
             if (cadenaDondeBuscar.contains(loQueQuieroBuscar) || flag) {
-               
-                if(cadenaDondeBuscar.equalsIgnoreCase("Subject: help")){
+
+                if (cadenaDondeBuscar.equalsIgnoreCase("Subject: help")) {
                     flag = false;
                     subject = cadenaDondeBuscar;
                     subject = subject.trim();
-                }else{
+                } else {
                     if (cadenaDondeBuscar.contains("];")) {
                         flag = false;
-                        subject = subject + cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length()-1);
+                        subject = subject +" " +cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length() - 1);
                         subject = subject.trim();
 
                     } else {
@@ -650,7 +651,7 @@ public class Mmail {
                         subject = subject.trim();
                         flag = true;
                     }
-                } 
+                }
             }
 
             System.out.println(line);
@@ -882,7 +883,7 @@ public class Mmail {
         String respuesta = "";
         respuesta += datos[0].length() < 1 ? "Descripcion de documento no valida" : "";
         respuesta += datos[1].length() < 1 ? "NIT de cliente no valido" : "";
-        respuesta += !isNumericEntero(datos[2])  ? "CI de abogado no valido" : "";
+        respuesta += !isNumericEntero(datos[2]) ? "CI de abogado no valido" : "";
         respuesta += !isNumericEntero(datos[3]) ? "Categoria de documento no valido" : "";
         if (respuesta.length() == 0) {
             GuardarMail(datos);
@@ -895,15 +896,15 @@ public class Mmail {
     //Modificar Documento 
     public void ModificarDocumento(String[] datos) {
         String respuesta = "";
-        respuesta += !isNumericEntero(datos[0])? "El id es de formato no valido" : "" ;
+        respuesta += !isNumericEntero(datos[0]) ? "El id es de formato no valido" : "";
         respuesta += datos[1].length() < 1 ? "Descripcion en formato no valido \n" : "";
-        respuesta += !isNumericEntero(datos[2])? "Categorida de documento en formato no valido \n" : "";
+        respuesta += !isNumericEntero(datos[2]) ? "Categorida de documento en formato no valido \n" : "";
         if (respuesta.length() == 0) {
             java.util.Date fechaHoy = new Date();
             long d = fechaHoy.getTime();
             java.sql.Time horaAhora = new java.sql.Time(d);
             java.sql.Date fechaAhora = new java.sql.Date(d);
-            respuesta = this.ndocumento.ModificarDocumento(Integer.parseInt(datos[0]),datos[1],fechaAhora,horaAhora,Integer.parseInt(datos[2]));
+            respuesta = this.ndocumento.ModificarDocumento(Integer.parseInt(datos[0]), datos[1], fechaAhora, horaAhora, Integer.parseInt(datos[2]));
         }
         sendMail(respuesta);
     }
@@ -1000,7 +1001,7 @@ public class Mmail {
     // RegistrarCliente
     public void RegistrarCliente(String[] datos) {
         String respuesta = "";
-        if (datos.length<12 || datos.length>12) {
+        if (datos.length < 12 || datos.length > 12) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -1025,7 +1026,7 @@ public class Mmail {
 
     public void ModificarCliente(String[] datos) {
         String respuesta = "";
-        if (datos.length<1 || datos.length>1) {
+        if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -1048,7 +1049,7 @@ public class Mmail {
 
     public void EliminarCliente(String[] datos) {
         String respuesta = "";
-        if (datos.length<1 || datos.length>1) {
+        if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -1069,7 +1070,7 @@ public class Mmail {
 
     public void BuscarCliente(String[] datos) {
         String respuesta = "";
-        if (datos.length<1 || datos.length>1) {
+        if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -1084,7 +1085,7 @@ public class Mmail {
 
     public void ModificarContraseñaCliente(String[] datos) {
         String respuesta = "";
-        if (datos.length<3 || datos.length>3) {
+        if (datos.length < 3 || datos.length > 3) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -1102,7 +1103,7 @@ public class Mmail {
     // RegistrarAbogado
     public void RegistrarAbogado(String[] datos) {
         String respuesta = "";
-        if (datos.length<13 || datos.length>13) {
+        if (datos.length < 13 || datos.length > 13) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -1111,12 +1112,12 @@ public class Mmail {
         respuesta += datos[2].length() <= 0 ? "El apellido paterno no es valido valido \n" : "";
         respuesta += datos[3].length() <= 0 ? "El apellido materno no es valido \n" : "";
         respuesta += datos[4].length() <= 0 ? "La especialidad no es un valor valido \n" : "";
-        respuesta += !isNumericEntero(datos[5])? "El numero de celular no es valido \n" : "";
+        respuesta += !isNumericEntero(datos[5]) ? "El numero de celular no es valido \n" : "";
         respuesta += datos[6].length() < 10 ? "La fecha de nacimiento no es valido \n" : "";
         respuesta += datos[7].length() < 1 ? "El genero del abogado  no es valido \n" : "";
-        respuesta += !isNumericEntero(datos[8])? "Nro de Colegio de abogados no valido \n" : "";
+        respuesta += !isNumericEntero(datos[8]) ? "Nro de Colegio de abogados no valido \n" : "";
         respuesta += !isNumericEntero(datos[9]) ? "Nro de ministerio de justicia no valido \n" : "";
-        respuesta += !isNumericEntero(datos[10])? "Nro de registro en corte no valido \n" : "";
+        respuesta += !isNumericEntero(datos[10]) ? "Nro de registro en corte no valido \n" : "";
         respuesta += datos[11].length() <= 0 ? "Mail no valido \n" : "";
         respuesta += datos[12].length() <= 8 ? "Contraseña de longitud no valida \n" : "";
 
@@ -1129,11 +1130,11 @@ public class Mmail {
 
     public void ModificarAbogado(String[] datos) {
         String respuesta = "";
-        if (datos.length<11 || datos.length>11) {
+        if (datos.length < 11 || datos.length > 11) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
-        respuesta += !isNumericEntero(datos[0])  ? "CI no valido \n " : "";
+        respuesta += !isNumericEntero(datos[0]) ? "CI no valido \n " : "";
         respuesta += datos[1].length() <= 0 ? "El nombre no es valido \n" : "";
         respuesta += datos[2].length() <= 0 ? "El apellido paterno no es valido valido \n" : "";
         respuesta += datos[3].length() <= 0 ? "El apellido materno no es valido \n" : "";
@@ -1142,7 +1143,7 @@ public class Mmail {
         respuesta += datos[6].length() < 10 ? "La fecha de nacimiento no es valido \n" : "";
         respuesta += datos[7].length() < 1 ? "El genero del abogado  no es valido \n" : "";
         respuesta += !isNumericEntero(datos[8]) ? "Nro de Colegio de abogados no valido \n" : "";
-        respuesta += !isNumericEntero(datos[9])? "Nro de ministerio de justicia no valido \n" : "";
+        respuesta += !isNumericEntero(datos[9]) ? "Nro de ministerio de justicia no valido \n" : "";
         respuesta += !isNumericEntero(datos[10]) ? "Nro de registro en corte no valido \n" : "";
 
         if (respuesta.length() == 0) {
@@ -1155,11 +1156,11 @@ public class Mmail {
 
     public void EliminarAbogado(String[] datos) {
         String respuesta = "";
-        if (datos.length<1 || datos.length>1) {
+        if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
-        respuesta += !isNumericEntero(datos[0])? "CI no valido \n " : "";
+        respuesta += !isNumericEntero(datos[0]) ? "CI no valido \n " : "";
 
         if (respuesta.length() == 0) {
             respuesta = this.nabogado.EliminarAbogado(Integer.parseInt(datos[0]));
@@ -1168,7 +1169,7 @@ public class Mmail {
     }
     // ListarAbogados
 
-    public void ListarAbogados() {        
+    public void ListarAbogados() {
         String respuesta = this.nabogado.ListarAbogado();
         sendMail(respuesta);
     }
@@ -1176,11 +1177,11 @@ public class Mmail {
 
     public void BuscarAbogado(String[] datos) {
         String respuesta = "";
-        if (datos.length<1 || datos.length>1) {
+        if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
-        respuesta += datos.length<1 || datos.length>1 ? "Error cantidad de parametros incorrecta" :"" ;
+        respuesta += datos.length < 1 || datos.length > 1 ? "Error cantidad de parametros incorrecta" : "";
         respuesta += !isNumericEntero(datos[0]) ? "El ci no es un formato valido" : "";
 
         if (respuesta.length() == 0) {
@@ -1192,7 +1193,7 @@ public class Mmail {
 
     public void ModificarContraseñaAbogado(String[] datos) {
         String respuesta = "";
-        if (datos.length<3 || datos.length>3) {
+        if (datos.length < 3 || datos.length > 3) {
             sendMail("Cantidad de parametros incorrecta");
             return;
         }
@@ -1413,18 +1414,23 @@ public class Mmail {
 
     public void EliminarCategoriaAnuncio(String[] datos) {
         String respuesta = "";
-        if (datos.length == 1) {
-            if (this.isNumericEntero(datos[0])) {
-                respuesta = this.ncategoriaanuncio.EliminarCategoriaAnuncio(Integer.parseInt(datos[0]));
-            } else {
-                respuesta = "El identificador de la categoría anuncio que se quiere eliminar, debe ser un entero y no: " + datos[0];
-            }
-
-        } else if (datos.length < 1) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        if (datos == null) {
+            respuesta = "No se permiten datos nulos.";
         } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            if (datos.length == 1) {
+                if (this.isNumericEntero(datos[0])) {
+                    respuesta = this.ncategoriaanuncio.EliminarCategoriaAnuncio(Integer.parseInt(datos[0]));
+                } else {
+                    respuesta = "El identificador de la categoría anuncio que se quiere eliminar, debe ser un entero y no: " + datos[0];
+                }
+
+            } else if (datos.length < 1) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         }
+
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1586,7 +1592,7 @@ public class Mmail {
                 comando = "RETR " + number + "\n";
                 System.out.print("C : " + comando);
                 salida.writeBytes(comando);
-                this.mailExterno = getEmisorMail(entrada);
+                //this.mailExterno = getEmisorMail(entrada);
                 encodeDoc = getEncodeMime(entrada);
                 System.out.println(encodeDoc);
 
@@ -1656,7 +1662,7 @@ public class Mmail {
             if (linea_anterior.contains("Content-Type:") && linea_actual.contains("name=") && flag == false) {
                 respuesta = linea_actual;
                 respuesta = respuesta.replaceAll("name=", "");
-                respuesta = respuesta.replaceAll("\"" , "");
+                respuesta = respuesta.replaceAll("\"", "");
                 respuesta = respuesta.trim();
             }
 
