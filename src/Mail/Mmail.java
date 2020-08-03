@@ -544,7 +544,10 @@ public class Mmail {
                 salida.writeBytes(comando);
                 this.mailExterno = getEmisorMail(entrada);
                 subject = getSubject(entrada);
-
+                if(subject.equals("")){
+                    return;
+                }
+                
                 comando = "QUIT\r\n";
                 System.out.print("C : " + comando);
                 salida.writeBytes(comando);
@@ -619,6 +622,7 @@ public class Mmail {
     public String getSubject(BufferedReader in) throws IOException {
         String subject = "";
         boolean flag = false;
+        int contador = 0;
         while (true) {
 
             String line = in.readLine();
@@ -634,12 +638,16 @@ public class Mmail {
             loQueQuieroBuscar = loQueQuieroBuscar.trim();
 
             if (cadenaDondeBuscar.contains(loQueQuieroBuscar) || flag) {
-
+                contador++;
                 if (cadenaDondeBuscar.equalsIgnoreCase("Subject: help")) {
                     flag = false;
                     subject = cadenaDondeBuscar;
                     subject = subject.trim();
                 } else {
+                    if(contador == 4){
+                        this.sendMail("Formato del comando erroneo, finalice el comando con ;");
+                        return "";
+                    }
                     if (cadenaDondeBuscar.contains("];")) {
                         flag = false;
                         subject = subject +" " +cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length() - 1);
