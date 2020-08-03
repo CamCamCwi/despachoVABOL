@@ -1477,7 +1477,7 @@ public class Mmail {
                 respuesta = this.nsolicitudcontacto.RegistrarSolicitudContacto(datos[0], datos[1], fechaAhora, Integer.parseInt(datos[2]), datos[3], datos[4], datos[5]);
 
             } else {
-                respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[2];
+                respuesta = "El identificador de la solicitud de contacto a registrar, debe ser un entero y no: " + datos[2];
             }
 
         } else if (datos.length < 6) {
@@ -1498,10 +1498,10 @@ public class Mmail {
                     respuesta = this.nsolicitudcontacto.ModificarSolicitudContacto(Integer.parseInt(datos[0]), datos[1], Integer.parseInt(datos[2]));
 
                 } else {
-                    respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[2];
+                    respuesta = "El identificador del abogado de la solicitud de contacto a modificar, debe ser un entero y no: " + datos[2];
                 }
             } else {
-                respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[0];
+                respuesta = "El identificador de la solicitud de contacto a modificar, debe ser un entero y no: " + datos[0];
             }
 
         } else if (datos.length < 3) {
