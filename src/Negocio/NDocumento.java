@@ -27,7 +27,7 @@ public class NDocumento {
                 && doc_cliente.length() != 0 && Integer.toString(doc_idmail).length() != 0
                 && Integer.toString(doc_abogado).length() != 0 && Integer.toString(doc_categoriadoc).length() != 0
                 && dcategoriadoc.Existe(doc_categoriadoc) && dabogado.Existe(doc_abogado)
-                && dcliente.Existe(doc_cliente)) {
+                && dcliente.Existe(doc_cliente) && !ddocumento.ExistePorTitulo(doc_titulo)) {
             if (doc_titulo.length() <= 125) {
                 if (doc_descripcion.length() <= 255) {
                     if (doc_url.length() <= 1000) {
@@ -60,7 +60,7 @@ public class NDocumento {
                 respuesta = "El titulo es demasiado largo";
             }
         } else {
-            respuesta = "No se permiten datos vacios o nulos o llaves foraneas inexistentes";
+            respuesta = "No se permiten datos vacios o nulos o llaves foraneas inexistentes y tampoco documentos con el nombre repetido.";
         }
         return respuesta;
     }
