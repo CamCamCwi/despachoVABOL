@@ -2,6 +2,7 @@ package Negocio;
 
 import Datos.DAbogado;
 import Datos.DCategoriaDoc;
+import Datos.DCliente;
 import Datos.DDocumento;
 import java.sql.Date;
 import java.sql.Time;
@@ -11,19 +12,22 @@ public class NDocumento {
     private DDocumento ddocumento;
     private DAbogado dabogado;
     private DCategoriaDoc dcategoriadoc;
+    private DCliente dcliente;
     private String respuesta = "";
 
     public NDocumento() {
         ddocumento = new DDocumento();
         dabogado = new DAbogado();
         dcategoriadoc = new DCategoriaDoc();
+        dcliente = new DCliente();
     }
 
     public String RegistrarDocumento(String doc_titulo, String doc_descripcion, Date doc_fechasubida, Time doc_horasubida, String doc_url, String doc_cliente, int doc_abogado, int doc_categoriadoc, int doc_idmail) {
         if (doc_titulo.length() != 0 && doc_descripcion.length() != 0 && doc_url.length() != 0
                 && doc_cliente.length() != 0 && Integer.toString(doc_idmail).length() != 0
                 && Integer.toString(doc_abogado).length() != 0 && Integer.toString(doc_categoriadoc).length() != 0
-                && dcategoriadoc.Existe(doc_categoriadoc) && dabogado.Existe(doc_abogado)) {
+                && dcategoriadoc.Existe(doc_categoriadoc) && dabogado.Existe(doc_abogado)
+                && dcliente.Existe(doc_cliente) && !ddocumento.ExistePorTitulo(doc_titulo)) {
             if (doc_titulo.length() <= 125) {
                 if (doc_descripcion.length() <= 255) {
                     if (doc_url.length() <= 1000) {
@@ -56,7 +60,7 @@ public class NDocumento {
                 respuesta = "El titulo es demasiado largo";
             }
         } else {
-            respuesta = "No se permiten datos vacios o nulos o llaves foraneas inexistentes";
+            respuesta = "No se permiten datos vacios o nulos o llaves foraneas inexistentes y tampoco documentos con el nombre repetido.";
         }
         return respuesta;
     }
