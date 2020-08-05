@@ -17,9 +17,33 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Time;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class Mmail {
+
+    public static void main(String[] args) {
+        /*Mmail mail = new Mmail();
+        mail.getMail();*/
+        Mmail mail = new Mmail();
+        
+        int cantMails = mail.getCantidadMails();
+        
+        while (true) { 
+            int cantMailsNew = mail.getCantidadMails();
+            if (cantMails != cantMailsNew){
+                cantMails = cantMailsNew;
+                mail.getMail();  
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Mmail.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
 
     //Login
     private String LoginFlag;
@@ -56,6 +80,7 @@ public class Mmail {
         String help = "Content-Type: text/html; charset=\"UTF-8\"\n"
                 + "\n"
                 + "<h1>HELP:  </h1>"
+                + "<h2>Por favor no utilizar tildes (´) o (ñ) en los datos de los comandos</h2>"
                 + "<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n"
                 + "\n"
                 + "  <tr>\n"
@@ -74,7 +99,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar documento</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_descripcion ;; String doc_cliente ;; int doc_abogado ;; int doc_categoriadoc];</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_descripcion ;; String doc_cliente ;; int doc_abogado ;; int doc_categoriadoc];(Se acepta documentos tipo: .txt, .docx, .pdf, .jpg, .rar, .xmls) DEPENDIENTO DEL TAMAÑO DEL ARCHIVO EL TIEMPO DE EJECUCION DEL PROGRAMA SERÁ MAYOR</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -224,7 +249,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar abogado</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_abogado[int ci ;; String nombre ;; String apellido Paterno ;; String apellido Materno ;; String especialidad ;; int celular ;; String fecha de nacimiento ;; String genero ;; int numero en colegio de abogados ;; int numero en ministerio de justicia ;; int numero de registro en Corte ;; String usuario ;; int contraseña];</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_abogado[int ci ;; String nombre ;; String apellido Paterno ;; String apellido Materno ;; String especialidad ;; int celular ;; String fecha de nacimiento(AAAA-MM-DD) ;; String genero ;; int numero en colegio de abogados ;; int numero en ministerio de justicia ;; int numero de registro en Corte ;; String usuario ;; int contraseña];</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -234,7 +259,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar abogado</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_abogado[int ci ;; String nombre ;; String apellido Paterno ;; String apellido Materno ;; String especialidad ;; int celular ;; String fecha de nacimiento ;; String genero ;; int numero en colegio de abogados ;; int numero en ministerio de justicia ;; int numero de registro en Corte];</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_abogado[int ci ;; String nombre ;; String apellido Paterno ;; String apellido Materno ;; String especialidad ;; int celular ;; String fecha de nacimiento(AAAA-MM-DD) ;; String genero ;; int numero en colegio de abogados ;; int numero en ministerio de justicia ;; int numero de registro en Corte];</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -547,6 +572,9 @@ public class Mmail {
                 salida.writeBytes(comando);
                 this.mailExterno = getEmisorMail(entrada);
                 subject = getSubject(entrada);
+                if (subject.equals("")) {
+                    return;
+                }
 
                 comando = "QUIT\r\n";
                 System.out.print("C : " + comando);
@@ -622,6 +650,7 @@ public class Mmail {
     public String getSubject(BufferedReader in) throws IOException {
         String subject = "";
         boolean flag = false;
+        int contador = 0;
         while (true) {
 
             String line = in.readLine();
@@ -637,15 +666,19 @@ public class Mmail {
             loQueQuieroBuscar = loQueQuieroBuscar.trim();
 
             if (cadenaDondeBuscar.contains(loQueQuieroBuscar) || flag) {
-
+                contador++;
                 if (cadenaDondeBuscar.equalsIgnoreCase("Subject: help")) {
                     flag = false;
                     subject = cadenaDondeBuscar;
                     subject = subject.trim();
                 } else {
+                    if (contador == 6) {
+                        this.sendMail("Formato del comando erroneo, finalice el comando con ;");
+                        return "";
+                    }
                     if (cadenaDondeBuscar.contains("];")) {
                         flag = false;
-                        subject = subject + cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length() - 1);
+                        subject = subject + " " + cadenaDondeBuscar.substring(0, cadenaDondeBuscar.length() - 1);
                         subject = subject.trim();
 
                     } else {
@@ -899,6 +932,10 @@ public class Mmail {
     // CU1: Gestionar Documento
     //Registrar Documento 
     public void RegistrarDocumento(String[] datos) {
+        if (datos.length < 4 || datos.length > 4) {
+            sendMail("Cantidad de parametros incorrecta");
+            return;
+        }
         String respuesta = "";
         respuesta += datos[0].length() < 1 ? "Descripcion de documento no valida" : "";
         respuesta += datos[1].length() < 1 ? "NIT de cliente no valido" : "";
@@ -914,6 +951,10 @@ public class Mmail {
 
     //Modificar Documento 
     public void ModificarDocumento(String[] datos) {
+        if (datos.length < 3 || datos.length > 3) {
+            sendMail("Cantidad de parametros incorrecta");
+            return;
+        }
         String respuesta = "";
         respuesta += !isNumericEntero(datos[0]) ? "El id es de formato no valido" : "";
         respuesta += datos[1].length() < 1 ? "Descripcion en formato no valido \n" : "";
@@ -930,6 +971,10 @@ public class Mmail {
 
     //Eliminar Documento 
     public void EliminarDocumento(String[] datos) {
+        if (datos.length < 1 || datos.length > 1) {
+            sendMail("Cantidad de parametros incorrecta");
+            return;
+        }
         String respuesta = "";
         respuesta += datos[0].length() < 1 ? "Titulo de formato no valido" : "";
         if (respuesta.length() == 0) {
@@ -947,6 +992,10 @@ public class Mmail {
 
     //Buscar Documento 
     public void BuscarDocumento(String[] datos) {
+        if (datos.length < 1 || datos.length > 1) {
+            sendMail("Cantidad de parametros incorrecta");
+            return;
+        }
         String respuesta = "";
         respuesta += datos[0].length() < 1 ? "Titulo del documento no valido" : "";
         if (respuesta.length() == 0) {
@@ -1309,30 +1358,35 @@ public class Mmail {
     // RegistrarAnuncio
     public void RegistrarAnuncio(String[] datos) {
         String respuesta = "";
-        if (datos.length == 5) {
-            if (this.isNumericEntero(datos[2])) {
-                if (this.isNumericEntero(datos[3])) {
-                    if (this.isNumericEntero(datos[4])) {
-                        java.util.Date fechaHoy = new Date();
-                        long d = fechaHoy.getTime();
-                        java.sql.Time horaAhora = new java.sql.Time(d);
-                        java.sql.Date fechaAhora = new java.sql.Date(d);
-                        respuesta = this.nanuncio.RegistrarAnuncio(datos[0], datos[1], Integer.parseInt(datos[2]), fechaAhora, horaAhora, Integer.parseInt(datos[3]), Integer.parseInt(datos[4]));
+        if (datos != null) {
+            if (datos.length == 5) {
+                if (this.isNumericEntero(datos[2])) {
+                    if (this.isNumericEntero(datos[3])) {
+                        if (this.isNumericEntero(datos[4])) {
+                            java.util.Date fechaHoy = new Date();
+                            long d = fechaHoy.getTime();
+                            java.sql.Time horaAhora = new java.sql.Time(d);
+                            java.sql.Date fechaAhora = new java.sql.Date(d);
+                            respuesta = this.nanuncio.RegistrarAnuncio(datos[0], datos[1], Integer.parseInt(datos[2]), fechaAhora, horaAhora, Integer.parseInt(datos[3]), Integer.parseInt(datos[4]));
+                        } else {
+                            respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[4];
+                        }
                     } else {
-                        respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[4];
+                        respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[3];
                     }
                 } else {
-                    respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[3];
+                    respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[2];
                 }
-            } else {
-                respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[2];
-            }
 
-        } else if (datos.length < 5) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else if (datos.length < 5) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            respuesta = "No se permiten datos nulos.";
         }
+
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1340,33 +1394,38 @@ public class Mmail {
 
     public void ModificarAnuncio(String[] datos) {
         String respuesta = "";
-        if (datos.length == 6) {
-            if (this.isNumericEntero(datos[0])) {
-                if (this.isNumericEntero(datos[3])) {
-                    if (this.isNumericEntero(datos[4])) {
-                        if (this.isNumericEntero(datos[5])) {
-                            java.util.Date fechaHoy = new Date();
-                            long d = fechaHoy.getTime();
-                            java.sql.Time horaAhora = new java.sql.Time(d);
-                            java.sql.Date fechaAhora = new java.sql.Date(d);
-                            respuesta = this.nanuncio.ModificarAnuncio(Integer.parseInt(datos[0]), datos[1], datos[2], Integer.parseInt(datos[3]), fechaAhora, horaAhora, Integer.parseInt(datos[4]), Integer.parseInt(datos[5]));
+        if (datos != null) {
+            if (datos.length == 6) {
+                if (this.isNumericEntero(datos[0])) {
+                    if (this.isNumericEntero(datos[3])) {
+                        if (this.isNumericEntero(datos[4])) {
+                            if (this.isNumericEntero(datos[5])) {
+                                java.util.Date fechaHoy = new Date();
+                                long d = fechaHoy.getTime();
+                                java.sql.Time horaAhora = new java.sql.Time(d);
+                                java.sql.Date fechaAhora = new java.sql.Date(d);
+                                respuesta = this.nanuncio.ModificarAnuncio(Integer.parseInt(datos[0]), datos[1], datos[2], Integer.parseInt(datos[3]), fechaAhora, horaAhora, Integer.parseInt(datos[4]), Integer.parseInt(datos[5]));
+                            } else {
+                                respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[5];
+                            }
                         } else {
-                            respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[5];
+                            respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[4];
                         }
                     } else {
-                        respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[4];
+                        respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[3];
                     }
                 } else {
-                    respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[3];
+                    respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[0];
                 }
+            } else if (datos.length < 6) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
             } else {
-                respuesta = "El identificador del anuncio a modificar, debe ser un entero y no: " + datos[0];
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
             }
-        } else if (datos.length < 6) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
         } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            respuesta = "No se permiten datos nulos.";
         }
+
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1374,18 +1433,23 @@ public class Mmail {
 
     public void EliminarAnuncio(String[] datos) {
         String respuesta = "";
-        if (datos.length == 1) {
-            if (this.isNumericEntero(datos[0])) {
-                respuesta = this.nanuncio.EliminarAnuncio(Integer.parseInt(datos[0]));
-            } else {
-                respuesta = "El identificador del anuncio a eliminar, debe ser un entero y no: " + datos[0];
-            }
+        if (datos != null) {
+            if (datos.length == 1) {
+                if (this.isNumericEntero(datos[0])) {
+                    respuesta = this.nanuncio.EliminarAnuncio(Integer.parseInt(datos[0]));
+                } else {
+                    respuesta = "El identificador del anuncio a eliminar, debe ser un entero y no: " + datos[0];
+                }
 
-        } else if (datos.length < 1) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else if (datos.length < 1) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            respuesta = "No se permiten datos nulos.";
         }
+
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1400,13 +1464,18 @@ public class Mmail {
     // RegistrarCategoriaAnuncio
     public void RegistrarCategoriaAnuncio(String[] datos) {
         String respuesta = "";
-        if (datos.length == 2) {
-            respuesta = this.ncategoriaanuncio.RegistrarCategoriaAnuncio(datos[0], datos[1]);
-        } else if (datos.length < 2) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo.";
+        if (datos != null) {
+            if (datos.length == 2) {
+                respuesta = this.ncategoriaanuncio.RegistrarCategoriaAnuncio(datos[0], datos[1]);
+            } else if (datos.length < 2) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo.";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo.";
+            }
         } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo.";
+            respuesta = "No se permiten datos nulos.";
         }
+
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1414,18 +1483,23 @@ public class Mmail {
 
     public void ModificarCategoriaAnuncio(String[] datos) {
         String respuesta = "";
-        if (datos.length == 3) {
-            if (this.isNumericEntero(datos[0])) {
-                respuesta = this.ncategoriaanuncio.ModificarCategoriaAnuncio(Integer.parseInt(datos[0]), datos[1], datos[2]);
-            } else {
-                respuesta = "El identificador de la categoría anuncio que se quiere modificar, debe ser un entero y no: " + datos[0];
-            }
+        if (datos != null) {
+            if (datos.length == 3) {
+                if (this.isNumericEntero(datos[0])) {
+                    respuesta = this.ncategoriaanuncio.ModificarCategoriaAnuncio(Integer.parseInt(datos[0]), datos[1], datos[2]);
+                } else {
+                    respuesta = "El identificador de la categoría anuncio que se quiere modificar, debe ser un entero y no: " + datos[0];
+                }
 
-        } else if (datos.length < 3) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else if (datos.length < 3) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            respuesta = "No se permiten datos nulos.";
         }
+
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1433,18 +1507,23 @@ public class Mmail {
 
     public void EliminarCategoriaAnuncio(String[] datos) {
         String respuesta = "";
-        if (datos.length == 1) {
-            if (this.isNumericEntero(datos[0])) {
-                respuesta = this.ncategoriaanuncio.EliminarCategoriaAnuncio(Integer.parseInt(datos[0]));
-            } else {
-                respuesta = "El identificador de la categoría anuncio que se quiere eliminar, debe ser un entero y no: " + datos[0];
-            }
-
-        } else if (datos.length < 1) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+        if (datos == null) {
+            respuesta = "No se permiten datos nulos.";
         } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            if (datos.length == 1) {
+                if (this.isNumericEntero(datos[0])) {
+                    respuesta = this.ncategoriaanuncio.EliminarCategoriaAnuncio(Integer.parseInt(datos[0]));
+                } else {
+                    respuesta = "El identificador de la categoría anuncio que se quiere eliminar, debe ser un entero y no: " + datos[0];
+                }
+
+            } else if (datos.length < 1) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         }
+
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1459,22 +1538,27 @@ public class Mmail {
     // RegistrarSolicitudContacto
     public void RegistrarSolicitudContacto(String[] datos) {
         String respuesta = "";
-        if (datos.length == 6) {
-            if (this.isNumericEntero(datos[2])) {
-                java.util.Date fechaHoy = new Date();
-                long d = fechaHoy.getTime();
-                java.sql.Date fechaAhora = new java.sql.Date(d);
-                respuesta = this.nsolicitudcontacto.RegistrarSolicitudContacto(datos[0], datos[1], fechaAhora, Integer.parseInt(datos[2]), datos[3], datos[4], datos[5]);
+        if (datos != null) {
+            if (datos.length == 6) {
+                if (this.isNumericEntero(datos[2])) {
+                    java.util.Date fechaHoy = new Date();
+                    long d = fechaHoy.getTime();
+                    java.sql.Date fechaAhora = new java.sql.Date(d);
+                    respuesta = this.nsolicitudcontacto.RegistrarSolicitudContacto(datos[0], datos[1], fechaAhora, Integer.parseInt(datos[2]), datos[3], datos[4], datos[5]);
 
+                } else {
+                    respuesta = "El identificador de la solicitud de contacto a registrar, debe ser un entero y no: " + datos[2];
+                }
+
+            } else if (datos.length < 6) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
             } else {
-                respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[2];
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
             }
-
-        } else if (datos.length < 6) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
         } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            respuesta = "No se permiten datos nulos.";
         }
+
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1482,23 +1566,28 @@ public class Mmail {
 
     public void ModificarSolicitudContacto(String[] datos) {
         String respuesta = "";
-        if (datos.length == 3) {
-            if (this.isNumericEntero(datos[0])) {
-                if (this.isNumericEntero(datos[2])) {
-                    respuesta = this.nsolicitudcontacto.ModificarSolicitudContacto(Integer.parseInt(datos[0]), datos[1], Integer.parseInt(datos[2]));
+        if (datos != null) {
+            if (datos.length == 3) {
+                if (this.isNumericEntero(datos[0])) {
+                    if (this.isNumericEntero(datos[2])) {
+                        respuesta = this.nsolicitudcontacto.ModificarSolicitudContacto(Integer.parseInt(datos[0]), datos[1], Integer.parseInt(datos[2]));
 
+                    } else {
+                        respuesta = "El identificador del abogado de la solicitud de contacto a modificar, debe ser un entero y no: " + datos[2];
+                    }
                 } else {
-                    respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[2];
+                    respuesta = "El identificador de la solicitud de contacto a modificar, debe ser un entero y no: " + datos[0];
                 }
-            } else {
-                respuesta = "El identificador del anuncio a registrar, debe ser un entero y no: " + datos[0];
-            }
 
-        } else if (datos.length < 3) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else if (datos.length < 3) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            respuesta = "No se permiten datos nulos.";
         }
+
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1565,6 +1654,10 @@ public class Mmail {
             long d = fechaHoy.getTime();
             java.sql.Time horaAhora = new java.sql.Time(d);
             java.sql.Date fechaAhora = new java.sql.Date(d);
+            if (nombre == "") {
+                sendMail("Error Usted no ha enviado ningun documento.");
+                return;
+            }
             respuesta = ndocumento.RegistrarDocumento(nombre, datos[0], fechaAhora, horaAhora, "/docs", datos[1], Integer.parseInt(datos[2]), Integer.parseInt(datos[3]), Integer.parseInt(number));
             sendMail(respuesta);
         } catch (UnknownHostException e) {
@@ -1606,7 +1699,7 @@ public class Mmail {
                 comando = "RETR " + number + "\n";
                 System.out.print("C : " + comando);
                 salida.writeBytes(comando);
-                this.mailExterno = getEmisorMail(entrada);
+                //this.mailExterno = getEmisorMail(entrada);
                 encodeDoc = getEncodeMime(entrada);
                 System.out.println(encodeDoc);
 
@@ -1676,6 +1769,7 @@ public class Mmail {
             if (linea_anterior.contains("Content-Type:") && linea_actual.contains("name=") && flag == false) {
                 respuesta = linea_actual;
                 respuesta = respuesta.replaceAll("name=", "");
+                respuesta = respuesta.replaceAll("Content-Disposition: attachment; file", "");
                 respuesta = respuesta.replaceAll("\"", "");
                 respuesta = respuesta.trim();
             }

@@ -162,7 +162,7 @@ public class DUsuario {
         ResultSet resultado = null;
         try {
             ps = con.prepareStatement(sql);
-            ps.setString(1, this.getUsuario());
+            ps.setInt(1, ident);
             resultado = ps.executeQuery();
             if (resultado.next()) {
                 return true;
