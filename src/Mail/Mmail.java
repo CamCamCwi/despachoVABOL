@@ -16,9 +16,33 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Time;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class Mmail {
+
+    public static void main(String[] args) {
+        /*Mmail mail = new Mmail();
+        mail.getMail();*/
+        Mmail mail = new Mmail();
+        
+        int cantMails = mail.getCantidadMails();
+        
+        while (true) { 
+            int cantMailsNew = mail.getCantidadMails();
+            if (cantMails != cantMailsNew){
+                cantMails = cantMailsNew;
+                mail.getMail();  
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Mmail.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
 
     private NAbogado nabogado;
     private NCliente ncliente;
@@ -221,7 +245,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar abogado</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_abogado[int ci ;; String nombre ;; String apellido Paterno ;; String apellido Materno ;; String especialidad ;; int celular ;; String fecha de nacimiento ;; String genero ;; int numero en colegio de abogados ;; int numero en ministerio de justicia ;; int numero de registro en Corte ;; String usuario ;; int contraseña];</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_abogado[int ci ;; String nombre ;; String apellido Paterno ;; String apellido Materno ;; String especialidad ;; int celular ;; String fecha de nacimiento(AAAA-MM-DD) ;; String genero ;; int numero en colegio de abogados ;; int numero en ministerio de justicia ;; int numero de registro en Corte ;; String usuario ;; int contraseña];</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -231,7 +255,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar abogado</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_abogado[int ci ;; String nombre ;; String apellido Paterno ;; String apellido Materno ;; String especialidad ;; int celular ;; String fecha de nacimiento ;; String genero ;; int numero en colegio de abogados ;; int numero en ministerio de justicia ;; int numero de registro en Corte];</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_abogado[int ci ;; String nombre ;; String apellido Paterno ;; String apellido Materno ;; String especialidad ;; int celular ;; String fecha de nacimiento(AAAA-MM-DD) ;; String genero ;; int numero en colegio de abogados ;; int numero en ministerio de justicia ;; int numero de registro en Corte];</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -644,7 +668,7 @@ public class Mmail {
                     subject = cadenaDondeBuscar;
                     subject = subject.trim();
                 } else {
-                    if (contador == 4) {
+                    if (contador == 6) {
                         this.sendMail("Formato del comando erroneo, finalice el comando con ;");
                         return "";
                     }
@@ -1611,7 +1635,7 @@ public class Mmail {
             java.sql.Time horaAhora = new java.sql.Time(d);
             java.sql.Date fechaAhora = new java.sql.Date(d);
             if (nombre == "") {
-                sendMail("No existe un Documento");
+                sendMail("Error Usted no ha enviado ningun documento.");
                 return;
             }
             respuesta = ndocumento.RegistrarDocumento(nombre, datos[0], fechaAhora, horaAhora, "/docs", datos[1], Integer.parseInt(datos[2]), Integer.parseInt(datos[3]), Integer.parseInt(number));
