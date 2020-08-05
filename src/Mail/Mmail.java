@@ -71,7 +71,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar documento</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_descripcion ;; String doc_cliente ;; int doc_abogado ;; int doc_categoriadoc];</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_documento[String doc_descripcion ;; String doc_cliente ;; int doc_abogado ;; int doc_categoriadoc];(Se acepta documentos tipo: .txt, .docx, .pdf, .jpg, .rar, .xmls) DEPENDIENTO DEL TAMAÑO DEL ARCHIVO EL TIEMPO DE EJECUCION DEL PROGRAMA SERÁ MAYOR</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
