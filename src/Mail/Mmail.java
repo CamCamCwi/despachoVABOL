@@ -707,8 +707,8 @@ public class Mmail {
             String cadenaDondeBuscar = line;
             String loQueQuieroBuscar = "From:";
             loQueQuieroBuscar = loQueQuieroBuscar.trim();
-
-            if (cadenaDondeBuscar.contains(loQueQuieroBuscar)) {
+            String primerasLetras = cadenaDondeBuscar.substring(0, 5);
+            if (primerasLetras.equals(loQueQuieroBuscar)) {
                 emisor = cadenaDondeBuscar.substring((cadenaDondeBuscar.indexOf("<")) + 1, (cadenaDondeBuscar.indexOf(">")));
                 break;
             }
@@ -912,53 +912,66 @@ public class Mmail {
     // CU1: Gestionar Documento
     //Registrar Documento 
     public void RegistrarDocumento(String[] datos) {
-        if (datos.length < 4 || datos.length > 4) {
-            sendMail("Cantidad de parametros incorrecta");
-            return;
-        }
         String respuesta = "";
-        respuesta += datos[0].length() < 1 ? "Descripcion de documento no valida" : "";
-        respuesta += datos[1].length() < 1 ? "NIT de cliente no valido" : "";
-        respuesta += !isNumericEntero(datos[2]) ? "CI de abogado no valido" : "";
-        respuesta += !isNumericEntero(datos[3]) ? "Categoria de documento no valido" : "";
-        if (respuesta.length() == 0) {
-            GuardarMail(datos);
-        } else {
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
             sendMail(respuesta);
-        }
+        }else{
+            if (datos.length < 4 || datos.length > 4) {
+                sendMail("Cantidad de parametros incorrecta");
+                return;
+            }
 
+            respuesta += datos[0].length() < 1 ? "Descripcion de documento no valida" : "";
+            respuesta += datos[1].length() < 1 ? "NIT de cliente no valido" : "";
+            respuesta += !isNumericEntero(datos[2]) ? "CI de abogado no valido" : "";
+            respuesta += !isNumericEntero(datos[3]) ? "Categoria de documento no valido" : "";
+            if (respuesta.length() == 0) {
+                GuardarMail(datos);
+            } else {
+                sendMail(respuesta);
+            }
+        }
     }
 
     //Modificar Documento 
     public void ModificarDocumento(String[] datos) {
-        if (datos.length < 3 || datos.length > 3) {
-            sendMail("Cantidad de parametros incorrecta");
-            return;
-        }
         String respuesta = "";
-        respuesta += !isNumericEntero(datos[0]) ? "El id es de formato no valido" : "";
-        respuesta += datos[1].length() < 1 ? "Descripcion en formato no valido \n" : "";
-        respuesta += !isNumericEntero(datos[2]) ? "Categorida de documento en formato no valido \n" : "";
-        if (respuesta.length() == 0) {
-            java.util.Date fechaHoy = new Date();
-            long d = fechaHoy.getTime();
-            java.sql.Time horaAhora = new java.sql.Time(d);
-            java.sql.Date fechaAhora = new java.sql.Date(d);
-            respuesta = this.ndocumento.ModificarDocumento(Integer.parseInt(datos[0]), datos[1], fechaAhora, horaAhora, Integer.parseInt(datos[2]));
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            if (datos.length < 3 || datos.length > 3) {
+                sendMail("Cantidad de parametros incorrecta");
+                return;
+            }
+            respuesta += !isNumericEntero(datos[0]) ? "El id es de formato no valido" : "";
+            respuesta += datos[1].length() < 1 ? "Descripcion en formato no valido \n" : "";
+            respuesta += !isNumericEntero(datos[2]) ? "Categorida de documento en formato no valido \n" : "";
+            if (respuesta.length() == 0) {
+                java.util.Date fechaHoy = new Date();
+                long d = fechaHoy.getTime();
+                java.sql.Time horaAhora = new java.sql.Time(d);
+                java.sql.Date fechaAhora = new java.sql.Date(d);
+                respuesta = this.ndocumento.ModificarDocumento(Integer.parseInt(datos[0]), datos[1], fechaAhora, horaAhora, Integer.parseInt(datos[2]));
+            }
         }
         sendMail(respuesta);
     }
 
     //Eliminar Documento 
     public void EliminarDocumento(String[] datos) {
-        if (datos.length < 1 || datos.length > 1) {
-            sendMail("Cantidad de parametros incorrecta");
-            return;
-        }
         String respuesta = "";
-        respuesta += datos[0].length() < 1 ? "Titulo de formato no valido" : "";
-        if (respuesta.length() == 0) {
-            respuesta = this.ndocumento.EliminarPorTitulo(datos[0]);
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            if (datos.length < 1 || datos.length > 1) {
+                sendMail("Cantidad de parametros incorrecta");
+                return;
+            }
+            respuesta += datos[0].length() < 1 ? "Titulo de formato no valido" : "";
+            if (respuesta.length() == 0) {
+                respuesta = this.ndocumento.EliminarPorTitulo(datos[0]);
+            }
         }
         sendMail(respuesta);
     }
@@ -972,31 +985,40 @@ public class Mmail {
 
     //Buscar Documento 
     public void BuscarDocumento(String[] datos) {
-        if (datos.length < 1 || datos.length > 1) {
-            sendMail("Cantidad de parametros incorrecta");
-            return;
-        }
         String respuesta = "";
-        respuesta += datos[0].length() < 1 ? "Titulo del documento no valido" : "";
-        if (respuesta.length() == 0) {
-            this.getDocFromMail(datos);
-        } else {
-            sendMail(respuesta);
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            if (datos.length < 1 || datos.length > 1) {
+                sendMail("Cantidad de parametros incorrecta");
+                return;
+            }
+            respuesta += datos[0].length() < 1 ? "Titulo del documento no valido" : "";
+            if (respuesta.length() == 0) {
+                this.getDocFromMail(datos);
+            } else {
+                sendMail(respuesta);
+            } 
         }
-
+        sendMail(respuesta);
     }
 
     // CU2: CategoriaDoc
     // RegistrarCategoriaDoc
     public void RegistrarCategoriaDoc(String[] datos) {
         String respuesta = "";
-        if (datos.length == 2) {
-            respuesta = this.ncategoriadoc.RegistrarCategoriaDoc(datos[0], datos[1]);
-        } else if (datos.length < 2) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
-        } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            if (datos.length == 2) {
+                respuesta = this.ncategoriadoc.RegistrarCategoriaDoc(datos[0], datos[1]);
+            } else if (datos.length < 2) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            } 
         }
+        
         System.out.println(respuesta);
         this.sendMail(respuesta);
     }
@@ -1004,17 +1026,21 @@ public class Mmail {
 
     public void ModificarCategoriaDoc(String[] datos) {
         String respuesta = "";
-        if (datos.length == 3) {
-            if (this.isNumericEntero(datos[0])) {
-                respuesta = this.ncategoriadoc.ModificarCategoriaDoc(Integer.parseInt(datos[0]), datos[1], datos[2]);
-            } else {
-                respuesta = "El identificador de la categoría documento que se quiere modificar, debe ser un entero y no: " + datos[0];
-            }
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            if (datos.length == 3) {
+                if (this.isNumericEntero(datos[0])) {
+                    respuesta = this.ncategoriadoc.ModificarCategoriaDoc(Integer.parseInt(datos[0]), datos[1], datos[2]);
+                } else {
+                    respuesta = "El identificador de la categoría documento que se quiere modificar, debe ser un entero y no: " + datos[0];
+                }
 
-        } else if (datos.length < 3) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
-        } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            } else if (datos.length < 3) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         }
         System.out.println(respuesta);
         this.sendMail(respuesta);
@@ -1023,17 +1049,21 @@ public class Mmail {
 
     public void EliminarCategoriaDoc(String[] datos) {
         String respuesta = "";
-        if (datos.length == 1) {
-            if (this.isNumericEntero(datos[0])) {
-                respuesta = this.ncategoriadoc.EliminarCategoriaDoc(Integer.parseInt(datos[0]));
-            } else {
-                respuesta = "El identificador de la categoría documento que se quiere eliminar, debe ser un entero y no: " + datos[0];
-            }
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            if (datos.length == 1) {
+                if (this.isNumericEntero(datos[0])) {
+                    respuesta = this.ncategoriadoc.EliminarCategoriaDoc(Integer.parseInt(datos[0]));
+                } else {
+                    respuesta = "El identificador de la categoría documento que se quiere eliminar, debe ser un entero y no: " + datos[0];
+                }
 
-        } else if (datos.length < 1) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
-        } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            } else if (datos.length < 1) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         }
         System.out.println(respuesta);
         this.sendMail(respuesta);
@@ -1259,29 +1289,33 @@ public class Mmail {
     // RegistrarComentario
     public void RegistrarComentario(String[] datos) {
         String respuesta = "";
-        if (datos.length == 4) {
-            if (this.isNumericEntero(datos[1])) {
-                if (this.isNumericEntero(datos[2])) {
-                    if (datos[3].equals("-") || this.isNumericEntero(datos[3])) {
-                        java.util.Date fechaHoy = new Date();
-                        long d = fechaHoy.getTime();
-                        java.sql.Time horaAhora = new java.sql.Time(d);
-                        java.sql.Date fechaAhora = new java.sql.Date(d);
-                        respuesta = this.ncomentario.RegistrarComentario(fechaAhora, horaAhora, datos[0], Integer.parseInt(datos[1]), Integer.parseInt(datos[2]), datos[3]);
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            if (datos.length == 4) {
+                if (this.isNumericEntero(datos[1])) {
+                    if (this.isNumericEntero(datos[2])) {
+                        if (datos[3].equals("-") || this.isNumericEntero(datos[3])) {
+                            java.util.Date fechaHoy = new Date();
+                            long d = fechaHoy.getTime();
+                            java.sql.Time horaAhora = new java.sql.Time(d);
+                            java.sql.Date fechaAhora = new java.sql.Date(d);
+                            respuesta = this.ncomentario.RegistrarComentario(fechaAhora, horaAhora, datos[0], Integer.parseInt(datos[1]), Integer.parseInt(datos[2]), datos[3]);
+                        } else {
+                            respuesta = "El identificador del comentario del comentario a registrar, debe ser un entero o un '-' y no: " + datos[3];
+                        }
                     } else {
-                        respuesta = "El identificador del comentario del comentario a registrar, debe ser un entero o un '-' y no: " + datos[3];
+                        respuesta = "El identificador del usuario del comentario a registrar, debe ser un entero y no: " + datos[2];
                     }
                 } else {
-                    respuesta = "El identificador del usuario del comentario a registrar, debe ser un entero y no: " + datos[2];
+                    respuesta = "El identificador del documento del comentario a registrar, debe ser un entero y no: " + datos[1];
                 }
-            } else {
-                respuesta = "El identificador del documento del comentario a registrar, debe ser un entero y no: " + datos[1];
-            }
 
-        } else if (datos.length < 4) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
-        } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            } else if (datos.length < 4) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         }
         System.out.println(respuesta);
         this.sendMail(respuesta);
@@ -1290,20 +1324,24 @@ public class Mmail {
 
     public void ModificarComentario(String[] datos) {
         String respuesta = "";
-        if (datos.length == 2) {
-            if (this.isNumericEntero(datos[0])) {
-                java.util.Date fechaHoy = new Date();
-                long d = fechaHoy.getTime();
-                java.sql.Time horaAhora = new java.sql.Time(d);
-                java.sql.Date fechaAhora = new java.sql.Date(d);
-                respuesta = this.ncomentario.ModificarComentario(Integer.parseInt(datos[0]), fechaAhora, horaAhora, datos[1]);
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            if (datos.length == 2) {
+                if (this.isNumericEntero(datos[0])) {
+                    java.util.Date fechaHoy = new Date();
+                    long d = fechaHoy.getTime();
+                    java.sql.Time horaAhora = new java.sql.Time(d);
+                    java.sql.Date fechaAhora = new java.sql.Date(d);
+                    respuesta = this.ncomentario.ModificarComentario(Integer.parseInt(datos[0]), fechaAhora, horaAhora, datos[1]);
+                } else {
+                    respuesta = "El identificador del comentario a modificar, debe ser un entero y no: " + datos[0];
+                }
+            } else if (datos.length < 2) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
             } else {
-                respuesta = "El identificador del comentario a modificar, debe ser un entero y no: " + datos[0];
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
             }
-        } else if (datos.length < 2) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
-        } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
         }
         System.out.println(respuesta);
         this.sendMail(respuesta);
@@ -1312,17 +1350,21 @@ public class Mmail {
 
     public void EliminarComentario(String[] datos) {
         String respuesta = "";
-        if (datos.length == 1) {
-            if (this.isNumericEntero(datos[0])) {
-                respuesta = this.ncomentario.EliminarComentario(Integer.parseInt(datos[0]));
-            } else {
-                respuesta = "El identificador del comentario a modificar, debe ser un entero y no: " + datos[0];
-            }
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            if (datos.length == 1) {
+                if (this.isNumericEntero(datos[0])) {
+                    respuesta = this.ncomentario.EliminarComentario(Integer.parseInt(datos[0]));
+                } else {
+                    respuesta = "El identificador del comentario a modificar, debe ser un entero y no: " + datos[0];
+                }
 
-        } else if (datos.length < 1) {
-            respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
-        } else {
-            respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            } else if (datos.length < 1) {
+                respuesta = "Los parámetros no son correctos, faltan datos para realizar la operación. Vuelva a intentarlo";
+            } else {
+                respuesta = "Los parámetros no son correctos, usted envió parametros de más. Vuelva a intentarlo";
+            }
         }
         System.out.println(respuesta);
         this.sendMail(respuesta);
@@ -1330,8 +1372,13 @@ public class Mmail {
     // ListarComentario
 
     public void ListarComentarios(String[] datos) {
-        String respuesta = this.ncomentario.ListarComentarios(Integer.parseInt(datos[0]));
-        this.sendMail(respuesta);
+        String respuesta = "";
+        if(datos == null){
+            respuesta = "Los datos no deben ser nulos o vacíos.";
+        }else{
+            respuesta = this.ncomentario.ListarComentarios(Integer.parseInt(datos[0]));
+        }
+      this.sendMail(respuesta);
     }
 
     // CU6: Gestionar Anuncio
