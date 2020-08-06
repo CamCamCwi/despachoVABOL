@@ -23,9 +23,9 @@ import java.util.regex.Pattern;
 public class Mmail {
 
     public static void main(String[] args) {
-        /*Mmail mail = new Mmail();
-        mail.getMail();*/
         Mmail mail = new Mmail();
+        mail.getMail();
+        /*Mmail mail = new Mmail();
         
         int cantMails = mail.getCantidadMails();
         
@@ -40,7 +40,7 @@ public class Mmail {
             } catch (InterruptedException ex) {
                 Logger.getLogger(Mmail.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }*/
 
     }
 
@@ -997,6 +997,7 @@ public class Mmail {
             respuesta += datos[0].length() < 1 ? "Titulo del documento no valido" : "";
             if (respuesta.length() == 0) {
                 this.getDocFromMail(datos);
+                return;
             } else {
                 sendMail(respuesta);
             } 
@@ -1808,6 +1809,9 @@ public class Mmail {
             if (linea_anterior.contains("Content-Type:") && linea_actual.contains("name=") && flag == false) {
                 flag = true;
             }
+            if (linea_anterior.contains("Content-Type:") && linea_anterior.contains("name=") && flag == false) {
+                flag = true;
+            }
             if (linea_actual.contains("--") && flag) {
                 respuesta += linea_anterior;
                 flag = false;
@@ -1840,8 +1844,18 @@ public class Mmail {
                 respuesta = respuesta.replaceAll("Content-Disposition: attachment; file", "");
                 respuesta = respuesta.replaceAll("\"", "");
                 respuesta = respuesta.trim();
+                return respuesta;
             }
-
+            if (linea_anterior.contains("Content-Type:") && linea_anterior.contains("name=") && flag == false) {
+                respuesta = linea_anterior;
+                respuesta = respuesta.substring(respuesta.indexOf("name="),respuesta.length()-1);
+                respuesta = respuesta.replaceAll("name=", "");
+                respuesta = respuesta.replaceAll("Content-Disposition: attachment; file", "");
+                respuesta = respuesta.replaceAll("\"", "");
+                respuesta = respuesta.trim();
+                return respuesta;
+            }
+        
         }
         return respuesta;
     }
