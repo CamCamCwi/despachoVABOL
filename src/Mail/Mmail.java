@@ -23,9 +23,9 @@ import java.util.regex.Pattern;
 public class Mmail {
 
     public static void main(String[] args) {
+       /* Mmail mail = new Mmail();
+        mail.getMail();*/
         Mmail mail = new Mmail();
-        mail.getMail();
-        /*Mmail mail = new Mmail();
         
         int cantMails = mail.getCantidadMails();
         
@@ -40,7 +40,7 @@ public class Mmail {
             } catch (InterruptedException ex) {
                 Logger.getLogger(Mmail.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }*/
+        }
 
     }
 
