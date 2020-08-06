@@ -316,12 +316,68 @@ public class DAbogado {
         this.setCi(ci);
         String sql = "SELECT * FROM Abogado WHERE abg_ci = ?";
         ResultSet resultado = null;
+        String imprimir = "Content-Type: text/html; charset=\"UTF-8\"\n" +
+"\n" +
+"<h3></h3>\n"+
+"\n"+
+"<h1>Datos del Abogado</h1>"+
+"<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
+"\n" +
+"  <tr>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">CI</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NOMBRE</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">APELLIDO PATERNO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">APELLIDO MATERNO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ESPECIALIDAD</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">CELULAR</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">FECHA DE NACIMIENTO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">GENERO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NR EN COLEGIO DE ABOGADOS</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NRO MINISTERIO DE JUSTICIA</th>\n" +
+"\n" +                
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NRO DE REGISTRO EN LA CORTE</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID USUARIO</th>\n" +
+"\n" +                
+"  </tr>\n" +
+"\n";
         try {
             ps = con.prepareStatement(sql);
             ps.setInt(1, this.getCi());            
             resultado = ps.executeQuery();
-            resultado.next();
-            return (String.valueOf(resultado.getInt("abg_ci")) + " " + resultado.getString("abg_nombre") + " " + resultado.getString("abg_apellidop") + " " + resultado.getString("abg_apellidom") + " " + resultado.getString("abg_especialidad") + " " + resultado.getString("abg_celular") + " " + String.valueOf(resultado.getDate("abg_fnacimiento")) + " " + resultado.getString("abg_genero") + " " + String.valueOf(resultado.getString("abg_nrocolabogados")) + " " + String.valueOf(resultado.getInt("abg_nrominjusticia")) + " " + String.valueOf(resultado.getInt("abg_numregcorte")));
+            ResultSetMetaData rsMd = resultado.getMetaData();
+            int cantidadColumnas = rsMd.getColumnCount();
+            while (resultado.next()) {
+                imprimir= imprimir+
+"  <tr>\n" +
+"\n";                        
+                for (int i = 0; i < cantidadColumnas; i++) {
+                    imprimir= imprimir+
+"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">" + resultado.getString(i+1) + "</td>\n" +
+"\n";                    
+                    
+                }
+                imprimir=imprimir+
+"  </tr>\n" +
+"\n" ;                        
+            }
+            imprimir=imprimir+
+"\n" +
+"</table>";  
+            ps.close();
+
+            con.close();
+            return imprimir;
 
         } catch (Exception e) {
         }
