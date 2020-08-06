@@ -186,7 +186,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Registrar Cliente</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_cliente[String Nit ;; String Ciudad ;; String Descripcion ;; String Direccion ;; String Numero del Representante ;; String Pagina Web ;; String Pais ;; String Razon social ;; String Rubro ;; int Telefono ;; String Usuario ;; String Contraseña];</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">reg_cliente[String Nit ;; String Ciudad ;; String Descripcion ;; String Direccion ;; String Nombre del Representante ;; String Pagina Web ;; String Pais ;; String Razon social ;; String Rubro ;; int Telefono ;; String Usuario ;; String Contraseña];</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -196,7 +196,7 @@ public class Mmail {
                 + "\n"
                 + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">Modificar Cliente</td>\n"
                 + "\n"
-                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_cliente[String Nit ;; String Ciudad ;; String Descripcion ;; String Direccion ;; String Numero del Representante ;; String Pagina Web ;; String Pais ;; String Razon social ;; String Rubro ;; int Telefono];</td>\n"
+                + "    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">mod_cliente[String Nit ;; String Ciudad ;; String Descripcion ;; String Direccion ;; String Nombre del Representante ;; String Pagina Web ;; String Pais ;; String Razon social ;; String Rubro ;; int Telefono];</td>\n"
                 + "\n"
                 + "  </tr>\n"
                 + "\n"
@@ -1098,7 +1098,7 @@ public class Mmail {
         respuesta += datos[8].length() < 1 ? "Rubro de formato no valido \n" : "";
         respuesta += !isNumericEntero(datos[9]) ? "Telefono de formato no valido \n" : "";
         respuesta += datos[10].length() < 1 ? "Mail de formato no valido \n" : "";
-        respuesta += datos[11].length() <= 8 ? "Contraseña de longitud no valida \n" : "";
+        respuesta += datos[11].length() < 8 ? "Contraseña de longitud no valida \n" : "";
         if (respuesta.length() == 0) {
             respuesta = this.ncliente.RegistrarCliente(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6], datos[7], datos[8], Integer.parseInt(datos[9]), datos[10], datos[11]);
         }
@@ -1189,8 +1189,8 @@ public class Mmail {
             return;
         }
         respuesta += datos[0].length() == 0 ? "Email no puede ser nulo \n" : "";
-        respuesta += datos[1].length() < 8 ? "Contraseña de longitud no valida \n" : "";
-        respuesta += datos[2].length() < 8 ? "Contraseña de longitud no valida " : "";
+        respuesta += datos[1].length() < 8 ? "Contraseña actual de longitud no valida \n" : "";
+        respuesta += datos[2].length() < 8 ? "Contraseña nueva de longitud no valida " : "";
 
         if (respuesta.length() == 0) {
             respuesta = this.ncliente.ModificarContraseñaCliente(datos[0], datos[1], datos[2]);
@@ -1222,7 +1222,7 @@ public class Mmail {
         respuesta += !isNumericEntero(datos[9]) ? "Nro de ministerio de justicia no valido \n" : "";
         respuesta += !isNumericEntero(datos[10]) ? "Nro de registro en corte no valido \n" : "";
         respuesta += datos[11].length() <= 0 ? "Mail no valido \n" : "";
-        respuesta += datos[12].length() <= 8 ? "Contraseña de longitud no valida \n" : "";
+        respuesta += datos[12].length() < 8 ? "Contraseña de longitud no valida \n" : "";
 
         if (respuesta.length() == 0) {
             respuesta = this.nabogado.RegistrarAbogado(Integer.parseInt(datos[0]), datos[1], datos[2], datos[3], datos[4], Integer.parseInt(datos[5]), datos[6], datos[7], Integer.parseInt(datos[8]), Integer.parseInt(datos[9]), Integer.parseInt(datos[10]), datos[11], datos[12]);
@@ -1317,8 +1317,8 @@ public class Mmail {
             return;
         }
         respuesta += datos[0].length() == 0 ? "Email no puede ser nulo \n" : "";
-        respuesta += datos[1].length() < 8 ? "Contraseña de longitud no valida \n" : "";
-        respuesta += datos[2].length() < 8 ? "Contraseña de longitud no valida " : "";
+        respuesta += datos[1].length() < 8 ? "Contraseña anterior de longitud no valida \n" : "";
+        respuesta += datos[2].length() < 8 ? "Contraseña nueva de longitud no valida " : "";
 
         if (respuesta.length() == 0) {
             respuesta = this.nabogado.ModificarContraseñaAbogado(datos[0], datos[1], datos[2]);
