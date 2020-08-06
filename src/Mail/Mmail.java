@@ -1049,6 +1049,10 @@ public class Mmail {
     // CU3: Gestionar Cliente
     // RegistrarCliente
     public void RegistrarCliente(String[] datos) {
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         String respuesta = "";
         if (datos.length < 12 || datos.length > 12) {
             sendMail("Cantidad de parametros incorrecta");
@@ -1074,6 +1078,10 @@ public class Mmail {
     // ModificarCliente
 
     public void ModificarCliente(String[] datos) {
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         String respuesta = "";
         if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
@@ -1097,6 +1105,10 @@ public class Mmail {
     // EliminarCliente
 
     public void EliminarCliente(String[] datos) {
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         String respuesta = "";
         if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
@@ -1118,6 +1130,10 @@ public class Mmail {
     // BuscarCliente
 
     public void BuscarCliente(String[] datos) {
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         String respuesta = "";
         if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
@@ -1133,6 +1149,10 @@ public class Mmail {
     // ModificarContraseñaCliente
 
     public void ModificarContraseñaCliente(String[] datos) {
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         String respuesta = "";
         if (datos.length < 3 || datos.length > 3) {
             sendMail("Cantidad de parametros incorrecta");
@@ -1152,6 +1172,10 @@ public class Mmail {
     // RegistrarAbogado
     public void RegistrarAbogado(String[] datos) {
         String respuesta = "";
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         if (datos.length < 13 || datos.length > 13) {
             sendMail("Cantidad de parametros incorrecta");
             return;
@@ -1179,6 +1203,10 @@ public class Mmail {
 
     public void ModificarAbogado(String[] datos) {
         String respuesta = "";
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         if (datos.length < 11 || datos.length > 11) {
             sendMail("Cantidad de parametros incorrecta");
             return;
@@ -1204,6 +1232,10 @@ public class Mmail {
     // EliminarAbogado
 
     public void EliminarAbogado(String[] datos) {
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         String respuesta = "";
         if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
@@ -1225,6 +1257,10 @@ public class Mmail {
     // BuscarAbogado
 
     public void BuscarAbogado(String[] datos) {
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         String respuesta = "";
         if (datos.length < 1 || datos.length > 1) {
             sendMail("Cantidad de parametros incorrecta");
@@ -1241,6 +1277,10 @@ public class Mmail {
     // ModificarContraseñaAbogado
 
     public void ModificarContraseñaAbogado(String[] datos) {
+        if (datos == null) {
+            sendMail("no se aceptan datos nulos");
+            return;
+        }
         String respuesta = "";
         if (datos.length < 3 || datos.length > 3) {
             sendMail("Cantidad de parametros incorrecta");
