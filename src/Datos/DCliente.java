@@ -296,12 +296,66 @@ public class DCliente {
         this.setNit(nit);
         String sql = "SELECT * FROM Cliente WHERE cl_nit = ?";
         ResultSet resultado = null;
+                String imprimir = "Content-Type: text/html; charset=\"UTF-8\"\n" +
+"\n" +
+"<h3></h3>\n"+
+"\n"+
+"<h1>Datos del Cliente</h1>"+
+"<table style=\"border-collapse: collapse; width: 100%; border: 2px solid black;\">\n" +
+"\n" +
+"  <tr>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NIT</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">CIUDAD</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">DESCRIPCION</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">DIRECCION</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">NOMBRE DEL REPRESENTANTE</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">PAGINA WEB</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">PAIS</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">RAZON SOCIAL</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">RUBRO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">TELEFONO</th>\n" +
+"\n" +
+"    <th style = \"text-align: left; padding: 8px; background-color: #4CAF50; color: white; border: 2px solid black;\">ID USUARIO</th>\n" +
+"\n" +                 
+"  </tr>\n" +
+"\n";
         try {
             ps = con.prepareStatement(sql);
             ps.setString(1, this.getNit());            
             resultado = ps.executeQuery();
-            resultado.next();
-            return (resultado.getString("cl_nit") + " " + resultado.getString("cl_ciudad") + " " + resultado.getString("cl_descripcion")  + " " + resultado.getString("cl_direccion") + " " + resultado.getString("cl_nrepresentante") + " " + resultado.getString("cl_paginaweb") + " " + resultado.getString("cl_pais") + " " + resultado.getString("cl_razonsocial") + " " + resultado.getString("cl_rubro") + " " + String.valueOf(resultado.getInt("cl_telefono")));
+           ResultSetMetaData rsMd = resultado.getMetaData();
+            int cantidadColumnas = rsMd.getColumnCount();
+            while (resultado.next()) {
+                imprimir= imprimir+
+"  <tr>\n" +
+"\n";                        
+                for (int i = 0; i < cantidadColumnas; i++) {
+                    imprimir= imprimir+
+"    <td style = \"text-align: left; padding: 8px; border: 2px solid black;\">" + resultado.getString(i+1) + "</td>\n" +
+"\n";                    
+                    
+                }
+                imprimir=imprimir+
+"  </tr>\n" +
+"\n" ;                        
+            }
+            imprimir=imprimir+
+"\n" +
+"</table>";  
+            ps.close();
+
+            con.close();
+            return imprimir;
 
         } catch (Exception e) {
         }
